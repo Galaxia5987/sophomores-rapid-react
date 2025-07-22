@@ -24,17 +24,13 @@ class Hopper : SubsystemBase() {
 
     val hasBall = Trigger { distanceSensor.isInRange }
 
-    private fun setVoltage(voltage: Voltage) {
+    private fun setVoltage(voltage: Voltage): Command = runOnce {
         motor.setControl(voltageRequest.withOutput(voltage))
     }
 
-    private fun setVoltageCommand(voltage: Voltage): Command = runOnce {
-        setVoltage(voltage)
-    }
+    fun start(): Command = setVoltage(INTAKE_VOLTAGE)
 
-    fun start(): Command = setVoltageCommand(INTAKE_VOLTAGE)
-
-    fun stop(): Command = setVoltageCommand(0.0.volts)
+    fun stop(): Command = setVoltage(0.volts)
 
     override fun periodic() {
         motor.updateInputs()
