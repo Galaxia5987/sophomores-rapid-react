@@ -35,7 +35,7 @@ class Hopper : SubsystemBase() {
     override fun periodic() {
         motor.updateInputs()
         distanceSensor.updateInputs()
-        Logger.processInputs("Subsystem/$name", motor.inputs)
-        Logger.recordOutput("Subsystem/$name/hasBackBall", hasBall)
+        Logger.processInputs("Subsystems/$name", motor.inputs)
+        Logger.recordOutput("Subsystems/$name/hasBackBall", hasBall)
     }
 }
