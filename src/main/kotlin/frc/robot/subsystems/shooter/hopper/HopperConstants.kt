@@ -5,11 +5,7 @@ import com.ctre.phoenix6.configs.CurrentLimitsConfigs
 import com.ctre.phoenix6.configs.ProximityParamsConfigs
 import com.ctre.phoenix6.configs.TalonFXConfiguration
 import edu.wpi.first.units.measure.Current
-import frc.robot.lib.extensions.amps
-import frc.robot.lib.extensions.get
-import frc.robot.lib.extensions.meters
-import frc.robot.lib.extensions.mm
-import frc.robot.lib.extensions.volts
+import frc.robot.lib.extensions.*
 
 const val MOTOR_ID = 0 // TBD
 val INTAKE_VOLTAGE = 4.volts
