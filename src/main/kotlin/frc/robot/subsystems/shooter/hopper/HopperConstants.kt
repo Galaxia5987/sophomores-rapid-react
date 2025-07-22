@@ -7,7 +7,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration
 import edu.wpi.first.units.measure.Current
 import frc.robot.lib.extensions.*
 
-const val MOTOR_ID = 0 // TBD
+val MOTOR_ID: Nothing = TODO("Define Motor Id")
 val INTAKE_VOLTAGE = 4.volts
 
 val STATOR_LIMIT = 30.amps
@@ -24,7 +24,7 @@ val MOTOR_CONFIG =
             }
     }
 
-const val DISTANCE_SENSOR_ID = 0 // TBD
+val DISTANCE_SENSOR_ID: Nothing = TODO("Define Sensor Id")
 
 val DISTANCE_THRESHOLD = 50.mm
 
