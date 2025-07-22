@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.lib.universal_motor.UniversalTalonFX
-import org.littletonrobotics.junction.AutoLogOutput
 import org.littletonrobotics.junction.Logger
 
 class Flywheel : SubsystemBase() {
@@ -21,8 +20,9 @@ class Flywheel : SubsystemBase() {
         motor.setControl(velocityTorque.withVelocity(velocity))
     }
 
-
-    fun stop() = setVelocity(STOP_VELOCITY).alongWith(runOnce { setVelocity = STOP_VELOCITY })
+    fun stop() =
+        setVelocity(STOP_VELOCITY)
+            .alongWith(runOnce { setVelocity = STOP_VELOCITY })
 
     override fun periodic() {
         motor.updateInputs()
