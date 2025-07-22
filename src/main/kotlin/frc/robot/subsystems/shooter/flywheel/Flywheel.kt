@@ -25,7 +25,8 @@ class Flywheel : SubsystemBase() {
 
     override fun periodic() {
         motor.updateInputs()
-        Logger.processInputs("flyWheelInputs", motor.inputs)
-        Logger.recordOutput("flyWheel/isAtSetVelocity", isAtSetVelocity)
+        Logger.processInputs("Subsystem/$name", motor.inputs)
+        Logger.recordOutput("FlyWheel/IsAtSetVelocity", isAtSetVelocity)
+        Logger.recordOutput("FlyWheel/SetVelocity", velocitySetpoint)
     }
 }
