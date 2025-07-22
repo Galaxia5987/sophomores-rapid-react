@@ -2,6 +2,7 @@ package frc.robot.subsystems.shooter.flywheel
 
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC
 import edu.wpi.first.units.measure.AngularVelocity
+import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.lib.universal_motor.UniversalTalonFX
@@ -15,17 +16,17 @@ class Flywheel : SubsystemBase() {
 
     val isAtSetVelocity = Trigger { motor.inputs.velocity == setVelocity }
 
-    private fun velocity(velocity: AngularVelocity) {
+    private fun setVelocity(velocity: AngularVelocity): Command = runOnce {
         setVelocity = velocity
         motor.setControl(velocityTorque.withVelocity(velocity))
     }
-    fun stop() {
-        setVelocity = STOP_VELOCITY
-        motor.setControl(velocityTorque.withVelocity(STOP_VELOCITY))
-    }
+
+
+    fun stop() = setVelocity(STOP_VELOCITY).alongWith(runOnce { setVelocity = STOP_VELOCITY })
+
     override fun periodic() {
         motor.updateInputs()
         Logger.processInputs("flyWheelInputs", motor.inputs)
-        Logger.recordOutput("flyWheel/isAtSetVelocity",isAtSetVelocity)
+        Logger.recordOutput("flyWheel/isAtSetVelocity", isAtSetVelocity)
     }
 }
