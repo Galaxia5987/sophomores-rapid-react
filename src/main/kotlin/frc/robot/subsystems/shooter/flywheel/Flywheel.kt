@@ -21,8 +21,7 @@ class Flywheel : SubsystemBase() {
     }
 
     fun stop() =
-        setVelocity(STOP_VELOCITY)
-            .alongWith(runOnce { setVelocity = STOP_VELOCITY })
+        setVelocity(STOP_VELOCITY).withName("FlyWheel/stop")
 
     override fun periodic() {
         motor.updateInputs()
