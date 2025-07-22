@@ -10,13 +10,13 @@ import org.littletonrobotics.junction.Logger
 
 class Flywheel : SubsystemBase() {
     private val velocityTorque = VelocityTorqueCurrentFOC(0.0)
-    private var setVelocity = STOP_VELOCITY
+    private var velocitySetpoint = STOP_VELOCITY
     private val motor = UniversalTalonFX(port, config = MOTOR_CONFIG)
 
-    val isAtSetVelocity = Trigger { motor.inputs.velocity == setVelocity }
+    val isAtSetVelocity = Trigger { motor.inputs.velocity == velocitySetpoint }
 
-    private fun setVelocity(velocity: AngularVelocity): Command = runOnce {
-        setVelocity = velocity
+    fun setVelocity(velocity: AngularVelocity): Command = runOnce {
+        velocitySetpoint = velocity
         motor.setControl(velocityTorque.withVelocity(velocity))
     }
 
