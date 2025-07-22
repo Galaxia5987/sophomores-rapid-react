@@ -32,6 +32,6 @@ val DISTANCE_SENSOR_CONFIG =
     CANrangeConfiguration().apply {
         ProximityParams =
             ProximityParamsConfigs().apply {
-                ProximityThreshold = DISTANCE_THRESHOLD[meters]
+                ProximityThreshold = DISTANCE_THRESHOLD[m]
             }
     }
