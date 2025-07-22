@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.lib.extensions.volts
 import frc.robot.lib.unified_canrange.UnifiedCANRange
 import frc.robot.lib.universal_motor.UniversalTalonFX
-import org.littletonrobotics.junction.AutoLogOutput
 import org.littletonrobotics.junction.Logger
 
 class Hopper : SubsystemBase() {
@@ -23,7 +22,7 @@ class Hopper : SubsystemBase() {
         )
     private val voltageRequest = VoltageOut(0.0)
 
-    @AutoLogOutput val hasBackBall = Trigger { distanceSensor.isInRange }
+    val hasBall = Trigger { distanceSensor.isInRange }
 
     private fun setVoltage(voltage: Voltage) {
         motor.setControl(voltageRequest.withOutput(voltage))
