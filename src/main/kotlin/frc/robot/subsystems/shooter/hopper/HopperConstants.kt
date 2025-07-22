@@ -17,21 +17,25 @@ val INTAKE_VOLTAGE = 4.volts
 val STATOR_LIMIT = 30.amps
 val SUPPLY_LIMIT: Current = STATOR_LIMIT.times(2.0)
 
-val MOTOR_CONFIG = TalonFXConfiguration().apply {
-    CurrentLimits = CurrentLimitsConfigs().apply {
-        StatorCurrentLimitEnable = true
-        SupplyCurrentLimitEnable = true
-        StatorCurrentLimit = STATOR_LIMIT[amps]
-        SupplyCurrentLimit = SUPPLY_LIMIT[amps]
+val MOTOR_CONFIG =
+    TalonFXConfiguration().apply {
+        CurrentLimits =
+            CurrentLimitsConfigs().apply {
+                StatorCurrentLimitEnable = true
+                SupplyCurrentLimitEnable = true
+                StatorCurrentLimit = STATOR_LIMIT[amps]
+                SupplyCurrentLimit = SUPPLY_LIMIT[amps]
+            }
     }
-}
 
 const val DISTANCE_SENSOR_ID = 0 // TBD
 
 val DISTANCE_THRESHOLD = 50.mm
 
-val DISTANCE_SENSOR_CONFIG = CANrangeConfiguration().apply {
-    ProximityParams = ProximityParamsConfigs().apply {
-        ProximityThreshold = DISTANCE_THRESHOLD[meters]
+val DISTANCE_SENSOR_CONFIG =
+    CANrangeConfiguration().apply {
+        ProximityParams =
+            ProximityParamsConfigs().apply {
+                ProximityThreshold = DISTANCE_THRESHOLD[meters]
+            }
     }
-}

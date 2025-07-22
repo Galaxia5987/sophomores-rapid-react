@@ -13,18 +13,25 @@ import org.littletonrobotics.junction.Logger
 
 class Hopper : SubsystemBase() {
 
-    private val motor: UniversalTalonFX = UniversalTalonFX(MOTOR_ID, config = MOTOR_CONFIG)
-    private val distanceSensor = UnifiedCANRange(DISTANCE_SENSOR_ID, configuration = DISTANCE_SENSOR_CONFIG, subsystemName=name)
+    private val motor: UniversalTalonFX =
+        UniversalTalonFX(MOTOR_ID, config = MOTOR_CONFIG)
+    private val distanceSensor =
+        UnifiedCANRange(
+            DISTANCE_SENSOR_ID,
+            configuration = DISTANCE_SENSOR_CONFIG,
+            subsystemName = name
+        )
     private val voltageRequest = VoltageOut(0.0)
 
-    @AutoLogOutput
-    val hasBackBall = Trigger { distanceSensor.isInRange }
+    @AutoLogOutput val hasBackBall = Trigger { distanceSensor.isInRange }
 
-    private fun setVoltage(voltage: Voltage){
+    private fun setVoltage(voltage: Voltage) {
         motor.setControl(voltageRequest.withOutput(voltage))
     }
 
-    private fun setVoltageCommand(voltage: Voltage): Command = runOnce { setVoltage(voltage) }
+    private fun setVoltageCommand(voltage: Voltage): Command = runOnce {
+        setVoltage(voltage)
+    }
 
     fun start(): Command = setVoltageCommand(INTAKE_VOLTAGE)
 
