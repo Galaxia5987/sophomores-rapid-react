@@ -11,7 +11,7 @@ val MOTOR_ID: Nothing = TODO("Define Motor Id")
 val INTAKE_VOLTAGE = 4.volts
 
 val STATOR_LIMIT = 30.amps
-val SUPPLY_LIMIT: Current = STATOR_LIMIT.times(2.0)
+val SUPPLY_LIMIT: Current = STATOR_LIMIT*2.0
 
 val MOTOR_CONFIG =
     TalonFXConfiguration().apply {
