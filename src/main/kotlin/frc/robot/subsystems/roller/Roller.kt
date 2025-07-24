@@ -26,7 +26,7 @@ class Roller : SubsystemBase() {
 
     private val rangeSensor =
         UnifiedCANRange(
-            subsystemName = "Wrist",
+            subsystemName = "Roller",
             port = SENSOR_ID,
             canbus = "",
             configuration = CANrangeConfiguration()
@@ -36,7 +36,8 @@ class Roller : SubsystemBase() {
     var hasFrontBall: Boolean = false
         private set
 
-    val ballDetectedTrigger = Trigger { hasFrontBall }
+    val HasBall = Trigger { hasFrontBall }
+
     private fun setVoltage(voltage: Voltage) {
         motor.setControl(voltageRequest.withOutput(voltage))
     }
