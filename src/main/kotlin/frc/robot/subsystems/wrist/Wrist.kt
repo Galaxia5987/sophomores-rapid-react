@@ -8,13 +8,11 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.lib.extensions.degrees
 import frc.robot.lib.extensions.kg2m
-import frc.robot.lib.extensions.kilogramSquareMeters
 import frc.robot.lib.universal_motor.UniversalTalonFX
 import org.littletonrobotics.junction.AutoLogOutput
 import org.littletonrobotics.junction.Logger
 import org.littletonrobotics.junction.mechanism.LoggedMechanism2d
 import org.littletonrobotics.junction.mechanism.LoggedMechanismLigament2d
-
 
 val POINTE_TOLERANCE = 1.0.degrees
 val MOTOR_PORT = 2
@@ -43,7 +41,7 @@ class Wrist : SubsystemBase() {
 
     fun reset() = setAngle(0.0.degrees)
 
-@AutoLogOutput
+    @AutoLogOutput
     val atSetpoint = Trigger {
         motor.inputs.position.isNear(setpoint, POINTE_TOLERANCE)
     }
