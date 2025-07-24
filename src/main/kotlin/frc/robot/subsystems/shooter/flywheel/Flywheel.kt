@@ -1,8 +1,10 @@
 package frc.robot.subsystems.shooter.flywheel
 
+import com.ctre.phoenix6.controls.Follower
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC
 import com.ctre.phoenix6.controls.VoltageOut
 import edu.wpi.first.units.measure.AngularVelocity
+import edu.wpi.first.units.measure.Voltage
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import edu.wpi.first.wpilibj2.command.button.Trigger
@@ -38,12 +40,11 @@ class Flywheel : SubsystemBase(), SysIdable {
         mainMotor.setControl(velocityTorque.withVelocity(velocity))
     }
 
-    fun stop() =
-        setVelocity(0.rps).withName("FlyWheel/stop")
+    fun stop() = setVelocity(0.rps).withName("Flywheel/stop")
 
     override fun periodic() {
         mainMotor.updateInputs()
-        Logger.processInputs("Subsystem/$name", motor.inputs)
+        Logger.processInputs("Subsystems/$name", mainMotor.inputs)
         Logger.recordOutput("FlyWheel/IsAtSetVelocity", isAtSetVelocity)
         Logger.recordOutput("FlyWheel/SetVelocity", velocitySetpoint)
     }
