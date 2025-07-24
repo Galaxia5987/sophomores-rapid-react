@@ -50,6 +50,6 @@ class Flywheel : SubsystemBase(), SysIdable {
     }
 
     override fun setVoltage(voltage: Voltage) {
-        mainMotor.setControl(VoltageOut(voltage))
+        mainMotor.setControl(velocityVoltage.withOutput(voltage))
     }
 }
