@@ -16,8 +16,10 @@ class Turret : SubsystemBase() {
     private val hallEffectSensor = DigitalInput(HALL_EFFECT_SENSOR_PORT)
     private val motionMagicTorque = MotionMagicTorqueCurrentFOC(0.0)
     private var angleSetpoint = 0.deg
+
     val isAtResetPoint =
         Trigger(hallEffectSensor::get).onTrue(runOnce { motor.reset(0.rot) })
+
     val isAtSetpoint = Trigger {
         motor.inputs.position.isNear(angleSetpoint, TOLERANCE)
     }
