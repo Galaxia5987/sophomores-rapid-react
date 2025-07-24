@@ -23,7 +23,7 @@ private val ligament =
     root.append(LoggedMechanismLigament2d("WristLigament", 0.25, 90.0))
 
 class Wrist : SubsystemBase() {
-    @AutoLogOutput private var setpoint: Angle = 0.0.degrees
+    @AutoLogOutput private var setpoint: Angle = 0.degrees
 
     private val motor =
         UniversalTalonFX(
