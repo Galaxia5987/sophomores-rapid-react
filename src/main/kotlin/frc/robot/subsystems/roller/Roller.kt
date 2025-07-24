@@ -11,10 +11,18 @@ import frc.robot.lib.extensions.volts
 import frc.robot.lib.unified_canrange.UnifiedCANRange
 import frc.robot.lib.universal_motor.UniversalTalonFX
 import org.littletonrobotics.junction.AutoLogOutput
+import org.littletonrobotics.junction.Logger
+import org.littletonrobotics.junction.mechanism.LoggedMechanism2d
+import org.littletonrobotics.junction.mechanism.LoggedMechanismLigament2d
 
 val MOTOR_PORT = 0
 val MOTOR_FOLLOW_PORT = 1
 val SENSOR_ID = 11
+
+@AutoLogOutput private var mechanism = LoggedMechanism2d(6.0, 4.0)
+private var root = mechanism.getRoot("Wrist", 3.0, 2.0)
+private val ligament =
+    root.append(LoggedMechanismLigament2d("WristLigament", 0.25, 90.0))
 
 class Roller : SubsystemBase() {
     private val motor =
@@ -56,6 +64,9 @@ class Roller : SubsystemBase() {
     override fun periodic() {
         motor.updateInputs()
         rangeSensor.updateInputs()
+        Logger.processInputs("Subsystems/$name", motor.inputs)
+
+
 
     }
 }
