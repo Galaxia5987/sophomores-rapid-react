@@ -9,14 +9,11 @@ import com.ctre.phoenix6.signals.InvertedValue
 import com.ctre.phoenix6.signals.NeutralModeValue
 import frc.robot.lib.Gains
 import frc.robot.lib.extensions.amps
-import frc.robot.lib.extensions.cm
 import frc.robot.lib.extensions.deg
 import frc.robot.lib.extensions.get
-import frc.robot.lib.extensions.m
-import frc.robot.lib.extensions.rad
-import frc.robot.lib.extensions.rot
 
-val TOLERANCE = 2.deg;
+val TOLERANCE = 2.deg
+
 const val HALL_EFFECT_SENSOR_PORT = 0
 const val MOTOR_ID = 7
 val GAINS = Gains(1.0, kV = 1.0, kA = 1.0)
