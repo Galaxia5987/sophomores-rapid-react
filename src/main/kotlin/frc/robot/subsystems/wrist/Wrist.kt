@@ -5,6 +5,7 @@ import com.ctre.phoenix6.controls.PositionVoltage
 import edu.wpi.first.units.measure.Angle
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.SubsystemBase
+import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.lib.extensions.degrees
 import frc.robot.lib.extensions.kilogramSquareMeters
 import frc.robot.lib.universal_motor.UniversalTalonFX
@@ -13,6 +14,7 @@ import org.littletonrobotics.junction.AutoLogOutput
 import org.littletonrobotics.junction.Logger
 
 private const val GEAR_RATIO = 0.0
+ val POINTE_TOLERANCE=1.0.degrees
 val MOTOR_PORT = 0
 
 class Wrist : SubsystemBase() {
@@ -33,24 +35,13 @@ class Wrist : SubsystemBase() {
         motor.setControl(positionRequest.withPosition(angle))
     }
 
-    fun stepUp(): Command = runOnce {
-        setPoint += 10.degrees
-        motor.setControl(positionRequest.withPosition(setPoint))
-    }
-
-    fun stepDown(): Command = runOnce {
-        setPoint -= 10.degrees
-        motor.setControl(positionRequest.withPosition(setPoint))
-    }
-
     fun reset(): Command = runOnce {
         setPoint = 0.0.degrees
         motor.setControl(positionRequest.withPosition(setPoint))
     }
 
-    fun isAtSetpoint(): Boolean {
-        val error = motor.inputs.position.minus(setPoint).`in`(degrees)
-        return error.absoluteValue < 1.0
+    var atSetpoint = Trigger {
+        motor.inputs.position.isNear(setPoint,POINTE_TOLERANCE)
     }
 
     override fun periodic() {
