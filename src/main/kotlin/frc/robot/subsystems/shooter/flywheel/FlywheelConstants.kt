@@ -23,7 +23,7 @@ val MOTOR_CONFIG =
     TalonFXConfiguration().apply {
         MotorOutput =
             MotorOutputConfigs().apply {
-                NeutralMode = NeutralModeValue.Brake
+                NeutralMode = NeutralModeValue.Coast
                 Inverted = InvertedValue.CounterClockwise_Positive
             }
         Feedback = FeedbackConfigs().apply { RotorToSensorRatio = 1.0 }
