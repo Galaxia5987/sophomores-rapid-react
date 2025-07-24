@@ -16,8 +16,9 @@ import org.littletonrobotics.junction.mechanism.LoggedMechanism2d
 import org.littletonrobotics.junction.mechanism.LoggedMechanismLigament2d
 
 val MOTOR_PORT = 0
-val MOTOR_FOLLOW_PORT = 1
+val AUXILIARY_MOTOR_PORT = 1
 val SENSOR_ID = 11
+
 
 @AutoLogOutput private var mechanism = LoggedMechanism2d(6.0, 4.0)
 private var root = mechanism.getRoot("Wrist", 3.0, 2.0)
@@ -31,9 +32,9 @@ class Roller : SubsystemBase() {
             momentOfInertia = (0.002).kilogramSquareMeters,
         )
 
-    private val motor_follow =
+    private val auxiliaryMotor =
         UniversalTalonFX(
-            MOTOR_FOLLOW_PORT,
+            AUXILIARY_MOTOR_PORT,
             momentOfInertia = (0.002).kilogramSquareMeters,
         )
 
@@ -41,7 +42,7 @@ class Roller : SubsystemBase() {
 
     private val rangeSensor =
         UnifiedCANRange(
-            subsystemName = "Roller",
+            subsystemName = "$name",
             port = SENSOR_ID,
             canbus = "",
             configuration = CANrangeConfiguration()
