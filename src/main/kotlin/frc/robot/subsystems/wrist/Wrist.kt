@@ -14,7 +14,7 @@ import org.littletonrobotics.junction.Logger
 import org.littletonrobotics.junction.mechanism.LoggedMechanism2d
 import org.littletonrobotics.junction.mechanism.LoggedMechanismLigament2d
 
-private const val GEAR_RATIO = 1/69.82
+
 val POINTE_TOLERANCE = 1.0.degrees
 val MOTOR_PORT = 2
 @AutoLogOutput private var mechanism = LoggedMechanism2d(6.0, 4.0)
@@ -40,9 +40,10 @@ class Wrist : SubsystemBase() {
         motor.setControl(positionRequest.withPosition(angle))
     }
 
-    fun reset(): Command = runOnce { setAngle(0.0.degrees) }
+    fun reset() = setAngle(0.0.degrees)
 
-    var atSetpoint = Trigger {
+@AutoLogOutput
+    val atSetpoint = Trigger {
         motor.inputs.position.isNear(setpoint, POINTE_TOLERANCE)
     }
 
