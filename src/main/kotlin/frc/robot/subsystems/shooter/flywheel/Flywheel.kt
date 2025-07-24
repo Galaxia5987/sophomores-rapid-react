@@ -33,7 +33,7 @@ class Flywheel : SubsystemBase(), SysIdable {
         Trigger {
                 mainMotor.inputs.velocity.isNear(velocitySetpoint, TOLERANCE)
             }
-            .debounce(DEBOUNCE[sec])
+            .debounce(AT_SET_VELOCITY_DEBOUNCE[sec])
 
     fun setVelocity(velocity: AngularVelocity): Command = runOnce {
         velocitySetpoint = velocity

@@ -18,7 +18,7 @@ val STATOR_CURRENT_LIMIT = 100.amps
 val SUPPLY_CURRENT_LIMIT = 50.amps
 val GAINS = Gains(kP = 2.0)
 val TOLERANCE = 0.1.rps
-val DEBOUNCE = 0.2.sec
+val AT_SET_VELOCITY_DEBOUNCE = 0.2.sec
 val MOTOR_CONFIG =
     TalonFXConfiguration().apply {
         MotorOutput =
