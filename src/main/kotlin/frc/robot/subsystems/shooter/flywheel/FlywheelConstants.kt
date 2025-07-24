@@ -15,7 +15,7 @@ const val MAIN_MOTOR_PORT = 5
 const val AUX_MOTOR_PORT = 6
 val STATOR_CURRENT_LIMIT = 80.amps
 val SUPPLY_CURRENT_LIMIT = 40.amps
-val GAINS = Gains(kP = 1.0)
+val GAINS = Gains(kP = 2.0)
 val STOP_VELOCITY = Units.RotationsPerSecond.zero()
 val MOTOR_CONFIG =
     TalonFXConfiguration().apply {
