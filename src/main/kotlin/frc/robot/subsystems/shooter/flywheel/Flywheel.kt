@@ -38,7 +38,7 @@ class Flywheel : SubsystemBase(), SysIdable {
     fun setVelocity(velocity: AngularVelocity): Command = runOnce {
         velocitySetpoint = velocity
         mainMotor.setControl(velocityTorque.withVelocity(velocity))
-    }
+    }.withName("Flywheel/setVelocity")
 
     fun stop() = setVelocity(0.rps).withName("Flywheel/stop")
 
