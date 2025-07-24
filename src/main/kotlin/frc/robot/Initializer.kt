@@ -12,6 +12,7 @@ import frc.robot.subsystems.drive.gyroIOs.GyroIOSim
 import frc.robot.subsystems.shooter.flywheel.Flywheel
 import frc.robot.subsystems.shooter.hood.Hood
 import frc.robot.subsystems.shooter.hopper.Hopper
+import frc.robot.subsystems.shooter.turret.Turret
 import frc.robot.subsystems.vision.Vision
 import frc.robot.subsystems.vision.VisionConstants
 import frc.robot.subsystems.vision.VisionIOPhotonVision
@@ -82,6 +83,8 @@ private val visionIOs =
     }.toTypedArray()
 
 val vision = Vision(drive, *visionIOs)
+
+val turret = Turret()
 val hood = Hood()
 val hopper = Hopper()
 
