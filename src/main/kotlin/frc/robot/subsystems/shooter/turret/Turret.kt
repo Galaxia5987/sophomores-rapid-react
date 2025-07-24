@@ -6,13 +6,17 @@ import edu.wpi.first.units.measure.Angle
 import edu.wpi.first.wpilibj.DigitalInput
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import edu.wpi.first.wpilibj2.command.button.Trigger
+import frc.robot.lib.extensions.cm
+import frc.robot.lib.extensions.deg
+import frc.robot.lib.extensions.get
+import frc.robot.lib.extensions.rot
 import frc.robot.lib.universal_motor.UniversalTalonFX
 import org.littletonrobotics.junction.Logger
 
 class Turret : SubsystemBase() {
     val motor = UniversalTalonFX(MOTOR_PORT, config = MOTOR_CONFIG)
     var angleSetpoint = 0.deg
-    val sensor = DigitalInput(SENSOR_PORT)
+    val hallEffectSensor = DigitalInput(HALL_EFFECT_SENSOR_PORT)
     val motionMagicTorque = MotionMagicTorqueCurrentFOC(0.0)
     val isAtResetPoint =
         Trigger(hallEffectSensor::get)
