@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.lib.extensions.degrees
 import frc.robot.lib.extensions.kilogramSquareMeters
 import frc.robot.lib.universal_motor.UniversalTalonFX
-import kotlin.math.absoluteValue
 import org.littletonrobotics.junction.AutoLogOutput
 import org.littletonrobotics.junction.Logger
 
@@ -18,7 +17,7 @@ private const val GEAR_RATIO = 0.0
 val MOTOR_PORT = 2
 
 class Wrist : SubsystemBase() {
-    @AutoLogOutput private var setPoint: Angle = 0.0.degrees
+    @AutoLogOutput private var setpoint: Angle = 0.0.degrees
 
     private val motor =
         UniversalTalonFX(
@@ -31,17 +30,16 @@ class Wrist : SubsystemBase() {
     private val positionRequest = PositionVoltage(0.0)
 
     fun setAngle(angle: Angle): Command = runOnce {
-        setPoint = angle
+        setpoint = angle
         motor.setControl(positionRequest.withPosition(angle))
     }
 
     fun reset(): Command = runOnce {
-        setPoint = 0.0.degrees
-        motor.setControl(positionRequest.withPosition(setPoint))
+     setAngle(0.0.degrees)
     }
 
     var atSetpoint = Trigger {
-        motor.inputs.position.isNear(setPoint,POINTE_TOLERANCE)
+        motor.inputs.position.isNear(setpoint,POINTE_TOLERANCE)
     }
 
     override fun periodic() {
