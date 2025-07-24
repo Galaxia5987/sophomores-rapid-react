@@ -16,7 +16,7 @@ private const val GEAR_RATIO = 0.0
 val MOTOR_PORT = 0
 
 class Wrist : SubsystemBase() {
-    @AutoLogOutput private var setPoint: Angle = 0.0.degrees
+    @AutoLogOutput private var setpoint: Angle = 0.0.degrees
 
     private val motor =
         UniversalTalonFX(
