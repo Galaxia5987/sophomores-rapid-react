@@ -16,7 +16,7 @@ private const val GEAR_RATIO = 0.0
 val MOTOR_PORT = 0
 
 class Wrist : SubsystemBase() {
-    @AutoLogOutput private var setpoint: Angle = 0.0.degrees
+    @AutoLogOutput private var setPoint: Angle = 0.0.degrees
 
     private val motor =
         UniversalTalonFX(
@@ -29,18 +29,27 @@ class Wrist : SubsystemBase() {
     private val positionRequest = PositionVoltage(0.0)
 
     fun setAngle(angle: Angle): Command = runOnce {
-        setpoint = angle
+        setPoint = angle
         motor.setControl(positionRequest.withPosition(angle))
     }
 
-
-    fun reset(): Command = runOnce {
-        setpoint = 0.0.degrees
-        motor.setControl(positionRequest.withPosition(setpoint))
+    fun stepUp(): Command = runOnce {
+        setPoint += 10.degrees
+        motor.setControl(positionRequest.withPosition(setPoint))
     }
 
-    fun isNearSetpoint(): Boolean {
-        val error = motor.inputs.position.minus(setpoint).`in`(degrees)
+    fun stepDown(): Command = runOnce {
+        setPoint -= 10.degrees
+        motor.setControl(positionRequest.withPosition(setPoint))
+    }
+
+    fun reset(): Command = runOnce {
+        setPoint = 0.0.degrees
+        motor.setControl(positionRequest.withPosition(setPoint))
+    }
+
+    fun isAtSetpoint(): Boolean {
+        val error = motor.inputs.position.minus(setPoint).`in`(degrees)
         return error.absoluteValue < 1.0
     }
 
