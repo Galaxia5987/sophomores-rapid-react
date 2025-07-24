@@ -47,9 +47,7 @@ class Roller : SubsystemBase() {
             configuration = CANrangeConfiguration()
         )
 
-    @AutoLogOutput
-    val HasBall = Trigger { rangeSensor.isInRange }
-
+    @AutoLogOutput val HasBall = Trigger { rangeSensor.isInRange }
 
     private fun setVoltage(voltage: Voltage) {
         motor.setControl(voltageRequest.withOutput(voltage))
@@ -65,8 +63,5 @@ class Roller : SubsystemBase() {
         motor.updateInputs()
         rangeSensor.updateInputs()
         Logger.processInputs("Subsystems/$name", motor.inputs)
-
-
-
     }
 }
