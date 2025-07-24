@@ -15,9 +15,6 @@ import org.littletonrobotics.junction.Logger
 import org.littletonrobotics.junction.mechanism.LoggedMechanism2d
 import org.littletonrobotics.junction.mechanism.LoggedMechanismLigament2d
 
-val MOTOR_PORT = 0
-val AUXILIARY_MOTOR_PORT = 1
-val SENSOR_ID = 11
 
 @AutoLogOutput private var mechanism = LoggedMechanism2d(6.0, 4.0)
 private var root = mechanism.getRoot("Wrist", 3.0, 2.0)
@@ -46,15 +43,15 @@ class Roller : SubsystemBase() {
 
     @AutoLogOutput val HasBall = Trigger { rangeSensor.isInRange }
 
-    private fun setVoltage(voltage: Voltage) {
+    private fun setVoltage(voltage: Voltage): Command=runOnce {
         motor.setControl(voltageRequest.withOutput(voltage))
     }
 
-    fun intake(): Command = runOnce { setVoltage(Intake) }
+    fun intake(): Command = runOnce { setVoltage(INTAKE) }
 
-    fun outtake(): Command = runOnce { setVoltage(Outtake) }
+    fun outtake(): Command = runOnce { setVoltage(OUTTAKE) }
 
-    fun stop(): Command = runOnce { setVoltage(Stop) }
+    fun stop(): Command = runOnce { setVoltage(STOP) }
 
     override fun periodic() {
         motor.updateInputs()
