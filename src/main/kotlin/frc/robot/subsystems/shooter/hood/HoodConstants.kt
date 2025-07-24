@@ -22,7 +22,8 @@ val PID_GAINS = Gains(kP = 1.0)
 
 const val ENCODER_ID = 10
 const val ENCODER_TO_MECHANISM_RATIO = 1.0
-const val MOTOR_TO_SENSOR_RATIO = 1.0
+const val MOTOR_TO_MECHANISM_RATIO = 1.0
+const val MOTOR_TO_SENSOR_RATIO = MOTOR_TO_MECHANISM_RATIO
 
 val MOTOR_CONFIG =
     TalonFXConfiguration().apply {
