@@ -12,7 +12,12 @@ import org.littletonrobotics.junction.Logger
 
 class Hood : SubsystemBase() {
 
-    private val motor = UniversalTalonFX(MOTOR_ID, config = MOTOR_CONFIG, gearRatio = MOTOR_TO_MECHANISM_RATIO)
+    private val motor =
+        UniversalTalonFX(
+            MOTOR_ID,
+            config = MOTOR_CONFIG,
+            gearRatio = MOTOR_TO_MECHANISM_RATIO
+        )
 
     private val positionRequest = PositionTorqueCurrentFOC(0.0)
 
