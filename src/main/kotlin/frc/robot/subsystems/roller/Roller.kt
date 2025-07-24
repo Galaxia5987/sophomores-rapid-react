@@ -29,7 +29,7 @@ class Roller : SubsystemBase() {
     private val motor =
         UniversalTalonFX(
             MOTOR_PORT,
-            momentOfInertia = (0.002).kilogramSquareMeters,
+            momentOfInertia = 0.002.kg2m,
         )
 
     private val auxiliaryMotor =
