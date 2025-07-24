@@ -48,6 +48,6 @@ class Wrist : SubsystemBase() {
 
     override fun periodic() {
         motor.updateInputs()
-        Logger.processInputs("subsystem/$name", motor.inputs)
+        Logger.processInputs("Subsystems/$name", motor.inputs)
     }
 }
