@@ -9,6 +9,7 @@ import frc.robot.subsystems.drive.ModuleIOs.ModuleIOTalonFX
 import frc.robot.subsystems.drive.gyroIOs.GyroIO
 import frc.robot.subsystems.drive.gyroIOs.GyroIOPigeon2
 import frc.robot.subsystems.drive.gyroIOs.GyroIOSim
+import frc.robot.subsystems.shooter.flywheel.Flywheel
 import frc.robot.subsystems.shooter.hood.Hood
 import frc.robot.subsystems.shooter.hopper.Hopper
 import frc.robot.subsystems.shooter.turret.Turret
@@ -86,3 +87,5 @@ val vision = Vision(drive, *visionIOs)
 val turret = Turret()
 val hood = Hood()
 val hopper = Hopper()
+
+val flywheel = Flywheel()
