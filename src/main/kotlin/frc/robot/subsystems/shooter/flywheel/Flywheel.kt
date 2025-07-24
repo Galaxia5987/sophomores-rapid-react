@@ -6,6 +6,8 @@ import edu.wpi.first.units.measure.AngularVelocity
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import edu.wpi.first.wpilibj2.command.button.Trigger
+import frc.robot.lib.extensions.get
+import frc.robot.lib.extensions.sec
 import frc.robot.lib.universal_motor.UniversalTalonFX
 import org.littletonrobotics.junction.Logger
 
@@ -16,8 +18,11 @@ class Flywheel : SubsystemBase(), SysIdable {
     private var velocitySetpoint = STOP_VELOCITY
     private val motor = UniversalTalonFX(port, config = MOTOR_CONFIG)
 
-    val isAtSetVelocity = Trigger { motor.inputs.velocity == velocitySetpoint }
-
+    val isAtSetVelocity =
+        Trigger {
+            mainMotor.inputs.velocity.isNear(velocitySetpoint, TOLERANCE)
+        }
+            .debounce(DEBOUNCE[sec])
     fun setVelocity(velocity: AngularVelocity): Command = runOnce {
         velocitySetpoint = velocity
         motor.setControl(velocityTorque.withVelocity(velocity))

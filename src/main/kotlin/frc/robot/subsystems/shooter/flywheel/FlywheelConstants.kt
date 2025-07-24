@@ -10,12 +10,16 @@ import edu.wpi.first.units.Units
 import frc.robot.lib.Gains
 import frc.robot.lib.extensions.amps
 import frc.robot.lib.extensions.get
+import frc.robot.lib.extensions.rps
+import frc.robot.lib.extensions.sec
 
 const val MAIN_MOTOR_PORT = 5
 const val AUX_MOTOR_PORT = 6
 val STATOR_CURRENT_LIMIT = 80.amps
 val SUPPLY_CURRENT_LIMIT = 40.amps
 val GAINS = Gains(kP = 2.0)
+val TOLERANCE = 0.1.rps
+val DEBOUNCE = 0.2.sec
 val STOP_VELOCITY = Units.RotationsPerSecond.zero()
 val MOTOR_CONFIG =
     TalonFXConfiguration().apply {
