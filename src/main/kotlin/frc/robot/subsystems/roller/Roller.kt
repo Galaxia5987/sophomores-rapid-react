@@ -42,17 +42,11 @@ class Roller : SubsystemBase() {
         motor.setControl(voltageRequest.withOutput(voltage))
     }
 
-    fun intake(): Command = runOnce {
-        setVoltage(3.0.volts)
-    }
+    fun intake(): Command = runOnce { setVoltage(3.0.volts) }
 
-    fun outtake(): Command = runOnce {
-        setVoltage((-3.0).volts)
-    }
+    fun outtake(): Command = runOnce { setVoltage((-3.0).volts) }
 
-    fun stop(): Command = runOnce {
-        setVoltage(0.0.volts)
-    }
+    fun stop(): Command = runOnce { setVoltage(0.0.volts) }
 
     override fun periodic() {
         motor.updateInputs()
