@@ -19,7 +19,7 @@ import frc.robot.lib.extensions.rot
 val TOLERANCE = 4.deg;
 val HALL_EFFECT_SENSOR_PORT = 0
 val MOTOR_PORT = 1
-val GAINS = Gains(1.0)
+val GAINS = Gains(1.0, kV = 1.0, kA = 1.0)
 val STATOR_CURRENT_LIMIT = 80.amps
 val SUPPLY_CURRENT_LIMIT = 40.amps
 val MOTOR_CONFIG: TalonFXConfiguration =
