@@ -6,8 +6,8 @@ import edu.wpi.first.units.measure.Voltage
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import edu.wpi.first.wpilibj2.command.button.Trigger
+import frc.robot.lib.extensions.kg2m
 import frc.robot.lib.extensions.kilogramSquareMeters
-import frc.robot.lib.extensions.volts
 import frc.robot.lib.unified_canrange.UnifiedCANRange
 import frc.robot.lib.universal_motor.UniversalTalonFX
 import org.littletonrobotics.junction.AutoLogOutput
@@ -19,7 +19,6 @@ val MOTOR_PORT = 0
 val AUXILIARY_MOTOR_PORT = 1
 val SENSOR_ID = 11
 
-
 @AutoLogOutput private var mechanism = LoggedMechanism2d(6.0, 4.0)
 private var root = mechanism.getRoot("Wrist", 3.0, 2.0)
 private val ligament =
@@ -27,10 +26,7 @@ private val ligament =
 
 class Roller : SubsystemBase() {
     private val motor =
-        UniversalTalonFX(
-            MOTOR_PORT,
-            momentOfInertia = 0.002.kg2m,
-        )
+        UniversalTalonFX(MOTOR_PORT, momentOfInertia = 0.002.kg2m)
 
     private val auxiliaryMotor =
         UniversalTalonFX(
