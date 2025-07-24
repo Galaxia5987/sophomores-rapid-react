@@ -23,12 +23,13 @@ class Roller : SubsystemBase() {
 
     private val voltageRequest = VoltageOut(0.0)
 
-    private val rangeSensor = UnifiedCANRange(
-        subsystemName = "Wrist",
-        port = SENSOR_ID,
-        canbus = "",
-        configuration = CANrangeConfiguration()
-    )
+    private val rangeSensor =
+        UnifiedCANRange(
+            subsystemName = "Wrist",
+            port = SENSOR_ID,
+            canbus = "",
+            configuration = CANrangeConfiguration()
+        )
 
     @AutoLogOutput
     var hasFrontBall: Boolean = false
