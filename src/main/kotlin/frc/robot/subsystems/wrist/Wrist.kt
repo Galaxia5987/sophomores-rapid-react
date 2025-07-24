@@ -11,10 +11,16 @@ import frc.robot.lib.extensions.kilogramSquareMeters
 import frc.robot.lib.universal_motor.UniversalTalonFX
 import org.littletonrobotics.junction.AutoLogOutput
 import org.littletonrobotics.junction.Logger
+import org.littletonrobotics.junction.mechanism.LoggedMechanism2d
+import org.littletonrobotics.junction.mechanism.LoggedMechanismLigament2d
 
 private const val GEAR_RATIO = 0.0
- val POINTE_TOLERANCE=1.0.degrees
+val POINTE_TOLERANCE = 1.0.degrees
 val MOTOR_PORT = 2
+@AutoLogOutput private var mechanism = LoggedMechanism2d(6.0, 4.0)
+private var root = mechanism.getRoot("Wrist", 3.0, 2.0)
+private val ligament =
+    root.append(LoggedMechanismLigament2d("WristLigament", 0.25, 90.0))
 
 class Wrist : SubsystemBase() {
     @AutoLogOutput private var setpoint: Angle = 0.0.degrees
@@ -34,12 +40,10 @@ class Wrist : SubsystemBase() {
         motor.setControl(positionRequest.withPosition(angle))
     }
 
-    fun reset(): Command = runOnce {
-     setAngle(0.0.degrees)
-    }
+    fun reset(): Command = runOnce { setAngle(0.0.degrees) }
 
     var atSetpoint = Trigger {
-        motor.inputs.position.isNear(setpoint,POINTE_TOLERANCE)
+        motor.inputs.position.isNear(setpoint, POINTE_TOLERANCE)
     }
 
     override fun periodic() {
