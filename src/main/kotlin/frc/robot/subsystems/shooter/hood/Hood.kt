@@ -25,11 +25,7 @@ class Hood : SubsystemBase() {
     private var setpoint: Angle = 0.deg
 
     private val isAtSetpoint = Trigger {
-        MathUtil.isNear(
-            setpoint[deg],
-            motor.inputs.position[deg],
-            SETPOINT_TOLERANCE[deg]
-        )
+        setpoint.isNear(motor.inputs.position, SETPOINT_TOLERANCE)
     }
 
     init {
