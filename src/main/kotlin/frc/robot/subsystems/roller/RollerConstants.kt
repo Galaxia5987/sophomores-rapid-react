@@ -1,6 +1,5 @@
 package frc.robot.subsystems.roller
 
-import edu.wpi.first.units.Units
 import frc.robot.lib.extensions.volts
 
 val MOTOR_PORT = 0

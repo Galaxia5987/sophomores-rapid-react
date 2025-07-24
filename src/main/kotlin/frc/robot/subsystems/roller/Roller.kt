@@ -15,7 +15,6 @@ import org.littletonrobotics.junction.Logger
 import org.littletonrobotics.junction.mechanism.LoggedMechanism2d
 import org.littletonrobotics.junction.mechanism.LoggedMechanismLigament2d
 
-
 @AutoLogOutput private var mechanism = LoggedMechanism2d(6.0, 4.0)
 private var root = mechanism.getRoot("Wrist", 3.0, 2.0)
 private val ligament =
@@ -43,7 +42,7 @@ class Roller : SubsystemBase() {
 
     @AutoLogOutput val HasBall = Trigger { rangeSensor.isInRange }
 
-    private fun setVoltage(voltage: Voltage): Command=runOnce {
+    private fun setVoltage(voltage: Voltage): Command = runOnce {
         motor.setControl(voltageRequest.withOutput(voltage))
     }
 
