@@ -25,7 +25,6 @@ class Hood : SubsystemBase() {
     }
 
     init {
-
         encoder.configurator.apply(ENCODER_CONFIG)
     }
 
