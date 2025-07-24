@@ -10,7 +10,7 @@ import frc.robot.lib.extensions.amps
 import frc.robot.lib.extensions.deg
 import frc.robot.lib.extensions.get
 
-//val MOTOR_ID: Nothing = TODO("Define motor id")
+// val MOTOR_ID: Nothing = TODO("Define motor id")
 
 val MOTOR_ID = 0
 
@@ -32,7 +32,7 @@ val MOTOR_CONFIG =
             }
     }
 
-//val ENCODER_ID: Nothing = TODO("Define encoder id")
+// val ENCODER_ID: Nothing = TODO("Define encoder id")
 
 val ENCODER_ID = 1
 

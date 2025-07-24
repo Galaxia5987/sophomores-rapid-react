@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.lib.Utils
 import frc.robot.lib.extensions.deg
 import frc.robot.lib.extensions.get
-import frc.robot.lib.extensions.kg2m
 import frc.robot.lib.universal_motor.UniversalTalonFX
 import org.littletonrobotics.junction.Logger
 
@@ -23,7 +22,13 @@ class Hood : SubsystemBase() {
 
     private var setpoint: Angle = 0.deg
 
-    private val isAtSetpoint = Trigger { Utils.epsilonEquals(setpoint[deg], motor.inputs.position[deg], SETPOINT_TOLERANCE[deg])}
+    private val isAtSetpoint = Trigger {
+        Utils.epsilonEquals(
+            setpoint[deg],
+            motor.inputs.position[deg],
+            SETPOINT_TOLERANCE[deg]
+        )
+    }
 
     init {
         encoder.configurator.apply(ENCODER_CONFIG)
