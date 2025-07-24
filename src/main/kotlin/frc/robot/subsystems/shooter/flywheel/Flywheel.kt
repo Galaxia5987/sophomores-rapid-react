@@ -42,14 +42,14 @@ class Flywheel : SubsystemBase(), SysIdable {
 
     fun stop() = setVelocity(0.rps).withName("Flywheel/stop")
 
+    override fun setVoltage(voltage: Voltage) {
+        mainMotor.setControl(velocityVoltage.withOutput(voltage))
+    }
+
     override fun periodic() {
         mainMotor.updateInputs()
         Logger.processInputs("Subsystems/$name", mainMotor.inputs)
         Logger.recordOutput("FlyWheel/IsAtSetVelocity", isAtSetVelocity)
         Logger.recordOutput("FlyWheel/SetVelocity", velocitySetpoint)
-    }
-
-    override fun setVoltage(voltage: Voltage) {
-        mainMotor.setControl(velocityVoltage.withOutput(voltage))
     }
 }
