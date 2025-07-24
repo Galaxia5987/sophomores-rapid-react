@@ -13,7 +13,7 @@ import kotlin.math.absoluteValue
 import org.littletonrobotics.junction.AutoLogOutput
 import org.littletonrobotics.junction.Logger
 
-private const val GEAR_RATIO = 1 / 50.0
+private const val GEAR_RATIO = 0.0
 val MOTOR_PORT = 0
 
 class Wrist : SubsystemBase() {
