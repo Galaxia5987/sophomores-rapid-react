@@ -18,7 +18,9 @@ val SETPOINT_TOLERANCE = 0.5.deg
 
 val STATOR_LIMIT = 30.amps
 val SUPPLY_LIMIT: Current = STATOR_LIMIT.times(2.0)
-val PID_GAINS = Gains(1.0)
+val PID_GAINS = Gains(
+    kP = 1.0
+)
 
 val MOTOR_CONFIG =
     TalonFXConfiguration().apply {
