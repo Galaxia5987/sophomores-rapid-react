@@ -11,7 +11,8 @@ import frc.robot.lib.Gains
 import frc.robot.lib.extensions.amps
 import frc.robot.lib.extensions.get
 
-const val port = 1
+const val MAIN_MOTOR_PORT = 5
+const val AUX_MOTOR_PORT = 6
 val STATOR_CURRENT_LIMIT = 80.amps
 val SUPPLY_CURRENT_LIMIT = 40.amps
 val GAINS = Gains(kP = 1.0)
