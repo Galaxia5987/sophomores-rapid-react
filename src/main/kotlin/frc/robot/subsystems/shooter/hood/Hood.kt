@@ -1,16 +1,19 @@
 package frc.robot.subsystems.shooter.hood
 
 import com.ctre.phoenix6.controls.PositionTorqueCurrentFOC
+import com.ctre.phoenix6.controls.VoltageOut
 import com.ctre.phoenix6.hardware.CANcoder
 import edu.wpi.first.units.measure.Angle
+import edu.wpi.first.units.measure.Voltage
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.lib.extensions.deg
+import frc.robot.lib.sysid.SysIdable
 import frc.robot.lib.universal_motor.UniversalTalonFX
 import org.littletonrobotics.junction.Logger
 
-class Hood : SubsystemBase() {
+class Hood : SubsystemBase(), SysIdable {
 
     private val motor =
         UniversalTalonFX(
@@ -20,6 +23,7 @@ class Hood : SubsystemBase() {
         )
 
     private val positionRequest = PositionTorqueCurrentFOC(0.0)
+    private val voltageRequest = VoltageOut(0.0)
 
     private val encoder = CANcoder(ENCODER_ID)
 
@@ -31,6 +35,10 @@ class Hood : SubsystemBase() {
 
     init {
         encoder.configurator.apply(ENCODER_CONFIG)
+    }
+
+    override fun setVoltage(voltage: Voltage) {
+        motor.setControl(voltageRequest.withOutput(voltage))
     }
 
     fun setAngle(angle: Angle): Command = runOnce {
