@@ -33,8 +33,7 @@ class Roller : SubsystemBase() {
         )
 
     @AutoLogOutput
-    var hasFrontBall: Boolean = false
-        private set
+    val HasBall = Trigger { rangeSensor.isInRange }
 
     val HasBall = Trigger { hasFrontBall }
 
