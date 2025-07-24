@@ -44,7 +44,7 @@ class Wrist : SubsystemBase() {
     }
 
     fun reset(): Command = runOnce {
-        setPoint = 0.0.degrees
+        setPoint = 0.degrees
         motor.setControl(positionRequest.withPosition(setPoint))
     }
 
