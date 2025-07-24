@@ -13,12 +13,19 @@ import frc.robot.lib.universal_motor.UniversalTalonFX
 import org.littletonrobotics.junction.AutoLogOutput
 
 val MOTOR_PORT = 0
-val SENSOR_ID = 0
+val MOTOR_FOLLOW_PORT = 1
+val SENSOR_ID = 11
 
 class Roller : SubsystemBase() {
     private val motor =
         UniversalTalonFX(
             MOTOR_PORT,
+            momentOfInertia = (0.002).kilogramSquareMeters,
+        )
+
+    private val motor_follow =
+        UniversalTalonFX(
+            MOTOR_FOLLOW_PORT,
             momentOfInertia = (0.002).kilogramSquareMeters,
         )
 
@@ -35,7 +42,6 @@ class Roller : SubsystemBase() {
     @AutoLogOutput
     val HasBall = Trigger { rangeSensor.isInRange }
 
-    val HasBall = Trigger { hasFrontBall }
 
     private fun setVoltage(voltage: Voltage) {
         motor.setControl(voltageRequest.withOutput(voltage))
@@ -51,6 +57,5 @@ class Roller : SubsystemBase() {
         motor.updateInputs()
         rangeSensor.updateInputs()
 
-        hasFrontBall = rangeSensor.isInRange
     }
 }
