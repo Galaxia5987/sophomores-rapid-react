@@ -28,7 +28,7 @@ class Wrist : SubsystemBase() {
     private val motor =
         UniversalTalonFX(
             MOTOR_PORT,
-            momentOfInertia = (0.0025).kilogramSquareMeters,
+            momentOfInertia = 0.0025.kg2m,
             gearRatio = GEAR_RATIO,
             config = TalonFXConfiguration()
         )
