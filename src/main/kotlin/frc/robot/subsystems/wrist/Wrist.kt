@@ -29,27 +29,18 @@ class Wrist : SubsystemBase() {
     private val positionRequest = PositionVoltage(0.0)
 
     fun setAngle(angle: Angle): Command = runOnce {
-        setPoint = angle
+        setpoint = angle
         motor.setControl(positionRequest.withPosition(angle))
     }
 
-    fun stepUp(): Command = runOnce {
-        setPoint += 10.degrees
-        motor.setControl(positionRequest.withPosition(setPoint))
-    }
-
-    fun stepDown(): Command = runOnce {
-        setPoint -= 10.degrees
-        motor.setControl(positionRequest.withPosition(setPoint))
-    }
 
     fun reset(): Command = runOnce {
-        setPoint = 0.0.degrees
-        motor.setControl(positionRequest.withPosition(setPoint))
+        setpoint = 0.0.degrees
+        motor.setControl(positionRequest.withPosition(setpoint))
     }
 
-    fun isAtSetpoint(): Boolean {
-        val error = motor.inputs.position.minus(setPoint).`in`(degrees)
+    fun isNearSetpoint(): Boolean {
+        val error = motor.inputs.position.minus(setpoint).`in`(degrees)
         return error.absoluteValue < 1.0
     }
 
