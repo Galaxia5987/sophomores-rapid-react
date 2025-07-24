@@ -21,7 +21,7 @@ class Flywheel : SubsystemBase(), SysIdable {
     private val auxMotor =
         UniversalTalonFX(AUX_MOTOR_PORT, config = MOTOR_CONFIG)
     private val velocityTorque = VelocityTorqueCurrentFOC(0.0)
-    private val velocityVoltage = VoltageOut(0.0)
+    private val voltageOut = VoltageOut(0.0)
 
     private var velocitySetpoint = 0.rps
 
@@ -43,7 +43,7 @@ class Flywheel : SubsystemBase(), SysIdable {
     fun stop() = setVelocity(0.rps).withName("Flywheel/stop")
 
     override fun setVoltage(voltage: Voltage) {
-        mainMotor.setControl(velocityVoltage.withOutput(voltage))
+        mainMotor.setControl(voltageOut.withOutput(voltage))
     }
 
     override fun periodic() {
