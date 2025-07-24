@@ -11,6 +11,7 @@ import frc.robot.lib.Gains
 import frc.robot.lib.extensions.amps
 import frc.robot.lib.extensions.get
 
+val TOLERANCE = 4.deg;
 val SENSOR_PORT = 0
 val MOTOR_PORT = 1
 val GAINS = Gains(1.0)
