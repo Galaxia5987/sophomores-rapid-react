@@ -9,10 +9,15 @@ import com.ctre.phoenix6.signals.InvertedValue
 import com.ctre.phoenix6.signals.NeutralModeValue
 import frc.robot.lib.Gains
 import frc.robot.lib.extensions.amps
+import frc.robot.lib.extensions.cm
+import frc.robot.lib.extensions.deg
 import frc.robot.lib.extensions.get
+import frc.robot.lib.extensions.m
+import frc.robot.lib.extensions.rad
+import frc.robot.lib.extensions.rot
 
 val TOLERANCE = 4.deg;
-val SENSOR_PORT = 0
+val HALL_EFFECT_SENSOR_PORT = 0
 val MOTOR_PORT = 1
 val GAINS = Gains(1.0)
 val STATOR_CURRENT_LIMIT = 80.amps
