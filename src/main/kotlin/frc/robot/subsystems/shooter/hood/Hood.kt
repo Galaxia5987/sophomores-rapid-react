@@ -2,6 +2,7 @@ package frc.robot.subsystems.shooter.hood
 
 import com.ctre.phoenix6.controls.PositionTorqueCurrentFOC
 import com.ctre.phoenix6.hardware.CANcoder
+import edu.wpi.first.math.MathUtil
 import edu.wpi.first.units.measure.Angle
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.SubsystemBase
@@ -23,7 +24,7 @@ class Hood : SubsystemBase() {
     private var setpoint: Angle = 0.deg
 
     private val isAtSetpoint = Trigger {
-        Utils.epsilonEquals(
+        MathUtil.isNear(
             setpoint[deg],
             motor.inputs.position[deg],
             SETPOINT_TOLERANCE[deg]
