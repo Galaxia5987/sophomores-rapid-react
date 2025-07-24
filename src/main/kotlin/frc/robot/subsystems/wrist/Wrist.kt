@@ -15,7 +15,7 @@ import org.littletonrobotics.junction.mechanism.LoggedMechanism2d
 import org.littletonrobotics.junction.mechanism.LoggedMechanismLigament2d
 
 private const val GEAR_RATIO = 1/69.82
-val POINTE_TOLERANCE = 1.0.degrees
+val POINTE_TOLERANCE = 1.0.deg
 val MOTOR_PORT = 2
 @AutoLogOutput private var mechanism = LoggedMechanism2d(6.0, 4.0)
 private var root = mechanism.getRoot("Wrist", 3.0, 2.0)
