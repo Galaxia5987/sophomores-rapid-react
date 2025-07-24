@@ -16,14 +16,14 @@ import frc.robot.lib.universal_motor.UniversalTalonFX
 import org.littletonrobotics.junction.Logger
 
 class Flywheel : SubsystemBase(), SysIdable {
-    private val velocityTorque = VelocityTorqueCurrentFOC(0.0)
-    private val velocityVoltage = VoltageOut(0.0)
-
-    private var velocitySetpoint = 0.rps
     private val mainMotor =
         UniversalTalonFX(MAIN_MOTOR_PORT, config = MOTOR_CONFIG)
     private val auxMotor =
         UniversalTalonFX(AUX_MOTOR_PORT, config = MOTOR_CONFIG)
+    private val velocityTorque = VelocityTorqueCurrentFOC(0.0)
+    private val velocityVoltage = VoltageOut(0.0)
+
+    private var velocitySetpoint = 0.rps
 
     init {
         auxMotor.setControl(Follower(MAIN_MOTOR_PORT, false))
