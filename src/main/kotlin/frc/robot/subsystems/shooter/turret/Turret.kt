@@ -14,10 +14,10 @@ import frc.robot.lib.universal_motor.UniversalTalonFX
 import org.littletonrobotics.junction.Logger
 
 class Turret : SubsystemBase() {
-    val motor = UniversalTalonFX(MOTOR_ID, config = MOTOR_CONFIG)
-    var angleSetpoint = 0.deg
-    val hallEffectSensor = DigitalInput(HALL_EFFECT_SENSOR_PORT)
-    val motionMagicTorque = MotionMagicTorqueCurrentFOC(0.0)
+    private val motor = UniversalTalonFX(MOTOR_ID, config = MOTOR_CONFIG)
+    private var angleSetpoint = 0.deg
+    private val hallEffectSensor = DigitalInput(HALL_EFFECT_SENSOR_PORT)
+    private val motionMagicTorque = MotionMagicTorqueCurrentFOC(0.0)
     val isAtResetPoint =
         Trigger(hallEffectSensor::get)
             .onTrue(runOnce { motor.reset(0.rot) })
