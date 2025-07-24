@@ -7,7 +7,9 @@ import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.lib.extensions.get
+import frc.robot.lib.extensions.rps
 import frc.robot.lib.extensions.sec
+import frc.robot.lib.sysid.SysIdable
 import frc.robot.lib.universal_motor.UniversalTalonFX
 import org.littletonrobotics.junction.Logger
 
@@ -15,7 +17,7 @@ class Flywheel : SubsystemBase(), SysIdable {
     private val velocityTorque = VelocityTorqueCurrentFOC(0.0)
     private val velocityVoltage = VoltageOut(0.0)
 
-    private var velocitySetpoint = STOP_VELOCITY
+    private var velocitySetpoint = 0.rps
     private val motor = UniversalTalonFX(port, config = MOTOR_CONFIG)
 
     val isAtSetVelocity =
@@ -29,7 +31,7 @@ class Flywheel : SubsystemBase(), SysIdable {
     }
 
     fun stop() =
-        setVelocity(STOP_VELOCITY).withName("FlyWheel/stop")
+        setVelocity(0.rps).withName("FlyWheel/stop")
 
     override fun periodic() {
         motor.updateInputs()

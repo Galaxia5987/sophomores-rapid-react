@@ -6,7 +6,6 @@ import com.ctre.phoenix6.configs.MotorOutputConfigs
 import com.ctre.phoenix6.configs.TalonFXConfiguration
 import com.ctre.phoenix6.signals.InvertedValue
 import com.ctre.phoenix6.signals.NeutralModeValue
-import edu.wpi.first.units.Units
 import frc.robot.lib.Gains
 import frc.robot.lib.extensions.amps
 import frc.robot.lib.extensions.get
@@ -20,7 +19,6 @@ val SUPPLY_CURRENT_LIMIT = 40.amps
 val GAINS = Gains(kP = 2.0)
 val TOLERANCE = 0.1.rps
 val DEBOUNCE = 0.2.sec
-val STOP_VELOCITY = Units.RotationsPerSecond.zero()
 val MOTOR_CONFIG =
     TalonFXConfiguration().apply {
         MotorOutput =
