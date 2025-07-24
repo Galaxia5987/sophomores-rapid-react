@@ -15,7 +15,7 @@ import org.littletonrobotics.junction.Logger
 
 private const val GEAR_RATIO = 0.0
  val POINTE_TOLERANCE=1.0.degrees
-val MOTOR_PORT = 0
+val MOTOR_PORT = 2
 
 class Wrist : SubsystemBase() {
     @AutoLogOutput private var setPoint: Angle = 0.0.degrees
