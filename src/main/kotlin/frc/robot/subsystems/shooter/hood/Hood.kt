@@ -43,7 +43,7 @@ class Hood : SubsystemBase() {
 
     override fun periodic() {
         motor.updateInputs()
-        if(CURRENT_MODE == Mode.REAL) {
+        if (CURRENT_MODE == Mode.REAL) {
             motor.reset(encoder.absolutePosition.value)
         }
         Logger.processInputs("Subsystems/$name", motor.inputs)
