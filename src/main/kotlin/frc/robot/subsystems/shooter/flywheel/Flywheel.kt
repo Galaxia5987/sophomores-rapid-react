@@ -31,8 +31,8 @@ class Flywheel : SubsystemBase(), SysIdable {
 
     val isAtSetVelocity =
         Trigger {
-            mainMotor.inputs.velocity.isNear(velocitySetpoint, TOLERANCE)
-        }
+                mainMotor.inputs.velocity.isNear(velocitySetpoint, TOLERANCE)
+            }
             .debounce(DEBOUNCE[sec])
 
     fun setVelocity(velocity: AngularVelocity): Command = runOnce {
