@@ -14,8 +14,8 @@ import frc.robot.lib.extensions.sec
 
 const val MAIN_MOTOR_PORT = 5
 const val AUX_MOTOR_PORT = 6
-val STATOR_CURRENT_LIMIT = 80.amps
-val SUPPLY_CURRENT_LIMIT = 40.amps
+val STATOR_CURRENT_LIMIT = 100.amps
+val SUPPLY_CURRENT_LIMIT = 50.amps
 val GAINS = Gains(kP = 2.0)
 val TOLERANCE = 0.1.rps
 val DEBOUNCE = 0.2.sec
