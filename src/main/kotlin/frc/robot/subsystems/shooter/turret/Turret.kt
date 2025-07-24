@@ -11,13 +11,13 @@ import org.littletonrobotics.junction.Logger
 
 class Turret : SubsystemBase() {
     val motor = UniversalTalonFX(MOTOR_PORT, config = MOTOR_CONFIG)
-    var angleSetpoint = Units.Rotations.zero()
+    var angleSetpoint = 0.deg
     val sensor = DigitalInput(SENSOR_PORT)
     val motionMagicTorque = MotionMagicTorqueCurrentFOC(0.0)
     val isAtResetPoint =
-        Trigger { sensor.get() }
-            .onTrue(runOnce { motor.reset(Units.Rotations.zero()) })
-    val isAtSetpoint = Trigger { motor.inputs.position == angleSetpoint }
+        Trigger(hallEffectSensor::get)
+            .onTrue(runOnce { motor.reset(0.rot) })
+    val isAtSetpoint = Trigger { motor.inputs.position.isNear(angleSetpoint, TOLERANCE) }
     fun setAngle(position: Angle) = runOnce {
         motor.setControl(motionMagicTorque.withPosition(position))
     }
