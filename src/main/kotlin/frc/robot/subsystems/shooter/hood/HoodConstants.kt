@@ -12,7 +12,7 @@ import frc.robot.lib.extensions.amps
 import frc.robot.lib.extensions.deg
 import frc.robot.lib.extensions.get
 
-val MOTOR_ID = 3
+const val MOTOR_ID = 3
 
 val SETPOINT_TOLERANCE = 0.5.deg
 
@@ -20,7 +20,9 @@ val STATOR_LIMIT = 30.amps
 val SUPPLY_LIMIT: Current = STATOR_LIMIT * 2.0
 val PID_GAINS = Gains(kP = 1.0)
 
-val ENCODER_ID = 10
+const val ENCODER_ID = 10
+const val ENCODER_TO_MECHANISM_RATIO = 1.0
+const val MOTOR_TO_SENSOR_RATIO = 1.0
 
 val MOTOR_CONFIG =
     TalonFXConfiguration().apply {
@@ -35,8 +37,10 @@ val MOTOR_CONFIG =
 
         Feedback =
             FeedbackConfigs().apply {
-                FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder
+                FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder
                 FeedbackRemoteSensorID = ENCODER_ID
+                SensorToMechanismRatio = ENCODER_TO_MECHANISM_RATIO
+                RotorToSensorRatio = MOTOR_TO_SENSOR_RATIO
             }
     }
 
