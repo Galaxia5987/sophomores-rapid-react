@@ -174,6 +174,8 @@ val Number.rot_ps: AngularVelocity
     get() = toUnit(Units.RotationsPerSecond::of)
 val Number.rotationsPerSecond: AngularVelocity
     get() = toUnit(Units.RotationsPerSecond::of)
+val Number.rps: AngularVelocity
+    get() = toUnit(Units.RotationsPerSecond::of)
 val Number.rad_ps: AngularVelocity
     get() = toUnit(Units.RadiansPerSecond::of)
 val Number.radiansPerSecond: AngularVelocity
