@@ -29,7 +29,7 @@ fun bindRobotStateTriggers() {
             onTrue(
                 parallel(
                     setIntakeing(),
-                    flywheel.setVelocity(0.rps),
+                    flywheel.slowRotation(),
                     hopper.stop(),
                     roller.stop()
                 )
