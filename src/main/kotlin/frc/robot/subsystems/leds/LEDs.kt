@@ -15,6 +15,6 @@ fun applyPattern(pattern: LEDPattern): Command = Commands.runOnce({
     pattern.applyTo(ledBuffer)
 })
 
-fun StateColors.applyPattern() {
+fun STATE_COLOR.applyPattern() {
     this.pattern.applyTo(ledBuffer)
 }
