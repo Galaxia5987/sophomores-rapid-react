@@ -21,18 +21,14 @@ fun poseToMoveTo(distance: Distance) =
         drive.pose.translation / (RobotDistanceFromBasket[m] / distance[m])
     )
 
-fun DriveToShootingPoint() =
+fun driveToShootingPoint() =
     ConditionalCommand(
-        run {
-            drive.defer { alignToPose(poseToMoveTo(MinDistanceFromBasket)) }
-        },
-        run {
-            drive.defer { alignToPose(poseToMoveTo(MaxDistanceFromBasket)) }
-        },
+        drive.defer { alignToPose(poseToMoveTo(MinDistanceFromBasket)) },
+        drive.defer { alignToPose(poseToMoveTo(MaxDistanceFromBasket)) },
         isOuterDeadZone
     )
 
-fun Shoot() =
+fun shoot() =
     Commands.sequence(
         Commands.runOnce(drive::stopWithX, drive),
         flywheel.setVelocity(0.rps),

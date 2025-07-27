@@ -14,12 +14,12 @@ private var state = RobotStates.Idle
 private val BallsEmpty = roller.HasBall.negate().and(hopper.hasBall.negate())
 private val IsShooting = Trigger { state == RobotStates.Shooting }
 val isOuterDeadZone = Trigger {
-    RobotDistanceFromBasket > MaxDistanceFromBasket
+    robotDistanceFromBasket > maxDistanceFromBasket
 }
 private val isInDeadZone = Trigger {
-    RobotDistanceFromBasket[m].between(
-        MinDistanceFromBasket[m],
-        MaxDistanceFromBasket[m]
+    robotDistanceFromBasket[m].between(
+        minDistanceFromBasket[m],
+        maxDistanceFromBasket[m]
     )
 }
 
@@ -31,8 +31,8 @@ fun bindRobotStateTriggers() {
             onTrue(hopper.stop())
             onTrue(roller.stop())
         }
-        and(isInDeadZone).onTrue(Shoot())
-        and(isInDeadZone.negate()).onTrue(DriveToShootingPoint())
+        and(isInDeadZone).onTrue(shoot())
+        and(isInDeadZone.negate()).onTrue(driveToShootingPoint())
     }
 }
 
