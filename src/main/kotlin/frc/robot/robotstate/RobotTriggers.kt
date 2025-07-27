@@ -1,6 +1,7 @@
 package frc.robot.robotstate
 
 import edu.wpi.first.wpilibj2.command.Commands
+import edu.wpi.first.wpilibj2.command.Commands.parallel
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.flywheel
 import frc.robot.hopper
@@ -25,10 +26,14 @@ private val isInDeadZone = Trigger {
 fun bindRobotStateTriggers() {
     IsShooting.apply {
         and(ballsEmpty).apply {
-            onTrue(setIntakeing())
-            onTrue(flywheel.setVelocity(0.rps)) // TODO() place Holder 0.rps
-            onTrue(hopper.stop())
-            onTrue(roller.stop())
+            onTrue(
+                parallel(
+                    setIntakeing(),
+                    flywheel.setVelocity(0.rps),
+                    hopper.stop(),
+                    roller.stop()
+                )
+            ) // TODO() place Holder 0.rps
         }
         and(isInDeadZone).onTrue(shoot())
         and(isInDeadZone.negate()).onTrue(driveToShootingPoint())
