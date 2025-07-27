@@ -1,6 +1,6 @@
 package frc.robot.robotstate
 
-enum class RobotStates() {
+enum class ROBOT_STATE() {
     Idle,
     Intakeing,
     Shooting

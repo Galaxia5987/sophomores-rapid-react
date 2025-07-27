@@ -10,16 +10,16 @@ import frc.robot.lib.extensions.m
 import frc.robot.lib.extensions.rps
 import frc.robot.roller
 
-private var state = RobotStates.Idle
+private var state = ROBOT_STATE.Idle
 private val BallsEmpty = roller.HasBall.negate().and(hopper.hasBall.negate())
-private val IsShooting = Trigger { state == RobotStates.Shooting }
+private val IsShooting = Trigger { state == ROBOT_STATE.Shooting }
 val isOuterDeadZone = Trigger {
-    robotDistanceFromBasket > maxDistanceFromBasket
+    robotDistanceFromBasket > MAX_DISTANCE_FROM_BASKET
 }
 private val isInDeadZone = Trigger {
     robotDistanceFromBasket[m].between(
-        minDistanceFromBasket[m],
-        maxDistanceFromBasket[m]
+        MIN_DISTANCE_FROM_BASKET[m],
+        MAX_DISTANCE_FROM_BASKET[m]
     )
 }
 
@@ -36,9 +36,9 @@ fun bindRobotStateTriggers() {
     }
 }
 
-private fun SetRobotState(newStates: RobotStates) =
+private fun SetRobotState(newStates: ROBOT_STATE) =
     Commands.runOnce({ state = newStates })
 
-fun SetShooting() = SetRobotState(RobotStates.Shooting)
+fun SetShooting() = SetRobotState(ROBOT_STATE.Shooting)
 
-fun SetIntakeing() = SetRobotState(RobotStates.Intakeing)
+fun SetIntakeing() = SetRobotState(ROBOT_STATE.Intakeing)

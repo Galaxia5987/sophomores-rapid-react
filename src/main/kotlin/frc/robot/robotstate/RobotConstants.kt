@@ -1,9 +1,7 @@
 package frc.robot.robotstate
 
-import frc.robot.drive
-import frc.robot.lib.extensions.distanceFromPoint
+
 import frc.robot.lib.extensions.m
-import frc.robot.lib.extensions.rotationFromPoint
 import frc.robot.lib.getPose2d
 
 val MIN_DISTANCE_FROM_BASKET = 0.5.m

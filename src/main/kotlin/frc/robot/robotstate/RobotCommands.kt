@@ -19,9 +19,9 @@ import frc.robot.subsystems.drive.alignToPose
 import frc.robot.turret
 
 val robotDistanceFromBasket
-    get() = drive.pose.distanceFromPoint(basketLocation.translation)
+    get() = drive.pose.distanceFromPoint(BASKET_LOCATION.translation)
 val turretRotationToBasket
-    get() = drive.pose.rotationFromPoint(basketLocation.translation)
+    get() = drive.pose.rotationFromPoint(BASKET_LOCATION.translation)
 
 fun poseToMoveTo(distance: Distance) =
     getPose2d(
@@ -30,8 +30,8 @@ fun poseToMoveTo(distance: Distance) =
 
 fun driveToShootingPoint() =
     ConditionalCommand(
-        drive.defer { alignToPose(poseToMoveTo(minDistanceFromBasket)) },
-        drive.defer { alignToPose(poseToMoveTo(maxDistanceFromBasket)) },
+        drive.defer { alignToPose(poseToMoveTo(MIN_DISTANCE_FROM_BASKET)) },
+        drive.defer { alignToPose(poseToMoveTo(MAX_DISTANCE_FROM_BASKET)) },
         isOuterDeadZone
     ).withName("RobotCommands/driveToShootingPoint")
 
