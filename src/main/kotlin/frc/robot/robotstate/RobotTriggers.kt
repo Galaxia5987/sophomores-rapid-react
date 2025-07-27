@@ -17,7 +17,7 @@ val isOuterDeadZone = Trigger {
     robotDistanceFromBasket > MAX_DISTANCE_FROM_BASKET
 }
 private val isInDeadZone = Trigger {
-    robotDistanceFromBasket[m].between(
+    !robotDistanceFromBasket[m].between(
         MIN_DISTANCE_FROM_BASKET[m],
         MAX_DISTANCE_FROM_BASKET[m]
     )
@@ -35,8 +35,8 @@ fun bindRobotStateTriggers() {
                 )
             ) // TODO() place Holder 0.rps
         }
-        and(isInDeadZone).onTrue(shoot())
-        and(isInDeadZone.negate()).onTrue(driveToShootingPoint())
+        and(isInDeadZone.negate()).onTrue(shoot())
+        and(isInDeadZone).onTrue(driveToShootingPoint())
     }
 }
 
