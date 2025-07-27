@@ -30,7 +30,7 @@ fun driveToShootingPoint() =
 
 fun shoot() =
     Commands.sequence(
-        Commands.runOnce(drive::stopWithX, drive),
+        drive.lock(),
         flywheel.setVelocity(0.rps),
         hopper.start(), // TODO() place Holder 0.rps
         roller.intake()

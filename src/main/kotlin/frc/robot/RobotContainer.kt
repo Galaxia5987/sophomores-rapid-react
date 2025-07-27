@@ -66,7 +66,7 @@ object RobotContainer {
             )
 
         // Switch to X pattern when X button is pressed
-        driverController.square().onTrue(runOnce(drive::stopWithX, drive))
+        driverController.square().onTrue(drive.lock())
 
         // Reset gyro / odometry
         val resetOdometry =
