@@ -10,7 +10,7 @@ import frc.robot.lib.extensions.m
 import frc.robot.lib.extensions.rps
 import frc.robot.roller
 
-private val BallsEmpty = roller.HasBall.negate().and(hopper.hasBall.negate())
+private val ballsEmpty = roller.HasBall.negate().and(hopper.hasBall.negate())
 private val IsShooting = Trigger { state == ROBOT_STATE.Shooting }
 val isOuterDeadZone = Trigger {
     robotDistanceFromBasket > MAX_DISTANCE_FROM_BASKET
@@ -24,7 +24,7 @@ private val isInDeadZone = Trigger {
 
 fun bindRobotStateTriggers() {
     IsShooting.apply {
-        and(BallsEmpty).apply {
+        and(ballsEmpty).apply {
             onTrue(SetIntakeing())
             onTrue(flywheel.setVelocity(0.rps)) // TODO() place Holder 0.rps
             onTrue(hopper.stop())
