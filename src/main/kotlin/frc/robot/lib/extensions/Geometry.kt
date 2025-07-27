@@ -63,7 +63,7 @@ fun Pose2d.distanceFromPoint(translationMeters: Translation2d): Distance =
     Units.Meters.of(this.translation.getDistance(translationMeters))
 
 fun Pose2d.rotationFromPoint(translation: Translation2d): Angle =
-    Units.Radian.of(atan2(this.y - translation.y, this.x - translation.x))
+    atan2(this.y - translation.y, this.x - translation.x).rad
 
 fun Pose3d.toTransform(): Transform3d =
     Transform3d(this.translation, this.rotation)
