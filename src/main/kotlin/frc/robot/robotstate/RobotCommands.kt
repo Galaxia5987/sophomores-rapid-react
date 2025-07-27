@@ -30,8 +30,8 @@ fun poseToMoveTo(distance: Distance) =
 
 fun driveToShootingPoint() =
     ConditionalCommand(
-        drive.defer { alignToPose(poseToMoveTo(MIN_DISTANCE_FROM_BASKET)) },
         drive.defer { alignToPose(poseToMoveTo(MAX_DISTANCE_FROM_BASKET)) },
+        drive.defer { alignToPose(poseToMoveTo(MIN_DISTANCE_FROM_BASKET)) },
         isOuterDeadZone
     ).withName("RobotCommands/driveToShootingPoint")
 
