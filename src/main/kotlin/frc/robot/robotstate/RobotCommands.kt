@@ -18,13 +18,13 @@ import frc.robot.turret
 
 fun poseToMoveTo(distance: Distance) =
     getPose2d(
-        drive.pose.translation / (RobotDistanceFromBasket[m] / distance[m])
+        drive.pose.translation / (robotDistanceFromBasket[m] / distance[m])
     )
 
 fun driveToShootingPoint() =
     ConditionalCommand(
-        drive.defer { alignToPose(poseToMoveTo(MinDistanceFromBasket)) },
-        drive.defer { alignToPose(poseToMoveTo(MaxDistanceFromBasket)) },
+        drive.defer { alignToPose(poseToMoveTo(minDistanceFromBasket)) },
+        drive.defer { alignToPose(poseToMoveTo(maxDistanceFromBasket)) },
         isOuterDeadZone
     )
 
