@@ -41,4 +41,4 @@ private fun SetRobotState(newStates: ROBOT_STATE) =
 
 fun SetShooting() = SetRobotState(ROBOT_STATE.Shooting)
 
-fun SetIntakeing() = SetRobotState(ROBOT_STATE.Intakeing)
+fun SetIntakeing() = SetRobotState(ROBOT_STATE.Intaking)
