@@ -25,7 +25,7 @@ private val isInDeadZone = Trigger {
 fun bindRobotStateTriggers() {
     IsShooting.apply {
         and(ballsEmpty).apply {
-            onTrue(SetIntakeing())
+            onTrue(setIntakeing())
             onTrue(flywheel.setVelocity(0.rps)) // TODO() place Holder 0.rps
             onTrue(hopper.stop())
             onTrue(roller.stop())
@@ -35,9 +35,9 @@ fun bindRobotStateTriggers() {
     }
 }
 
-private fun SetRobotState(newStates: ROBOT_STATE) =
+private fun setRobotState(newStates: ROBOT_STATE) =
     Commands.runOnce({ state = newStates })
 
-fun SetShooting() = SetRobotState(ROBOT_STATE.Shooting)
+fun setShooting() = setRobotState(ROBOT_STATE.Shooting)
 
-fun SetIntakeing() = SetRobotState(ROBOT_STATE.Intaking)
+fun setIntakeing() = setRobotState(ROBOT_STATE.Intaking)
