@@ -7,14 +7,21 @@ import frc.robot.drive
 import frc.robot.flywheel
 import frc.robot.hood
 import frc.robot.hopper
+import frc.robot.lib.extensions.distanceFromPoint
 import frc.robot.lib.extensions.get
 import frc.robot.lib.extensions.m
 import frc.robot.lib.extensions.rad
+import frc.robot.lib.extensions.rotationFromPoint
 import frc.robot.lib.extensions.rps
 import frc.robot.lib.getPose2d
 import frc.robot.roller
 import frc.robot.subsystems.drive.alignToPose
 import frc.robot.turret
+
+val robotDistanceFromBasket
+    get() = drive.pose.distanceFromPoint(basketLocation.translation)
+val turretRotationToBasket
+    get() = drive.pose.rotationFromPoint(basketLocation.translation)
 
 fun poseToMoveTo(distance: Distance) =
     getPose2d(
