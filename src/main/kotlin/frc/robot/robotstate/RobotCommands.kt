@@ -26,7 +26,7 @@ fun driveToShootingPoint() =
         drive.defer { alignToPose(poseToMoveTo(minDistanceFromBasket)) },
         drive.defer { alignToPose(poseToMoveTo(maxDistanceFromBasket)) },
         isOuterDeadZone
-    )
+    ).withName("RobotCommands/driveToShootingPoint")
 
 fun shoot() =
     Commands.sequence(
@@ -34,7 +34,7 @@ fun shoot() =
         flywheel.setVelocity(0.rps),
         hopper.start(), // TODO() place Holder 0.rps
         roller.intake()
-    )
+    ).withName("RobotCommands/shoot")
 
 fun setDefaultCommands() {
     turret.defaultCommand = run {
