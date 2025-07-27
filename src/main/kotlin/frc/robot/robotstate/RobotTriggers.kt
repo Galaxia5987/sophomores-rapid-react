@@ -10,7 +10,7 @@ import frc.robot.lib.extensions.m
 import frc.robot.lib.extensions.rps
 import frc.robot.roller
 
-private var state = ROBOT_STATE.Idle
+private var state = ROBOT_STATE.Idling
 private val BallsEmpty = roller.HasBall.negate().and(hopper.hasBall.negate())
 private val IsShooting = Trigger { state == ROBOT_STATE.Shooting }
 val isOuterDeadZone = Trigger {
