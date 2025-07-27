@@ -6,6 +6,6 @@ import frc.robot.lib.extensions.m
 import frc.robot.lib.extensions.rotationFromPoint
 import frc.robot.lib.getPose2d
 
-val minDistanceFromBasket = 0.5.m
-val maxDistanceFromBasket = 3.m
-val basketLocation = getPose2d()
+val MIN_DISTANCE_FROM_BASKET = 0.5.m
+val MAX_DISTANCE_FROM_BASKET = 3.m
+val BASKET_LOCATION = getPose2d()
