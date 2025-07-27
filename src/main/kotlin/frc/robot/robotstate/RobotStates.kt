@@ -5,3 +5,4 @@ enum class ROBOT_STATE() {
     Intaking,
     Shooting
 }
+var state = ROBOT_STATE.Idling
