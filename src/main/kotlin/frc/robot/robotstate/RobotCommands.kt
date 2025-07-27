@@ -38,8 +38,8 @@ fun shoot() =
 
 fun setDefaultCommands() {
     turret.defaultCommand = run {
-        turret.setAngle(0.rad)
-    } // TODO() place Holder 0.rad
+        turret.setAngle(turretRotationToBasket)
+    }
     hood.defaultCommand = run {
         hood.setAngle(0.rad)
     } // TODO() place Holder 0.rad
