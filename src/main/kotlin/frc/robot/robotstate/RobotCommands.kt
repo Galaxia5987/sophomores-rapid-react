@@ -1,6 +1,6 @@
 package frc.robot.robotstate
 
-import edu.wpi.first.wpilibj2.command.Commands
+import edu.wpi.first.wpilibj2.command.Commands.sequence
 import frc.robot.drive
 import frc.robot.flywheel
 import frc.robot.hood
@@ -39,7 +39,7 @@ fun driveToShootingPoint() =
         .withName("Drive/Drive to shooting point")
 
 fun shooting() =
-    Commands.sequence(
+    sequence(
             drive.lock(),
             flywheel.setVelocity(0.rps),
             hopper.start(), // TODO() place Holder 0.rps
@@ -48,7 +48,7 @@ fun shooting() =
         .withName("Drive/Shoot")
 
 fun stopShooting() =
-    Commands.sequence(flywheel.slowRotation(), hopper.stop(), roller.stop())
+    sequence(flywheel.slowRotation(), hopper.stop(), roller.stop())
 
 fun setDefaultCommands() {
     turret.defaultCommand = run { turret.setAngle(turretRotationToBasket) }
