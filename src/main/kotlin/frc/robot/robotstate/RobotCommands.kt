@@ -33,7 +33,7 @@ fun driveToShootingPoint() = drive.defer {
             drive.pose.translation / (robotDistanceFromBasket[m] / distance[m])
         )
     )
-}.withName("RobotCommands/driveToShootingPoint")
+}.withName("Drive/Drive to shooting point")
 
 fun shoot() =
     Commands.sequence(
@@ -41,7 +41,7 @@ fun shoot() =
         flywheel.setVelocity(0.rps),
         hopper.start(), // TODO() place Holder 0.rps
         roller.intake()
-    ).withName("RobotCommands/shoot")
+    ).withName("Drive/Shoot")
 
 fun setDefaultCommands() {
     turret.defaultCommand = run {
@@ -50,4 +50,7 @@ fun setDefaultCommands() {
     hood.defaultCommand = run {
         hood.setAngle(0.rad)
     } // TODO() place Holder 0.rad
+//    drive.defaultCommand = run {
+//        TODO() add auto rotation to drive
+//    }
 }
