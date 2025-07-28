@@ -17,7 +17,7 @@ private val isInDeadZone = Trigger {
 
 fun bindRobotStateTriggers() {
     IsShooting.apply {
-        and(ballsEmpty).apply { onTrue(setIntakeing(), stopShooting()) }
+        and(ballsEmpty).onTrue(setIntakeing(), stopShooting())
         and(isInDeadZone.negate()).onTrue(shooting())
         and(isInDeadZone).onTrue(driveToShootingPoint())
         onTrue(stateColor.SHOOTING.applyPattern())
