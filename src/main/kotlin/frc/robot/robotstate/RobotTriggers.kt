@@ -7,6 +7,7 @@ import frc.robot.lib.onTrue
 import frc.robot.roller
 import frc.robot.subsystems.leds.StateColor
 import frc.robot.subsystems.leds.applyPattern
+import kotlin.and
 
 private val ballsEmpty = roller.HasBall.negate().and(hopper.hasBall.negate())
 private val IsShooting = Trigger { state == RobotState.SHOOTING }
@@ -15,12 +16,24 @@ private val isInDeadZone = Trigger {
         MIN_DISTANCE_FROM_BASKET..MAX_DISTANCE_FROM_BASKET
 }
 
+private val IsIntaking = Trigger { state == RobotState.INTAKING }
+private val hasFrontBall = roller.HasBall
+private val hasBackBall = hopper.hasBall
+
 fun bindRobotStateTriggers() {
     IsShooting.apply {
         and(ballsEmpty).onTrue(setIntakeing(), stopShooting())
         and(isInDeadZone.negate()).onTrue(shooting())
         and(isInDeadZone).onTrue(driveToShootingPoint())
         onTrue(StateColor.SHOOTING.applyPattern())
+    }
+
+    IsIntaking.apply {
+        onTrue(StateColor.INTAKING.applyPattern())
+        and(hasFrontBall).and(hasBackBall).onTrue(roller.stop(), setShooting())
+        and(hasBackBall).and(hasFrontBall.negate()).onTrue(hopper.start())
+        and(hasFrontBall).onTrue(roller.stop())
+        and(hasBackBall.negate()).onTrue(hopper.start())
     }
 }
 
