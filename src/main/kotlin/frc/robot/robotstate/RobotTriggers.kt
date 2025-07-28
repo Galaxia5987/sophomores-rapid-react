@@ -5,8 +5,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.hopper
 import frc.robot.lib.onTrue
 import frc.robot.roller
+import frc.robot.subsystems.leds.StateColor
 import frc.robot.subsystems.leds.applyPattern
-import frc.robot.subsystems.leds.stateColor
 
 private val ballsEmpty = roller.HasBall.negate().and(hopper.hasBall.negate())
 private val IsShooting = Trigger { state == RobotState.SHOOTING }
@@ -20,7 +20,7 @@ fun bindRobotStateTriggers() {
         and(ballsEmpty).onTrue(setIntakeing(), stopShooting())
         and(isInDeadZone.negate()).onTrue(shooting())
         and(isInDeadZone).onTrue(driveToShootingPoint())
-        onTrue(stateColor.SHOOTING.applyPattern())
+        onTrue(StateColor.SHOOTING.applyPattern())
     }
 }
 
