@@ -38,7 +38,7 @@ fun driveToShootingPoint() =
         }
         .withName("Drive/Drive to shooting point")
 
-fun shoot() =
+fun shooting() =
     Commands.sequence(
             drive.lock(),
             flywheel.setVelocity(0.rps),
@@ -46,6 +46,9 @@ fun shoot() =
             roller.intake()
         )
         .withName("Drive/Shoot")
+
+fun stopShooting() =
+    Commands.sequence(flywheel.slowRotation(), hopper.stop(), roller.stop())
 
 fun setDefaultCommands() {
     turret.defaultCommand = run { turret.setAngle(turretRotationToBasket) }
