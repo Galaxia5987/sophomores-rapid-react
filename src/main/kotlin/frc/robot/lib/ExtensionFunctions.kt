@@ -82,5 +82,3 @@ fun CommandXboxController.rumbleCommand(): Command {
     return Commands.startEnd({ this.setRumble(1.0) }, { this.setRumble(0.0) })
 }
 
-fun Number.between(min: Double, max: Double): Boolean =
-    min < this.toDouble() && this.toDouble() < max
