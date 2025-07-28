@@ -5,10 +5,8 @@ import edu.wpi.first.wpilibj2.command.Commands.parallel
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.flywheel
 import frc.robot.hopper
-import frc.robot.lib.between
 import frc.robot.lib.extensions.get
 import frc.robot.lib.extensions.m
-import frc.robot.lib.extensions.rps
 import frc.robot.roller
 
 private val ballsEmpty = roller.HasBall.negate().and(hopper.hasBall.negate())
@@ -17,10 +15,9 @@ val isOuterDeadZone = Trigger {
     robotDistanceFromBasket > MAX_DISTANCE_FROM_BASKET
 }
 private val isInDeadZone = Trigger {
-    !robotDistanceFromBasket[m].between(
-        MIN_DISTANCE_FROM_BASKET[m],
-        MAX_DISTANCE_FROM_BASKET[m]
-    )
+    robotDistanceFromBasket[m] in
+            MIN_DISTANCE_FROM_BASKET[m]..
+            MAX_DISTANCE_FROM_BASKET[m]
 }
 
 fun bindRobotStateTriggers() {
