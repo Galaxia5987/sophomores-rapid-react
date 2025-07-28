@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.Commands.parallel
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.flywheel
 import frc.robot.hopper
+import frc.robot.lib.onTrue
 import frc.robot.roller
 
 private val ballsEmpty = roller.HasBall.negate().and(hopper.hasBall.negate())
@@ -19,12 +20,10 @@ fun bindRobotStateTriggers() {
     IsShooting.apply {
         and(ballsEmpty).apply {
             onTrue(
-                parallel(
                     setIntakeing(),
                     flywheel.slowRotation(),
                     hopper.stop(),
                     roller.stop()
-                )
             ) // TODO() place Holder 0.rps
         }
         and(isInDeadZone.negate()).onTrue(shoot())
