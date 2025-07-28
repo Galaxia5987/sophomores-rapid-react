@@ -9,7 +9,6 @@ import frc.robot.lib.extensions.deg
 import frc.robot.lib.extensions.distanceFromPoint
 import frc.robot.lib.extensions.get
 import frc.robot.lib.extensions.m
-import frc.robot.lib.extensions.rad
 import frc.robot.lib.extensions.rotationFromPoint
 import frc.robot.lib.extensions.rps
 import frc.robot.lib.getPose2d
@@ -23,12 +22,15 @@ val robotDistanceFromBasket
 val turretRotationToBasket
     get() = drive.pose.rotationFromPoint(HUB_LOCATION.translation)
 val hoodAngle
-    get() = when (robotDistanceFromBasket) {
-        0.m..HoodAngles.NEAR.distance -> HoodAngles.NEAR.angles
-        HoodAngles.NEAR.distance..HoodAngles.MED.distance -> HoodAngles.MED.angles
-        HoodAngles.MED.distance..HoodAngles.FAR.distance -> HoodAngles.FAR.angles
-        else -> 45.deg
-    }
+    get() =
+        when (robotDistanceFromBasket) {
+            0.m..HoodAngles.NEAR.distance -> HoodAngles.NEAR.angles
+            HoodAngles.NEAR.distance..HoodAngles.MED.distance ->
+                HoodAngles.MED.angles
+            HoodAngles.MED.distance..HoodAngles.FAR.distance ->
+                HoodAngles.FAR.angles
+            else -> 45.deg
+        }
 val isOuterDeadZone
     get() = robotDistanceFromBasket > MAX_DISTANCE_FROM_BASKET
 
@@ -41,7 +43,7 @@ fun driveToShootingPoint() =
             alignToPose(
                 getPose2d(
                     drive.pose.translation /
-                            (robotDistanceFromBasket[m] / distance[m])
+                        (robotDistanceFromBasket[m] / distance[m])
                 )
             )
         }
@@ -49,20 +51,18 @@ fun driveToShootingPoint() =
 
 fun shooting() =
     sequence(
-        drive.lock(),
-        flywheel.setVelocity(0.rps),
-        hopper.start(), // TODO() place Holder 0.rps
-        roller.intake()
-    )
+            drive.lock(),
+            flywheel.setVelocity(0.rps),
+            hopper.start(), // TODO() place Holder 0.rps
+            roller.intake()
+        )
         .withName("$name/Shooting")
 
 fun stopShooting() =
-    sequence(flywheel.slowRotation(), hopper.stop(), roller.stop()).withName("$name/StopShooting")
-
+    sequence(flywheel.slowRotation(), hopper.stop(), roller.stop())
+        .withName("$name/StopShooting")
 
 fun setDefaultCommands() {
     turret.defaultCommand = run { turret.setAngle(turretRotationToBasket) }
-    hood.defaultCommand = run {
-        hood.setAngle(hoodAngle)
-    }
+    hood.defaultCommand = run { hood.setAngle(hoodAngle) }
 }
