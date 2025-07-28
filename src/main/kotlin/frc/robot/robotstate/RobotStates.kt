@@ -1,9 +1,9 @@
 package frc.robot.robotstate
 
-enum class robotState() {
+enum class RobotState() {
     IDLING,
     INTAKING,
     SHOOTING
 }
 
-var state = robotState.IDLING
+var state = RobotState.IDLING
