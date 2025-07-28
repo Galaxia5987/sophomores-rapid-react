@@ -9,7 +9,7 @@ import frc.robot.subsystems.leds.applyPattern
 import frc.robot.subsystems.leds.stateColor
 
 private val ballsEmpty = roller.HasBall.negate().and(hopper.hasBall.negate())
-private val IsShooting = Trigger { state == robotState.SHOOTING }
+private val IsShooting = Trigger { state == RobotState.SHOOTING }
 private val isInDeadZone = Trigger {
     robotDistanceFromBasket in
         MIN_DISTANCE_FROM_BASKET..MAX_DISTANCE_FROM_BASKET
@@ -24,9 +24,9 @@ fun bindRobotStateTriggers() {
     }
 }
 
-private fun setRobotState(newStates: robotState) =
+private fun setRobotState(newStates: RobotState) =
     Commands.runOnce({ state = newStates })
 
-fun setShooting() = setRobotState(robotState.SHOOTING)
+fun setShooting() = setRobotState(RobotState.SHOOTING)
 
-fun setIntakeing() = setRobotState(robotState.INTAKING)
+fun setIntakeing() = setRobotState(RobotState.INTAKING)
