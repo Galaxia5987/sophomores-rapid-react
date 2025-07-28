@@ -11,10 +11,8 @@ private val ledStrip =
     }
 private val ledBuffer = AddressableLEDBuffer(STRIP_LENGTH)
 
-fun applyPattern(pattern: LEDPattern): Command = Commands.runOnce({
-    pattern.applyTo(ledBuffer)
-})
+fun applyPattern(pattern: LEDPattern): Command =
+    Commands.runOnce({ pattern.applyTo(ledBuffer) })
 
-fun stateColor.applyPattern() = Commands.runOnce({
-    this.pattern.applyTo(ledBuffer)
-})
+fun stateColor.applyPattern() =
+    Commands.runOnce({ this.pattern.applyTo(ledBuffer) })
