@@ -28,6 +28,7 @@ fun bindRobotStateTriggers() {
         }
         and(isInDeadZone.negate()).onTrue(shoot())
         and(isInDeadZone).onTrue(driveToShootingPoint())
+        onTrue(stateColor.SHOOTING.applyPattern())
     }
 }
 
