@@ -45,10 +45,11 @@ fun shooting() =
             hopper.start(), // TODO() place Holder 0.rps
             roller.intake()
         )
-        .withName("Drive/Shoot")
+        .withName("$name/Shooting")
 
 fun stopShooting() =
-    sequence(flywheel.slowRotation(), hopper.stop(), roller.stop())
+    sequence(flywheel.slowRotation(), hopper.stop(), roller.stop()).withName("$name/StopShooting")
+
 
 fun setDefaultCommands() {
     turret.defaultCommand = run { turret.setAngle(turretRotationToBasket) }
