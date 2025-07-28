@@ -23,17 +23,14 @@ val robotDistanceFromBasket
 val turretRotationToBasket
     get() = drive.pose.rotationFromPoint(BASKET_LOCATION.translation)
 
-fun poseToMoveTo(distance: Distance) =
-    getPose2d(
-        drive.pose.translation / (robotDistanceFromBasket[m] / distance[m])
+fun driveToShootingPoint() = drive.defer {
+    val distance = if (isOuterDeadZone.asBoolean) MAX_DISTANCE_FROM_BASKET else MIN_DISTANCE_FROM_BASKET
+    alignToPose(
+        getPose2d(
+            drive.pose.translation / (robotDistanceFromBasket[m] / distance[m])
+        )
     )
-
-fun driveToShootingPoint() =
-    ConditionalCommand(
-        drive.defer { alignToPose(poseToMoveTo(MAX_DISTANCE_FROM_BASKET)) },
-        drive.defer { alignToPose(poseToMoveTo(MIN_DISTANCE_FROM_BASKET)) },
-        isOuterDeadZone
-    ).withName("RobotCommands/driveToShootingPoint")
+}.withName("RobotCommands/driveToShootingPoint")
 
 fun shoot() =
     Commands.sequence(
