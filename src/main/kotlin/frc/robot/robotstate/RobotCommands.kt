@@ -1,6 +1,7 @@
 package frc.robot.robotstate
 
 import edu.wpi.first.wpilibj2.command.Commands
+import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.drive
 import frc.robot.flywheel
 import frc.robot.hood
@@ -20,9 +21,13 @@ val robotDistanceFromBasket
     get() = drive.pose.distanceFromPoint(HUB_LOCATION.translation)
 val turretRotationToBasket
     get() = drive.pose.rotationFromPoint(HUB_LOCATION.translation)
+val isOuterDeadZone
+    get() =
+        robotDistanceFromBasket > MAX_DISTANCE_FROM_BASKET
+
 
 fun driveToShootingPoint() = drive.defer {
-    val distance = if (isOuterDeadZone.asBoolean) MAX_DISTANCE_FROM_BASKET else MIN_DISTANCE_FROM_BASKET
+    val distance = if (isOuterDeadZone) MAX_DISTANCE_FROM_BASKET else MIN_DISTANCE_FROM_BASKET
     alignToPose(
         getPose2d(
             drive.pose.translation / (robotDistanceFromBasket[m] / distance[m])

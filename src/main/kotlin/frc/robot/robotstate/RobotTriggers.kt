@@ -11,9 +11,6 @@ import frc.robot.roller
 
 private val ballsEmpty = roller.HasBall.negate().and(hopper.hasBall.negate())
 private val IsShooting = Trigger { state == ROBOT_STATE.Shooting }
-val isOuterDeadZone = Trigger {
-    robotDistanceFromBasket > MAX_DISTANCE_FROM_BASKET
-}
 private val isInDeadZone = Trigger {
     robotDistanceFromBasket in
             MIN_DISTANCE_FROM_BASKET..
