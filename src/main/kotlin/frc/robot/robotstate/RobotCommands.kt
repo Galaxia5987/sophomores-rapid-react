@@ -27,8 +27,10 @@ val hoodAngle
             0.m..HoodAngles.NEAR.distance -> HoodAngles.NEAR.angles
             HoodAngles.NEAR.distance..HoodAngles.MED.distance ->
                 HoodAngles.MED.angles
+
             HoodAngles.MED.distance..HoodAngles.FAR.distance ->
                 HoodAngles.FAR.angles
+
             else -> 45.deg
         }
 val isOuterDeadZone
@@ -43,7 +45,7 @@ fun driveToShootingPoint() =
             alignToPose(
                 getPose2d(
                     drive.pose.translation /
-                        (robotDistanceFromBasket[m] / distance[m])
+                            (robotDistanceFromBasket[m] / distance[m])
                 )
             )
         }
@@ -51,11 +53,11 @@ fun driveToShootingPoint() =
 
 fun shooting() =
     sequence(
-            drive.lock(),
-            flywheel.setVelocity(0.rps),
-            hopper.start(), // TODO() place Holder 0.rps
-            roller.intake()
-        )
+        drive.lock(),
+        flywheel.setVelocity(0.rps),
+        hopper.start(), // TODO() place Holder 0.rps
+        roller.intake()
+    )
         .withName("$name/Shooting")
 
 fun stopShooting() =
