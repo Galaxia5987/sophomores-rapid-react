@@ -40,12 +40,13 @@ class Flywheel : SubsystemBase(), SysIdable {
             velocitySetpoint = velocity
             mainMotor.setControl(velocityTorque.withVelocity(velocity))
         }
-            .withName("Flywheel/setVelocity")
+            .withName("$name/setVelocity")
 
     fun slowRotation() =
-        setVelocity(SLOW_ROTATION)
 
-    fun stop() = setVelocity(0.rps).withName("Flywheel/stop")
+        setVelocity(SLOW_ROTATION).withName("$name/slowRotation")
+
+    fun stop() = setVelocity(0.rps).withName("$name/stop")
 
     override fun setVoltage(voltage: Voltage) {
         mainMotor.setControl(voltageOut.withOutput(voltage))
