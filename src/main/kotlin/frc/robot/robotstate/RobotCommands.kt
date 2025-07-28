@@ -27,9 +27,7 @@ val hoodAngle
         0.m..HoodAngles.NEAR.distance -> HoodAngles.NEAR.angles
         HoodAngles.NEAR.distance..HoodAngles.MED.distance -> HoodAngles.MED.angles
         HoodAngles.MED.distance..HoodAngles.FAR.distance -> HoodAngles.FAR.angles
-        else -> {
-            45.deg
-        }
+        else -> 45.deg
     }
 val isOuterDeadZone
     get() = robotDistanceFromBasket > MAX_DISTANCE_FROM_BASKET
