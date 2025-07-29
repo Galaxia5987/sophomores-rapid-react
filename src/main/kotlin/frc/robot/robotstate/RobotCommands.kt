@@ -32,6 +32,24 @@ val hoodAngle
                 HoodAngles.FAR.angles
             else -> 45.deg
         }
+val flywheelTargetVelocity
+    get() =
+        when (robotDistanceFromBasket) {
+            0.2..0.6 -> 1
+            0.6..1.0 -> 2
+            1.0..1.4 -> 3
+            1.4..1.8 -> 4
+            1.8..2.2 -> 5
+            2.2..2.6 -> 6
+            2.6..3.0 -> 7
+            3.0..3.4 -> 8
+            3.4..3.8 -> 9
+            3.8..4.0 -> 10
+            else -> {
+                SLOW_ROTATION[rps]
+            }
+        }.rps
+
 val isOuterDeadZone
     get() = robotDistanceFromBasket > MAX_DISTANCE_FROM_BASKET
 
