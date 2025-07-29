@@ -69,16 +69,15 @@ fun driveToShootingPoint() =
 
 fun shooting() =
     sequence(
-            drive.lock(),
-            flywheel.setVelocity(0.rps),
-            hopper.start(), // TODO() place Holder 0.rps
-            roller.intake()
-        )
+        drive.lock(),
+        WaitUntilCommand(flywheel.isAtSetVelocity),
+        hopper.start(),
+        roller.intake()
+    )
         .withName("$name/Shooting")
 
 fun stopShooting() =
-    parallel(flywheel.slowRotation(), hopper.stop(), roller.stop())
-        .withName("$name/StopShooting")
+    parallel(hopper.stop(), roller.stop()).withName("$name/StopShooting")
 
 fun intake() =
     parallel(roller.intake(), hopper.start()).withName("$name/Intake")
