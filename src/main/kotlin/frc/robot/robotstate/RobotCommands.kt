@@ -60,7 +60,7 @@ fun shooting() =
         .withName("$name/Shooting")
 
 fun stopShooting() =
-    sequence(flywheel.slowRotation(), hopper.stop(), roller.stop())
+    parallel(flywheel.slowRotation(), hopper.stop(), roller.stop())
         .withName("$name/StopShooting")
 
 fun intake() =
