@@ -31,13 +31,16 @@ class MotorIOSim(
     private val diameter: Distance
 ) : MotorIO {
     override val inputs = LoggedMotorInputs()
-    private val profiledPIDController = ProfiledPIDController(
-        config.Slot0.kP, config.Slot0.kI, config.Slot0.kD,
-        TrapezoidProfile.Constraints(
-            config.MotionMagic.MotionMagicCruiseVelocity,
-            config.MotionMagic.MotionMagicAcceleration
+    private val profiledPIDController =
+        ProfiledPIDController(
+            config.Slot0.kP,
+            config.Slot0.kI,
+            config.Slot0.kD,
+            TrapezoidProfile.Constraints(
+                config.MotionMagic.MotionMagicCruiseVelocity,
+                config.MotionMagic.MotionMagicAcceleration
+            )
         )
-    )
     private val controller =
         PIDController(config.Slot0.kP, config.Slot0.kI, config.Slot0.kD)
     private val motor =
