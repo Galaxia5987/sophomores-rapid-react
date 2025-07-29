@@ -62,8 +62,9 @@ fun driveToShootingPoint() =
             alignToPose(
                 getPose2d(
                     drive.pose.translation /
-                        (robotDistanceFromBasket[m] / distance[m])
+                            (robotDistanceFromBasket[m] / distance[m])
                 )
+                    .plus(HUB_LOCATION.toTransform())
             )
         }
         .withName("Drive/Drive to shooting point")
