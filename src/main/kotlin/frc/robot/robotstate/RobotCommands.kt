@@ -23,31 +23,29 @@ val robotDistanceFromBasket
 val turretRotationToBasket
     get() = drive.pose.rotationFromPoint(HUB_LOCATION.translation)
 val hoodAngle
-    get() =
-        when (robotDistanceFromBasket) {
-            0.m..HoodAngles.NEAR.distance -> HoodAngles.NEAR.angles
-            HoodAngles.NEAR.distance..HoodAngles.MED.distance ->
-                HoodAngles.MED.angles
-            HoodAngles.MED.distance..HoodAngles.FAR.distance ->
-                HoodAngles.FAR.angles
-            else -> 45.deg
-        }
+    get() = when (robotDistanceFromBasket) {
+        in 0.m..<HoodAngles.NEAR.distance -> HoodAngles.NEAR.angles
+        in HoodAngles.NEAR.distance..<HoodAngles.MED.distance -> HoodAngles.MED.angles
+        in HoodAngles.MED.distance..<HoodAngles.FAR.distance -> HoodAngles.FAR.angles
+        else -> (45.deg)
+    }
+
 val flywheelTargetVelocity
     get() =
-        when (robotDistanceFromBasket) {
-            0.2..0.6 -> 1
-            0.6..1.0 -> 2
-            1.0..1.4 -> 3
-            1.4..1.8 -> 4
-            1.8..2.2 -> 5
-            2.2..2.6 -> 6
-            2.6..3.0 -> 7
-            3.0..3.4 -> 8
-            3.4..3.8 -> 9
-            3.8..4.0 -> 10
-            else -> {
+        when (robotDistanceFromBasket[m]) {
+            in 0.2..0.6 -> 1
+            in 0.6..1.0 -> 2
+            in 1.0..1.4 -> 3
+            in 1.4..1.8 -> 4
+            in 1.8..2.2 -> 5
+            in 2.2..2.6 -> 6
+            in 2.6..3.0 -> 7
+            in 3.0..3.4 -> 8
+            in 3.4..3.8 -> 9
+            in 3.8..4.0 -> 10
+            else ->
                 SLOW_ROTATION[rps]
-            }
+
         }.rps
 
 val isOuterDeadZone
