@@ -41,13 +41,13 @@ fun bindRobotCommands() {
         and(isInDeadZone).onTrue(driveToShootingPoint())
         onTrue(StateColor.SHOOTING.applyPattern())
     }
-
-    IsIntaking.apply {
+    isIntaking.apply {
         onTrue(StateColor.INTAKING.applyPattern())
-        and(hasFrontBall).and(hasBackBall).onTrue(roller.stop(), setShooting())
-        and(hasBackBall).and(hasFrontBall.negate()).onTrue(hopper.start())
-        and(hasFrontBall).onTrue(roller.stop())
-        and(hasBackBall.negate()).onTrue(hopper.start())
+        and(ballsEmpty).onTrue(intake())
+        and(hasFrontBall)
+            .and(hasBackBall)
+            .onTrue(roller.stop(), hopper.stop(), setShooting())
+        and(hasBackBall).and(hasFrontBall.negate()).onTrue(hopper.stop())
     }
 }
 
