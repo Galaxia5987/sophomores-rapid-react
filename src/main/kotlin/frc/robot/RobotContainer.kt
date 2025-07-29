@@ -51,6 +51,10 @@ object RobotContainer {
                 { -driverController.leftX },
                 { -driverController.rightX * 0.8 }
             )
+
+        flywheel.defaultCommand = flywheel.setVelocity(flywheelTargetVelocity)
+        turret.defaultCommand = turret.setAngle(turretRotationToBasket)
+        hood.defaultCommand = hood.setAngle(hoodAngle)
     }
 
     private fun configureButtonBindings() {
