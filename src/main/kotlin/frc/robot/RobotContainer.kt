@@ -31,6 +31,7 @@ object RobotContainer {
         registerAutoCommands()
         configureButtonBindings()
         configureDefaultCommands()
+        bindRobotCommands()
 
         if (CURRENT_MODE == Mode.SIM) {
             SimulatedArena.getInstance().resetFieldForAuto()
