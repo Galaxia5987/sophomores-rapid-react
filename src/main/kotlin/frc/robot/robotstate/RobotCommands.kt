@@ -2,9 +2,9 @@ package frc.robot.robotstate
 
 import edu.wpi.first.wpilibj2.command.Commands.parallel
 import edu.wpi.first.wpilibj2.command.Commands.sequence
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand
 import frc.robot.drive
 import frc.robot.flywheel
-import frc.robot.hood
 import frc.robot.hopper
 import frc.robot.lib.extensions.deg
 import frc.robot.lib.extensions.distanceFromPoint
@@ -12,11 +12,12 @@ import frc.robot.lib.extensions.get
 import frc.robot.lib.extensions.m
 import frc.robot.lib.extensions.rotationFromPoint
 import frc.robot.lib.extensions.rps
+import frc.robot.lib.extensions.toTransform
 import frc.robot.lib.getPose2d
 import frc.robot.roller
 import frc.robot.subsystems.drive.alignToPose
+import frc.robot.subsystems.shooter.flywheel.SLOW_ROTATION
 import frc.robot.subsystems.shooter.hood.HoodAngles
-import frc.robot.turret
 
 val robotDistanceFromBasket
     get() = drive.pose.distanceFromPoint(HUB_LOCATION.translation)
