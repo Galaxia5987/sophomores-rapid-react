@@ -14,6 +14,7 @@ import frc.robot.lib.extensions.sec
 import frc.robot.lib.sysid.SysIdable
 import frc.robot.lib.universal_motor.UniversalTalonFX
 import org.littletonrobotics.junction.Logger
+import java.util.function.Supplier
 
 class Flywheel : SubsystemBase(), SysIdable {
     private val mainMotor =
@@ -30,16 +31,25 @@ class Flywheel : SubsystemBase(), SysIdable {
 
     val isAtSetVelocity =
         Trigger {
-                mainMotor.inputs.velocity.isNear(velocitySetpoint, TOLERANCE)
-            }
+            mainMotor.inputs.velocity.isNear(velocitySetpoint, TOLERANCE)
+        }
             .debounce(AT_SET_VELOCITY_DEBOUNCE[sec])
 
     fun setVelocity(velocity: AngularVelocity): Command =
         runOnce {
-                velocitySetpoint = velocity
-                mainMotor.setControl(velocityTorque.withVelocity(velocity))
-            }
+            velocitySetpoint = velocity
+            mainMotor.setControl(velocityTorque.withVelocity(velocity))
+        }
             .withName("$name/setVelocity")
+
+    fun setVelocity(velocity: Supplier<AngularVelocity>): Command =
+        run {
+            velocitySetpoint = velocity.get()
+            mainMotor.setControl(velocityTorque.withVelocity(velocity.get()))
+        }
+            .withName("$name/setVelocity")
+
+
 
     fun slowRotation() =
         setVelocity(SLOW_ROTATION).withName("$name/slowRotation")

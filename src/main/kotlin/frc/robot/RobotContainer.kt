@@ -9,6 +9,11 @@ import edu.wpi.first.wpilibj2.command.Commands.runOnce
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine
 import frc.robot.lib.extensions.enableAutoLogOutputFor
+import frc.robot.robotstate.bindRobotCommands
+import frc.robot.robotstate.flywheelTargetVelocity
+import frc.robot.robotstate.hoodAngle
+import frc.robot.robotstate.setIntakeing
+import frc.robot.robotstate.turretRotationToBasket
 import frc.robot.subsystems.drive.DriveCommands
 import org.ironmaple.simulation.SimulatedArena
 import org.littletonrobotics.junction.AutoLogOutput
@@ -52,9 +57,9 @@ object RobotContainer {
                 { -driverController.rightX * 0.8 }
             )
 
-        flywheel.defaultCommand = flywheel.setVelocity(flywheelTargetVelocity)
-        turret.defaultCommand = turret.setAngle(turretRotationToBasket)
-        hood.defaultCommand = hood.setAngle(hoodAngle)
+        flywheel.defaultCommand = flywheel.setVelocity{flywheelTargetVelocity}
+        turret.defaultCommand = turret.setAngle { turretRotationToBasket }
+        hood.defaultCommand = hood.setAngle { hoodAngle }
     }
 
     private fun configureButtonBindings() {
