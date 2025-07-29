@@ -20,9 +20,9 @@ const val MOTOR_ID = 3
 val SETPOINT_TOLERANCE = 0.5.deg
 
 enum class HoodAngles(val angles: Angle, val distance: Distance) {
-    NEAR(15.deg, 1.m),
-    MED(30.deg, 2.m),
-    FAR(45.deg, 3.m)
+    NEAR(15.deg, 1.3.m),
+    MED(30.deg, 2.6.m),
+    FAR(45.deg, 4.m)
 }
 
 val STATOR_LIMIT = 30.amps
