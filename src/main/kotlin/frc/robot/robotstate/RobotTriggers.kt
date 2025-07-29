@@ -7,7 +7,7 @@ import frc.robot.lib.onTrue
 import frc.robot.roller
 import frc.robot.subsystems.leds.StateColor
 import frc.robot.subsystems.leds.applyPattern
-import kotlin.and
+import org.littletonrobotics.junction.Logger
 
 private val ballsEmpty = roller.hasBall.negate().and(hopper.hasBall.negate())
 private val isShooting = Trigger { state == RobotState.SHOOTING }
@@ -22,8 +22,20 @@ private val isIntaking = Trigger { state == RobotState.INTAKING }
 private val hasFrontBall = roller.hasBall
 private val hasBackBall = hopper.hasBall
 
-fun bindRobotStateTriggers() {
-    IsShooting.apply {
+val RobotCommandsLogger
+    get() = {
+        Logger.recordOutput("$name/RobotState", state)
+        Logger.recordOutput(
+            "$name/RobotDistanceFromHub",
+            robotDistanceFromBasket
+        )
+        Logger.recordOutput("$name/is in dead zone", isInDeadZone)
+        Logger.recordOutput("$name/fly wheel target velocity", flywheelTargetVelocity)
+        Logger.recordOutput("$name/hoodRotation", hoodAngle)
+    }
+
+fun bindRobotCommands() {
+    isShooting.apply {
         and(ballsEmpty).onTrue(setIntakeing(), stopShooting())
         and(isInDeadZone.negate()).onTrue(shooting())
         and(isInDeadZone).onTrue(driveToShootingPoint())
