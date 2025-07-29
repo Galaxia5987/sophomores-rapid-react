@@ -12,6 +12,7 @@ import frc.robot.lib.extensions.deg
 import frc.robot.lib.sysid.SysIdable
 import frc.robot.lib.universal_motor.UniversalTalonFX
 import org.littletonrobotics.junction.Logger
+import java.util.function.Supplier
 
 class Hood : SubsystemBase(), SysIdable {
 
@@ -44,6 +45,11 @@ class Hood : SubsystemBase(), SysIdable {
     fun setAngle(angle: Angle): Command = runOnce {
         setpoint = angle
         motor.setControl(positionRequest.withPosition(angle))
+    }
+
+    fun setAngle(angle: Supplier<Angle>): Command = run {
+        setpoint = angle.get()
+        motor.setControl(positionRequest.withPosition(angle.get()))
     }
 
     override fun periodic() {
