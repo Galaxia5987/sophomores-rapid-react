@@ -30,7 +30,7 @@ class Turret : SubsystemBase() {
     override fun periodic() {
         motor.updateInputs()
         Logger.processInputs("Subsystems/$name", motor.inputs)
-        Logger.recordOutput("Turret/isAtResetPoint", isAtResetPoint)
-        Logger.recordOutput("Turret/isAtSetpoint", isAtSetpoint)
+        Logger.recordOutput("Subsystems/$name/isAtResetPoint", isAtResetPoint)
+        Logger.recordOutput("Subsystems/$name/isAtSetpoint", isAtSetpoint)
     }
 }

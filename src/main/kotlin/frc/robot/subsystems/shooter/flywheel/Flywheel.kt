@@ -22,7 +22,6 @@ class Flywheel : SubsystemBase(), SysIdable {
         UniversalTalonFX(AUX_MOTOR_PORT, config = MOTOR_CONFIG)
     private val velocityTorque = VelocityTorqueCurrentFOC(0.0)
     private val voltageOut = VoltageOut(0.0)
-
     private var velocitySetpoint = 0.rps
 
     init {
@@ -54,7 +53,7 @@ class Flywheel : SubsystemBase(), SysIdable {
     override fun periodic() {
         mainMotor.updateInputs()
         Logger.processInputs("Subsystems/$name", mainMotor.inputs)
-        Logger.recordOutput("FlyWheel/IsAtSetVelocity", isAtSetVelocity)
-        Logger.recordOutput("FlyWheel/SetVelocity", velocitySetpoint)
+        Logger.recordOutput("Subsystems/$name/IsAtSetVelocity", isAtSetVelocity)
+        Logger.recordOutput("Subsystems/$name/SetVelocity", velocitySetpoint)
     }
 }
