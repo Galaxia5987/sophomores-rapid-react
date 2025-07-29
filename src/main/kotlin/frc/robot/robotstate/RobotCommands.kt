@@ -84,8 +84,3 @@ fun intake() =
 
 fun stopIntake() =
     parallel(roller.stop(), hopper.stop()).withName("$name/StopIntake")
-
-fun setDefaultCommands() {
-    turret.defaultCommand = run { turret.setAngle(turretRotationToBasket) }
-    hood.defaultCommand = run { hood.setAngle(hoodAngle) }
-}
