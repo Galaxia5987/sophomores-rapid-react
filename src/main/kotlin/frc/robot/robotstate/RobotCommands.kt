@@ -1,7 +1,7 @@
 package frc.robot.robotstate
 
-import edu.wpi.first.wpilibj2.command.Commands.sequence
 import edu.wpi.first.wpilibj2.command.Commands.parallel
+import edu.wpi.first.wpilibj2.command.Commands.sequence
 import edu.wpi.first.wpilibj2.command.Commands.waitUntil
 import frc.robot.drive
 import frc.robot.flywheel
@@ -12,7 +12,6 @@ import frc.robot.lib.extensions.get
 import frc.robot.lib.extensions.m
 import frc.robot.lib.extensions.rotationFromPoint
 import frc.robot.lib.extensions.rps
-import frc.robot.lib.extensions.toTransform
 import frc.robot.lib.getPose2d
 import frc.robot.roller
 import frc.robot.subsystems.drive.alignToPose
@@ -24,12 +23,17 @@ val robotDistanceFromBasket
 val turretRotationToBasket
     get() = drive.pose.rotationFromPoint(HUB_LOCATION.translation)
 val hoodAngle
-    get() = when (robotDistanceFromBasket) {
-        in 0.m..<HoodAngles.NEAR.distance -> HoodAngles.NEAR.angles
-        in HoodAngles.NEAR.distance..<HoodAngles.MED.distance -> HoodAngles.MED.angles
-        in HoodAngles.MED.distance..<HoodAngles.FAR.distance -> HoodAngles.FAR.angles
-        else -> (45.deg)
-    }
+    get() =
+        when (robotDistanceFromBasket) {
+            in 0.m..HoodAngles.NEAR.distance -> HoodAngles.NEAR.angles
+            in HoodAngles.NEAR.distance..HoodAngles.MED.distance ->
+                HoodAngles.MED.angles
+
+            in HoodAngles.MED.distance..HoodAngles.FAR.distance ->
+                HoodAngles.FAR.angles
+
+            else -> (45.deg)
+        }
 
 val flywheelTargetVelocity
     get() =
@@ -44,26 +48,23 @@ val flywheelTargetVelocity
             in 3.0..3.4 -> 8
             in 3.4..3.8 -> 9
             in 3.8..4.0 -> 10
-            else ->
-                SLOW_ROTATION[rps]
-
+            else -> SLOW_ROTATION[rps]
         }.rps
-
-val isInOuterDeadZone
-    get() = robotDistanceFromBasket > MAX_DISTANCE_FROM_BASKET
 
 fun driveToShootingPoint() =
     drive
         .defer {
-            val distance =
-                if (isInOuterDeadZone) MAX_DISTANCE_FROM_BASKET
-                else MIN_DISTANCE_FROM_BASKET
-            alignToPose(
-                (getPose2d(
-                    drive.pose.translation /
-                            (robotDistanceFromBasket[m] / distance[m]),
-                ) + HUB_LOCATION.toTransform()) / 2.0
-            )
+            val robotTranslation = drive.pose.translation
+            val setpoint =
+                if (
+                    INNER_SHOOTING_AREA.getDistance(robotTranslation) >
+                    OUTER_SHOOTING_AREA.getDistance(robotTranslation)
+                ) {
+                    INNER_SHOOTING_AREA.nearest(robotTranslation)
+                } else {
+                    OUTER_SHOOTING_AREA.nearest(robotTranslation)
+                }
+            alignToPose((getPose2d(setpoint)))
         }
         .withName("Drive/Drive to shooting point")
 
@@ -77,10 +78,13 @@ fun shooting() =
         .withName("$COMMAND_NAME_PREFIX/Shooting")
 
 fun stopShooting() =
-    parallel(hopper.stop(), roller.stop()).withName("$COMMAND_NAME_PREFIX/StopShooting")
+    parallel(hopper.stop(), roller.stop())
+        .withName("$COMMAND_NAME_PREFIX/StopShooting")
 
 fun intaking() =
-    parallel(roller.intake(), hopper.start()).withName("$COMMAND_NAME_PREFIX/Intake")
+    parallel(roller.intake(), hopper.start())
+        .withName("$COMMAND_NAME_PREFIX/Intake")
 
 fun stopIntaking() =
-    parallel(roller.stop(), hopper.stop()).withName("$COMMAND_NAME_PREFIX/StopIntake")
+    parallel(roller.stop(), hopper.stop())
+        .withName("$COMMAND_NAME_PREFIX/StopIntake")
