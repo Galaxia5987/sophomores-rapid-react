@@ -8,8 +8,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.lib.extensions.deg
 import frc.robot.lib.extensions.rot
 import frc.robot.lib.universal_motor.UniversalTalonFX
-import org.littletonrobotics.junction.Logger
 import java.util.function.Supplier
+import org.littletonrobotics.junction.Logger
 
 class Turret : SubsystemBase() {
     private val motor = UniversalTalonFX(MOTOR_ID, config = MOTOR_CONFIG)
@@ -31,7 +31,6 @@ class Turret : SubsystemBase() {
     fun setAngle(position: Supplier<Angle>) = run {
         motor.setControl(motionMagicTorque.withPosition(position.get()))
     }
-
 
     override fun periodic() {
         motor.updateInputs()

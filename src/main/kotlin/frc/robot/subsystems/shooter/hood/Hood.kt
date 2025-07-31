@@ -11,8 +11,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.lib.extensions.deg
 import frc.robot.lib.sysid.SysIdable
 import frc.robot.lib.universal_motor.UniversalTalonFX
-import org.littletonrobotics.junction.Logger
 import java.util.function.Supplier
+import org.littletonrobotics.junction.Logger
 
 class Hood : SubsystemBase(), SysIdable {
 
