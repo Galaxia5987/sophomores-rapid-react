@@ -2,7 +2,7 @@ package frc.robot.robotstate
 
 import edu.wpi.first.wpilibj2.command.Commands.sequence
 import edu.wpi.first.wpilibj2.command.Commands.parallel
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand
+import edu.wpi.first.wpilibj2.command.Commands.waitUntil
 import frc.robot.drive
 import frc.robot.flywheel
 import frc.robot.hopper
@@ -70,7 +70,7 @@ fun driveToShootingPoint() =
 fun shooting() =
     sequence(
         drive.lock(),
-        WaitUntilCommand(flywheel.isAtSetVelocity),
+        waitUntil(flywheel.isAtSetVelocity),
         hopper.start(),
         roller.intake()
     )
