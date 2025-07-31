@@ -28,7 +28,6 @@ val hoodAngle
             in 0.m..HoodAngles.NEAR.distance -> HoodAngles.NEAR.angles
             in HoodAngles.NEAR.distance..HoodAngles.MID.distance ->
                 HoodAngles.MID.angles
-
             in HoodAngles.MID.distance..HoodAngles.FAR.distance ->
                 HoodAngles.FAR.angles
             else -> (45.deg)
@@ -57,7 +56,7 @@ fun driveToShootingPoint() =
             val setpoint =
                 if (
                     INNER_SHOOTING_AREA.getDistance(robotTranslation) >
-                    OUTER_SHOOTING_AREA.getDistance(robotTranslation)
+                        OUTER_SHOOTING_AREA.getDistance(robotTranslation)
                 ) {
                     INNER_SHOOTING_AREA.nearest(robotTranslation)
                 } else {
@@ -69,11 +68,11 @@ fun driveToShootingPoint() =
 
 fun shooting() =
     sequence(
-        drive.lock(),
-        waitUntil(flywheel.isAtSetVelocity),
-        hopper.start(),
-        roller.intake()
-    )
+            drive.lock(),
+            waitUntil(flywheel.isAtSetVelocity),
+            hopper.start(),
+            roller.intake()
+        )
         .withName("$COMMAND_NAME_PREFIX/Shooting")
 
 fun stopShooting() =
