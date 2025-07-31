@@ -36,10 +36,10 @@ val RobotCommandsLogger
 
 fun bindRobotCommands() {
     isShooting.apply {
+        onTrue(StateColor.SHOOTING.applyPattern())
         and(ballsEmpty).onTrue(setIntakeing(), stopShooting())
         and(isInDeadZone.negate()).onTrue(shooting())
         and(isInDeadZone).onTrue(driveToShootingPoint())
-        onTrue(StateColor.SHOOTING.applyPattern())
     }
     isIntaking.apply {
         onTrue(StateColor.INTAKING.applyPattern())
