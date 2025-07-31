@@ -17,9 +17,8 @@ val isInDeadZone = Trigger {
             INNER_SHOOTING_AREA.contains(drive.pose.translation)
 }
 
-val isIdling = Trigger { state == RobotState.IDLING }
 val isIntaking = Trigger { state == RobotState.INTAKING }
-val hasFrontBall = roller.hasBall
+private val hasFrontBall = roller.hasBall
 val hasBackBall = hopper.hasBall
 
 val RobotCommandsLogger
