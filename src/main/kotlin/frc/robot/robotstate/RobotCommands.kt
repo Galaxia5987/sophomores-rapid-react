@@ -38,16 +38,16 @@ val hoodAngle
 val flywheelTargetVelocity
     get() =
         when (robotDistanceFromBasket[m]) {
-            in 0.2..0.6 -> 1
-            in 0.6..1.0 -> 2
-            in 1.0..1.4 -> 3
-            in 1.4..1.8 -> 4
-            in 1.8..2.2 -> 5
-            in 2.2..2.6 -> 6
-            in 2.6..3.0 -> 7
-            in 3.0..3.4 -> 8
-            in 3.4..3.8 -> 9
-            in 3.8..4.0 -> 10
+            in 0.2..0.6 -> 10
+            in 0.6..1.0 -> 20
+            in 1.0..1.4 -> 30
+            in 1.4..1.8 -> 40
+            in 1.8..2.2 -> 50
+            in 2.2..2.6 -> 60
+            in 2.6..3.0 -> 70
+            in 3.0..3.4 -> 80
+            in 3.4..3.8 -> 90
+            in 3.8..4.0 -> 100
             else -> SLOW_ROTATION[rps]
         }.rps
 
