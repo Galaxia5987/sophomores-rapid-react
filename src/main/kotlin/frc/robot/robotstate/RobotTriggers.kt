@@ -43,7 +43,7 @@ fun bindRobotCommands() {
     }
     isIntaking.apply {
         onTrue(StateColor.INTAKING.applyPattern())
-        and(ballsEmpty).onTrue(intake())
+        and(ballsEmpty).onTrue(intaking())
         and(hasFrontBall)
             .and(hasBackBall)
             .onTrue(roller.stop(), hopper.stop(), setShooting())
