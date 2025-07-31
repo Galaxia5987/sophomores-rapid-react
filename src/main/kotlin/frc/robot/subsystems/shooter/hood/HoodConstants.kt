@@ -21,7 +21,7 @@ val SETPOINT_TOLERANCE = 0.5.deg
 
 enum class HoodAngles(val angles: Angle, val distance: Distance) {
     NEAR(15.deg, 1.3.m),
-    MED(30.deg, 2.6.m),
+    MID(30.deg, 2.6.m),
     FAR(45.deg, 4.m)
 }
 

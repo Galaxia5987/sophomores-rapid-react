@@ -26,9 +26,10 @@ val hoodAngle
     get() =
         when (robotDistanceFromBasket) {
             in 0.m..HoodAngles.NEAR.distance -> HoodAngles.NEAR.angles
-            in HoodAngles.NEAR.distance..HoodAngles.MED.distance ->
-                HoodAngles.MED.angles
-            in HoodAngles.MED.distance..HoodAngles.FAR.distance ->
+            in HoodAngles.NEAR.distance..HoodAngles.MID.distance ->
+                HoodAngles.MID.angles
+
+            in HoodAngles.MID.distance..HoodAngles.FAR.distance ->
                 HoodAngles.FAR.angles
             else -> (45.deg)
         }
