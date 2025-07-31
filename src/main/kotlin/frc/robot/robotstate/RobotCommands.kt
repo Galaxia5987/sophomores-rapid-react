@@ -1,5 +1,6 @@
 package frc.robot.robotstate
 
+import edu.wpi.first.wpilibj2.command.Commands.sequence
 import edu.wpi.first.wpilibj2.command.Commands.parallel
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand
 import frc.robot.drive
@@ -13,7 +14,6 @@ import frc.robot.lib.extensions.rotationFromPoint
 import frc.robot.lib.extensions.rps
 import frc.robot.lib.extensions.toTransform
 import frc.robot.lib.getPose2d
-import frc.robot.lib.sequence
 import frc.robot.roller
 import frc.robot.subsystems.drive.alignToPose
 import frc.robot.subsystems.shooter.flywheel.SLOW_ROTATION

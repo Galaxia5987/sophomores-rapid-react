@@ -83,14 +83,6 @@ fun CommandXboxController.rumbleCommand(): Command {
     return Commands.startEnd({ this.setRumble(1.0) }, { this.setRumble(0.0) })
 }
 
-fun sequence(vararg element: Command): Command {
-    var command = element[0]
-    for (i in 1..element.size) {
-        command = command.andThen(element[1])
-    }
-    return command
-}
-
 fun Trigger.onTrue(vararg element: Command) {
     element.forEach { this.onTrue(it) }
 }
