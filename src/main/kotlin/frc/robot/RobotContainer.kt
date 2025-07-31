@@ -12,7 +12,6 @@ import frc.robot.lib.extensions.enableAutoLogOutputFor
 import frc.robot.robotstate.bindRobotCommands
 import frc.robot.robotstate.flywheelTargetVelocity
 import frc.robot.robotstate.hoodAngle
-import frc.robot.robotstate.setIntakeing
 import frc.robot.robotstate.turretRotationToBasket
 import frc.robot.subsystems.drive.DriveCommands
 import org.ironmaple.simulation.SimulatedArena
@@ -57,7 +56,8 @@ object RobotContainer {
                 { -driverController.rightX * 0.8 }
             )
 
-        flywheel.defaultCommand = flywheel.setVelocity { flywheelTargetVelocity }
+        flywheel.defaultCommand =
+            flywheel.setVelocity { flywheelTargetVelocity }
         turret.defaultCommand = turret.setAngle { turretRotationToBasket }
         hood.defaultCommand = hood.setAngle { hoodAngle }
     }

@@ -31,24 +31,24 @@ class Flywheel : SubsystemBase(), SysIdable {
 
     val isAtSetVelocity =
         Trigger {
-            mainMotor.inputs.velocity.isNear(velocitySetpoint, TOLERANCE)
-        }
+                mainMotor.inputs.velocity.isNear(velocitySetpoint, TOLERANCE)
+            }
             .debounce(AT_SET_VELOCITY_DEBOUNCE[sec])
 
     fun setVelocity(velocity: AngularVelocity): Command =
         runOnce {
-            velocitySetpoint = velocity
-            mainMotor.setControl(velocityTorque.withVelocity(velocity))
-        }
+                velocitySetpoint = velocity
+                mainMotor.setControl(velocityTorque.withVelocity(velocity))
+            }
             .withName("$name/setVelocity")
 
     fun setVelocity(velocity: Supplier<AngularVelocity>): Command =
         run {
-            velocitySetpoint = velocity.get()
-            mainMotor.setControl(
-                velocityTorque.withVelocity(velocity.get())
-            )
-        }
+                velocitySetpoint = velocity.get()
+                mainMotor.setControl(
+                    velocityTorque.withVelocity(velocity.get())
+                )
+            }
             .withName("$name/setVelocity")
 
     fun slowRotation() =
