@@ -2,7 +2,7 @@ package frc.robot.robotstate
 
 import edu.wpi.first.wpilibj2.command.Commands.sequence
 import edu.wpi.first.wpilibj2.command.Commands.parallel
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand
+import edu.wpi.first.wpilibj2.command.Commands.waitUntil
 import frc.robot.drive
 import frc.robot.flywheel
 import frc.robot.hopper
@@ -49,21 +49,20 @@ val flywheelTargetVelocity
 
         }.rps
 
-val isOuterDeadZone
+val isInOuterDeadZone
     get() = robotDistanceFromBasket > MAX_DISTANCE_FROM_BASKET
 
 fun driveToShootingPoint() =
     drive
         .defer {
             val distance =
-                if (isOuterDeadZone) MAX_DISTANCE_FROM_BASKET
+                if (isInOuterDeadZone) MAX_DISTANCE_FROM_BASKET
                 else MIN_DISTANCE_FROM_BASKET
             alignToPose(
-                getPose2d(
+                (getPose2d(
                     drive.pose.translation /
-                            (robotDistanceFromBasket[m] / distance[m])
-                )
-                    .plus(HUB_LOCATION.toTransform()) / 2.0
+                            (robotDistanceFromBasket[m] / distance[m]),
+                ) + HUB_LOCATION.toTransform()) / 2.0
             )
         }
         .withName("Drive/Drive to shooting point")
@@ -71,7 +70,7 @@ fun driveToShootingPoint() =
 fun shooting() =
     sequence(
         drive.lock(),
-        WaitUntilCommand(flywheel.isAtSetVelocity),
+        waitUntil(flywheel.isAtSetVelocity),
         hopper.start(),
         roller.intake()
     )
