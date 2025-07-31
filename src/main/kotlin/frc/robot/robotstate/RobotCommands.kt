@@ -80,8 +80,8 @@ fun shooting() =
 fun stopShooting() =
     parallel(hopper.stop(), roller.stop()).withName("$name/StopShooting")
 
-fun intake() =
+fun intaking() =
     parallel(roller.intake(), hopper.start()).withName("$name/Intake")
 
-fun stopIntake() =
+fun stopIntaking() =
     parallel(roller.stop(), hopper.stop()).withName("$name/StopIntake")
