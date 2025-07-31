@@ -2,6 +2,7 @@ package frc.robot.robotstate
 
 import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.button.Trigger
+import frc.robot.drive
 import frc.robot.hopper
 import frc.robot.lib.onTrue
 import frc.robot.roller
@@ -11,12 +12,11 @@ import org.littletonrobotics.junction.Logger
 
 private val ballsEmpty = roller.hasBall.negate().and(hopper.hasBall.negate())
 private val isShooting = Trigger { state == RobotState.SHOOTING }
-private val isInDeadZone =
-    Trigger {
-        robotDistanceFromBasket in
-                MIN_DISTANCE_FROM_BASKET..MAX_DISTANCE_FROM_BASKET
-    }
-        .negate()
+private val isInDeadZone = Trigger {
+    val driveTranslation = drive.pose.translation
+    !OUTER_SHOOTING_AREA.contains(drive.pose.translation) ||
+            INNER_SHOOTING_AREA.contains(drive.pose.translation)
+}
 
 private val isIntaking = Trigger { state == RobotState.INTAKING }
 private val hasFrontBall = roller.hasBall
@@ -29,8 +29,14 @@ val RobotCommandsLogger
             "$COMMAND_NAME_PREFIX/RobotDistanceFromHub",
             robotDistanceFromBasket
         )
-        Logger.recordOutput("$COMMAND_NAME_PREFIX/is in dead zone", isInDeadZone)
-        Logger.recordOutput("$COMMAND_NAME_PREFIX/fly wheel target velocity", flywheelTargetVelocity)
+        Logger.recordOutput(
+            "$COMMAND_NAME_PREFIX/is in dead zone",
+            isInDeadZone
+        )
+        Logger.recordOutput(
+            "$COMMAND_NAME_PREFIX/fly wheel target velocity",
+            flywheelTargetVelocity
+        )
         Logger.recordOutput("$COMMAND_NAME_PREFIX/hoodRotation", hoodAngle)
     }
 
