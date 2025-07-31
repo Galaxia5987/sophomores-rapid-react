@@ -59,11 +59,10 @@ fun driveToShootingPoint() =
                 if (isInOuterDeadZone) MAX_DISTANCE_FROM_BASKET
                 else MIN_DISTANCE_FROM_BASKET
             alignToPose(
-                getPose2d(
+                (getPose2d(
                     drive.pose.translation /
-                            (robotDistanceFromBasket[m] / distance[m])
-                )
-                    .plus(HUB_LOCATION.toTransform()) / 2.0
+                            (robotDistanceFromBasket[m] / distance[m]),
+                ) + HUB_LOCATION.toTransform()) / 2.0
             )
         }
         .withName("Drive/Drive to shooting point")
