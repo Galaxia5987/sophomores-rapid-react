@@ -59,10 +59,7 @@ class UniversalTalonFX(
      * @param control The control request to apply.
      */
     fun setControl(control: ControlRequest) =
-        if (control.name != "Follower") {
-            motorIO.setRequest(control)
-        } else {
-        }
+        motorIO.setRequest(control)
 
     fun reset(angle: Angle) = motorIO.resetInternalEncoder(angle)
 
