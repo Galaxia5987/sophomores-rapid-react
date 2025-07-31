@@ -49,14 +49,14 @@ val flywheelTargetVelocity
 
         }.rps
 
-val isOuterDeadZone
+val isInOuterDeadZone
     get() = robotDistanceFromBasket > MAX_DISTANCE_FROM_BASKET
 
 fun driveToShootingPoint() =
     drive
         .defer {
             val distance =
-                if (isOuterDeadZone) MAX_DISTANCE_FROM_BASKET
+                if (isInOuterDeadZone) MAX_DISTANCE_FROM_BASKET
                 else MIN_DISTANCE_FROM_BASKET
             alignToPose(
                 getPose2d(
