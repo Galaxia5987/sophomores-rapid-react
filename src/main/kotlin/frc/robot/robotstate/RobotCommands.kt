@@ -74,13 +74,13 @@ fun shooting() =
         hopper.start(),
         roller.intake()
     )
-        .withName("$name/Shooting")
+        .withName("$COMMAND_NAME_PREFIX/Shooting")
 
 fun stopShooting() =
-    parallel(hopper.stop(), roller.stop()).withName("$name/StopShooting")
+    parallel(hopper.stop(), roller.stop()).withName("$COMMAND_NAME_PREFIX/StopShooting")
 
 fun intaking() =
-    parallel(roller.intake(), hopper.start()).withName("$name/Intake")
+    parallel(roller.intake(), hopper.start()).withName("$COMMAND_NAME_PREFIX/Intake")
 
 fun stopIntaking() =
-    parallel(roller.stop(), hopper.stop()).withName("$name/StopIntake")
+    parallel(roller.stop(), hopper.stop()).withName("$COMMAND_NAME_PREFIX/StopIntake")

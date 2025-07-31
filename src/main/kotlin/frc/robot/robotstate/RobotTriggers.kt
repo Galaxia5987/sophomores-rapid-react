@@ -24,14 +24,14 @@ private val hasBackBall = hopper.hasBall
 
 val RobotCommandsLogger
     get() = {
-        Logger.recordOutput("$name/RobotState", state)
+        Logger.recordOutput("$COMMAND_NAME_PREFIX/RobotState", state)
         Logger.recordOutput(
-            "$name/RobotDistanceFromHub",
+            "$COMMAND_NAME_PREFIX/RobotDistanceFromHub",
             robotDistanceFromBasket
         )
-        Logger.recordOutput("$name/is in dead zone", isInDeadZone)
-        Logger.recordOutput("$name/fly wheel target velocity", flywheelTargetVelocity)
-        Logger.recordOutput("$name/hoodRotation", hoodAngle)
+        Logger.recordOutput("$COMMAND_NAME_PREFIX/is in dead zone", isInDeadZone)
+        Logger.recordOutput("$COMMAND_NAME_PREFIX/fly wheel target velocity", flywheelTargetVelocity)
+        Logger.recordOutput("$COMMAND_NAME_PREFIX/hoodRotation", hoodAngle)
     }
 
 fun bindRobotCommands() {
