@@ -1,5 +1,6 @@
 package frc.robot.robotstate
 
+import edu.wpi.first.units.measure.Angle
 import edu.wpi.first.wpilibj2.command.Commands.parallel
 import edu.wpi.first.wpilibj2.command.Commands.sequence
 import edu.wpi.first.wpilibj2.command.Commands.waitUntil
@@ -20,18 +21,33 @@ import frc.robot.subsystems.shooter.hood.HoodAngles
 
 val robotDistanceFromBasket
     get() = drive.pose.distanceFromPoint(HUB_LOCATION.translation)
-val turretRotationToBasket
-    get() = drive.pose.rotationFromPoint(HUB_LOCATION.translation)
+val turretRotationToBasket: Angle
+    get() {
+        val robotHeading: Angle = drive.pose.rotation.degrees.deg
+        val angleToBasket =
+            drive.pose.rotationFromPoint(HUB_LOCATION.translation)
+        var relativeAngle = angleToBasket - robotHeading
+        val maxAngle = 135.deg
+        relativeAngle =
+            when {
+                relativeAngle > maxAngle -> maxAngle
+                relativeAngle < -maxAngle -> -maxAngle
+                else -> relativeAngle
+            }
+
+        return relativeAngle
+    }
+
 val hoodAngle
     get() =
-        when (robotDistanceFromBasket) {
-            in 0.m..HoodAngles.NEAR.distance -> HoodAngles.NEAR.angles
-            in HoodAngles.NEAR.distance..HoodAngles.MID.distance ->
-                HoodAngles.MID.angles
-
-            in HoodAngles.MID.distance..HoodAngles.FAR.distance ->
-                HoodAngles.FAR.angles
-            else -> (45.deg)
+        when {
+            robotDistanceFromBasket in HoodAngles.NEAR.range ->
+                HoodAngles.NEAR.angle
+            robotDistanceFromBasket in HoodAngles.MID.range ->
+                HoodAngles.MID.angle
+            robotDistanceFromBasket in HoodAngles.FAR.range ->
+                HoodAngles.FAR.angle
+            else -> 45.deg
         }
 
 val flywheelTargetVelocity
@@ -57,7 +73,7 @@ fun driveToShootingPoint() =
             val setpoint =
                 if (
                     INNER_SHOOTING_AREA.getDistance(robotTranslation) >
-                    OUTER_SHOOTING_AREA.getDistance(robotTranslation)
+                        OUTER_SHOOTING_AREA.getDistance(robotTranslation)
                 ) {
                     INNER_SHOOTING_AREA.nearest(robotTranslation)
                 } else {
@@ -69,11 +85,11 @@ fun driveToShootingPoint() =
 
 fun shooting() =
     sequence(
-        drive.lock(),
-        waitUntil(flywheel.isAtSetVelocity),
-        hopper.start(),
-        roller.intake()
-    )
+            drive.lock(),
+            waitUntil(flywheel.isAtSetVelocity),
+            hopper.start(),
+            roller.intake()
+        )
         .withName("$COMMAND_NAME_PREFIX/Shooting")
 
 fun stopShooting() =
