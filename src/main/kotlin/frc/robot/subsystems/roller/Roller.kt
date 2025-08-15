@@ -12,13 +12,6 @@ import frc.robot.lib.unified_canrange.UnifiedCANRange
 import frc.robot.lib.universal_motor.UniversalTalonFX
 import org.littletonrobotics.junction.AutoLogOutput
 import org.littletonrobotics.junction.Logger
-import org.littletonrobotics.junction.mechanism.LoggedMechanism2d
-import org.littletonrobotics.junction.mechanism.LoggedMechanismLigament2d
-
-@AutoLogOutput private var mechanism = LoggedMechanism2d(6.0, 4.0)
-private var root = mechanism.getRoot("Wrist", 3.0, 2.0)
-private val ligament =
-    root.append(LoggedMechanismLigament2d("WristLigament", 0.25, 90.0))
 
 class Roller : SubsystemBase() {
     private val motor =
@@ -40,8 +33,7 @@ class Roller : SubsystemBase() {
             configuration = CANrangeConfiguration()
         )
 
-    @AutoLogOutput
-    val hasBall = Trigger { rangeSensor.isInRange }
+    @AutoLogOutput val hasBall = Trigger { rangeSensor.isInRange }
 
     private fun setVoltage(voltage: Voltage): Command = runOnce {
         motor.setControl(voltageRequest.withOutput(voltage))

@@ -26,9 +26,10 @@ private val ledBuffer = AddressableLEDBuffer(STRIP_LENGTH)
 
 fun LEDPattern.applyLedPattern(): Command =
     Commands.run({
-        this.applyTo(ledBuffer)
-        ledStrip.setData(ledBuffer)
-    }).ignoringDisable(true)
+            this.applyTo(ledBuffer)
+            ledStrip.setData(ledBuffer)
+        })
+        .ignoringDisable(true)
 
 fun Color.setLed() = solid(this).applyLedPattern().ignoringDisable(true)
 
@@ -42,11 +43,12 @@ fun applyLeds() {
         .and(hasBackBall)
         .onTrue(
             gradient(
-                LEDPattern.GradientType.kDiscontinuous,
-                Color.kPink,
-                Color.kRed,
-                Color.kOrange
-            ).scrollAtAbsoluteSpeed(0.5.mps, 1.cm)
+                    LEDPattern.GradientType.kDiscontinuous,
+                    Color.kPink,
+                    Color.kRed,
+                    Color.kOrange
+                )
+                .scrollAtAbsoluteSpeed(0.5.mps, 1.cm)
                 .applyLedPattern()
         )
 }
