@@ -5,6 +5,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.applyLeds
 import frc.robot.drive
 import frc.robot.hopper
+import frc.robot.lib.extensions.deg
+import frc.robot.lib.extensions.get
 import frc.robot.lib.onTrue
 import frc.robot.roller
 import org.littletonrobotics.junction.Logger
@@ -36,6 +38,7 @@ val RobotCommandsLogger
             "$COMMAND_NAME_PREFIX/fly wheel target velocity",
             flywheelTargetVelocity
         )
+        Logger.recordOutput("$COMMAND_NAME_PREFIX/turret rotation",turretRotationToBasket[deg])
         Logger.recordOutput("$COMMAND_NAME_PREFIX/hoodRotation", hoodAngle)
     }
 
