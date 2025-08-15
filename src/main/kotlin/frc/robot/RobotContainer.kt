@@ -57,7 +57,8 @@ object RobotContainer {
                 { -driverController.rightX * 0.8 }
             )
 
-        flywheel.defaultCommand = flywheel.setVelocity { flywheelTargetVelocity }
+        flywheel.defaultCommand =
+            flywheel.setVelocity { flywheelTargetVelocity }
         turret.defaultCommand = turret.setAngle { turretRotationToBasket }
         hood.defaultCommand = hood.setAngle { hoodAngle }
     }
@@ -78,6 +79,7 @@ object RobotContainer {
         // Switch to X pattern when X button is pressed
         driverController.square().onTrue(drive.lock())
 
+        driverController.circle().onTrue(setIntakeing())
         // Reset gyro / odometry
         val resetOdometry =
             if (CURRENT_MODE == Mode.SIM)
