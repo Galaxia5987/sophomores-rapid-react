@@ -5,7 +5,6 @@ import com.pathplanner.lib.auto.NamedCommands
 import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.wpilibj2.command.Command
-import edu.wpi.first.wpilibj2.command.Commands.runOnce
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine
 import frc.robot.lib.extensions.enableAutoLogOutputFor
@@ -63,20 +62,8 @@ object RobotContainer {
     }
 
     private fun configureButtonBindings() {
-        // Lock to 0° when A button is held
-        driverController
-            .cross()
-            .whileTrue(
-                DriveCommands.joystickDriveAtAngle(
-                    drive,
-                    { -driverController.leftY },
-                    { -driverController.leftX },
-                    { Rotation2d() }
-                )
-            )
 
         // Switch to X pattern when X button is pressed
-        driverController.square().onTrue(drive.lock())
 
         // Reset gyro / odometry
         val resetOdometry =
@@ -92,9 +79,6 @@ object RobotContainer {
                         Pose2d(drive.pose.translation, Rotation2d())
                     )
                 }
-        driverController
-            .options()
-            .onTrue(runOnce(resetOdometry).ignoringDisable(true))
     }
 
     fun getAutonomousCommand(): Command = autoChooser.get()

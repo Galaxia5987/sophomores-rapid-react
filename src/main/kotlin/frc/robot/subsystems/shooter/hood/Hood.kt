@@ -11,13 +11,14 @@ import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.lib.extensions.deg
 import frc.robot.lib.sysid.SysIdable
 import frc.robot.lib.universal_motor.UniversalTalonFX
-import org.littletonrobotics.junction.AutoLogOutput
 import java.util.function.Supplier
+import org.littletonrobotics.junction.AutoLogOutput
 import org.littletonrobotics.junction.Logger
 import org.littletonrobotics.junction.mechanism.LoggedMechanism2d
 import org.littletonrobotics.junction.mechanism.LoggedMechanismLigament2d
 
-@AutoLogOutput(key = "Hood/mechanism") private var mechanism = LoggedMechanism2d(6.0, 4.0)
+@AutoLogOutput(key = "Hood/mechanism")
+private var mechanism = LoggedMechanism2d(6.0, 4.0)
 private var root = mechanism.getRoot("Hood", 3.0, 2.0)
 private val ligament =
     root.append(LoggedMechanismLigament2d("HoodLigament", 0.25, 90.0))
@@ -66,6 +67,6 @@ class Hood : SubsystemBase(), SysIdable {
         Logger.processInputs("Subsystems/$name", motor.inputs)
         Logger.recordOutput("Subsystems/$name/isAtSetpoint", isAtSetpoint)
         Logger.recordOutput("Subsystems/$name/setpoint", setpoint)
-        Logger.recordOutput("Subsystems/$name/Ligament",mechanism)
+        Logger.recordOutput("Subsystems/$name/Ligament", mechanism)
     }
 }
