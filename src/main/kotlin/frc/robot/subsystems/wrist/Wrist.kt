@@ -6,6 +6,7 @@ import edu.wpi.first.units.measure.Angle
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import edu.wpi.first.wpilibj2.command.button.Trigger
+import frc.robot.lib.extensions.deg
 import frc.robot.lib.extensions.degrees
 import frc.robot.lib.extensions.kg2m
 import frc.robot.lib.universal_motor.UniversalTalonFX
@@ -48,6 +49,8 @@ class Wrist : SubsystemBase() {
 
     override fun periodic() {
         motor.updateInputs()
+        ligament.setAngle(setpoint.`in`(deg))
+        Logger.recordOutput("Subsystems/$name/Ligament", mechanism)
         Logger.processInputs("Subsystems/$name", motor.inputs)
     }
 }
