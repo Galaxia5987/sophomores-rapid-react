@@ -79,12 +79,13 @@ fun driveToShootingPoint() =
                 } else {
                     OUTER_SHOOTING_AREA.nearest(robotTranslation)
                 }
-            alignToPose((getPose2d(setpoint)))
+            alignToPose((getPose2d(setpoint,drive.pose.rotation)))
         }
         .withName("Drive/Drive to shooting point")
 
 fun shooting() =
     sequence(
+
             drive.lock(),
             waitUntil(flywheel.isAtSetVelocity),
             hopper.start(),
