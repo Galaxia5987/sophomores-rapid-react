@@ -11,6 +11,7 @@ import frc.robot.lib.extensions.enableAutoLogOutputFor
 import frc.robot.robotstate.bindRobotCommands
 import frc.robot.robotstate.flywheelTargetVelocity
 import frc.robot.robotstate.hoodAngle
+import frc.robot.robotstate.setIntakeing
 import frc.robot.robotstate.turretRotationToBasket
 import frc.robot.subsystems.drive.DriveCommands
 import org.ironmaple.simulation.SimulatedArena
@@ -50,8 +51,8 @@ object RobotContainer {
     private fun configureDefaultCommands() {
         drive.defaultCommand =
             DriveCommands.joystickDrive(
+                {driverController.leftX },
                 { -driverController.leftY },
-                { -driverController.leftX },
                 { -driverController.rightX * 0.8 }
             )
 
