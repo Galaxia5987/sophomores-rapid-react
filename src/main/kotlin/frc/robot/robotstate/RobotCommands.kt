@@ -76,7 +76,7 @@ fun driveToShootingPoint() =
         }
         .withName("Drive/Drive to shooting point")
 
-fun shooting() =
+fun startShooting() =
     sequence(
             drive.lock(),
             waitUntil(flywheel.isAtSetVelocity),
@@ -89,7 +89,7 @@ fun stopShooting() =
     parallel(hopper.stop(), roller.stop())
         .withName("$COMMAND_NAME_PREFIX/StopShooting")
 
-fun intaking() =
+fun startIntaking() =
     parallel(roller.intake(), hopper.start())
         .withName("$COMMAND_NAME_PREFIX/Intake")
 
