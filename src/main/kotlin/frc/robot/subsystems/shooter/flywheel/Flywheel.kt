@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.lib.extensions.get
 import frc.robot.lib.extensions.rps
 import frc.robot.lib.extensions.sec
-import frc.robot.lib.name
+import frc.robot.lib.named
 import frc.robot.lib.namedRun
 import frc.robot.lib.namedRunOnce
 import frc.robot.lib.sysid.SysIdable
@@ -54,9 +54,9 @@ class Flywheel : SubsystemBase(), SysIdable {
             }
 
     fun slowRotation() =
-        setVelocity(SLOW_ROTATION).name()
+        setVelocity(SLOW_ROTATION).named()
 
-    fun stop() = setVelocity(0.rps).name()
+    fun stop() = setVelocity(0.rps).named()
 
     override fun setVoltage(voltage: Voltage) {
         mainMotor.setControl(voltageOut.withOutput(voltage))
