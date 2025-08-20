@@ -16,7 +16,7 @@ fun Subsystem.namedRunOnce(
     action: () -> Unit
 ) = runOnce(action).withName("$name/$commandName")
 
-fun Command.name(
+fun Command.named(
     prefixName: String = OuterStackTrace.className.substringAfterLast('.'),
     commandName: String = OuterStackTrace.methodName
 ) = this.withName("$prefixName/$commandName")
