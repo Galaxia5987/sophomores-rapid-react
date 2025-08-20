@@ -31,7 +31,7 @@ val angleToBasket
 val turretRotationToBasket: Angle
     get() = angleToBasket.coerceIn(MIN_ANGLE, MAX_ANGLE)
 
-val shootingAngle
+val swerveAngle
     get() = angleToBasket - turretRotationToBasket
 
 val hoodAngle
@@ -72,7 +72,7 @@ fun driveToShootingPoint() =
                 } else {
                     OUTER_SHOOTING_AREA.nearest(robotTranslation)
                 }
-            alignToPose((getPose2d(setpoint, shootingAngle.toRotation2d())))
+            alignToPose((getPose2d(setpoint, swerveAngle.toRotation2d())))
         }
         .withName("Drive/Drive to shooting point")
 
