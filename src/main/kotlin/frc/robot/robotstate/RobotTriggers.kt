@@ -18,30 +18,29 @@ val isInDeadZone = Trigger {
     !OUTER_SHOOTING_AREA.contains(driveTranslation) ||
         INNER_SHOOTING_AREA.contains(driveTranslation)
 }
-val atShootingRotation = turret.isAtSetpoint.and {drive.pose.rotation.measure.isNear(swerveAngle, ROTATION_TOLERANCE)}
+val atShootingRotation =
+    turret.isAtSetpoint.and {
+        drive.pose.rotation.measure.isNear(swerveAngle, ROTATION_TOLERANCE)
+    }
 
 val isIntaking = Trigger { state == RobotState.INTAKING }
 private val hasFrontBall = roller.hasBall
 val hasBackBall = hopper.hasBall
 private val ballsEmpty = hasFrontBall.and(hasBackBall).negate()
 
-
 fun robotCommandsLogger() {
-        Logger.recordOutput("$COMMAND_NAME_PREFIX/RobotState", state)
-        Logger.recordOutput(
-            "$COMMAND_NAME_PREFIX/RobotDistanceFromHub",
-            robotDistanceFromHub
-        )
-        Logger.recordOutput(
-            "$COMMAND_NAME_PREFIX/is in dead zone",
-            isInDeadZone
-        )
-        Logger.recordOutput(
-            "$COMMAND_NAME_PREFIX/turret rotation",
-            turretRotationToHub[deg]
-        )
-        Logger.recordOutput("$COMMAND_NAME_PREFIX/hoodRotation", hoodAngle)
-    }
+    Logger.recordOutput("$COMMAND_NAME_PREFIX/RobotState", state)
+    Logger.recordOutput(
+        "$COMMAND_NAME_PREFIX/RobotDistanceFromHub",
+        robotDistanceFromHub
+    )
+    Logger.recordOutput("$COMMAND_NAME_PREFIX/is in dead zone", isInDeadZone)
+    Logger.recordOutput(
+        "$COMMAND_NAME_PREFIX/turret rotation",
+        turretRotationToHub[deg]
+    )
+    Logger.recordOutput("$COMMAND_NAME_PREFIX/hoodRotation", hoodAngle)
+}
 
 fun bindRobotCommands() {
     isShooting.apply {

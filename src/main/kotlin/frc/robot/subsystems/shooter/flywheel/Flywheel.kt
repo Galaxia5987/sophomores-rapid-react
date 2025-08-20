@@ -37,24 +37,17 @@ class Flywheel : SubsystemBase(), SysIdable {
             }
             .debounce(AT_SET_VELOCITY_DEBOUNCE[sec])
 
-    fun setVelocity(velocity: AngularVelocity): Command =
-        namedRunOnce {
-                velocitySetpoint = velocity
-                mainMotor.setControl(
-                    velocityTorque.withVelocity(velocitySetpoint)
-                )
-            }
+    fun setVelocity(velocity: AngularVelocity): Command = namedRunOnce {
+        velocitySetpoint = velocity
+        mainMotor.setControl(velocityTorque.withVelocity(velocitySetpoint))
+    }
 
-    fun setVelocity(velocity: () -> AngularVelocity): Command =
-        namedRun {
-                velocitySetpoint = velocity.invoke()
-                mainMotor.setControl(
-                    velocityTorque.withVelocity(velocitySetpoint)
-                )
-            }
+    fun setVelocity(velocity: () -> AngularVelocity): Command = namedRun {
+        velocitySetpoint = velocity.invoke()
+        mainMotor.setControl(velocityTorque.withVelocity(velocitySetpoint))
+    }
 
-    fun slowRotation() =
-        setVelocity(SLOW_ROTATION).named()
+    fun slowRotation() = setVelocity(SLOW_ROTATION).named()
 
     fun stop() = setVelocity(0.rps).named()
 

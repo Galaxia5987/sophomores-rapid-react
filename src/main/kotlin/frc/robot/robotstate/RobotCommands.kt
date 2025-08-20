@@ -86,13 +86,10 @@ fun startShooting() =
         .named(COMMAND_NAME_PREFIX)
 
 fun stopShooting() =
-    parallel(hopper.stop(), roller.stop())
-        .named(COMMAND_NAME_PREFIX)
+    parallel(hopper.stop(), roller.stop()).named(COMMAND_NAME_PREFIX)
 
 fun startIntaking() =
-    parallel(roller.intake(), hopper.start())
-        .named(COMMAND_NAME_PREFIX)
+    parallel(roller.intake(), hopper.start()).named(COMMAND_NAME_PREFIX)
 
 fun stopIntaking() =
-    parallel(roller.stop(), hopper.stop())
-        .named(COMMAND_NAME_PREFIX)
+    parallel(roller.stop(), hopper.stop()).named(COMMAND_NAME_PREFIX)
