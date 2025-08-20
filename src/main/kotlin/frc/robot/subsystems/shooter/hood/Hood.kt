@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.lib.extensions.deg
 import frc.robot.lib.sysid.SysIdable
 import frc.robot.lib.universal_motor.UniversalTalonFX
+import frc.robot.subsystems.shooter.turret.MAX_ANGLE
+import frc.robot.subsystems.shooter.turret.MIN_ANGLE
 import java.util.function.Supplier
 import org.littletonrobotics.junction.AutoLogOutput
 import org.littletonrobotics.junction.Logger
@@ -52,13 +54,13 @@ class Hood : SubsystemBase(), SysIdable {
     }
 
     fun setAngle(angle: Angle): Command = runOnce {
-        setpoint = angle
-        motor.setControl(positionRequest.withPosition(angle))
+        setpoint = angle.coerceIn(MIN_ANGLE, MAX_ANGLE)
+        motor.setControl(positionRequest.withPosition(setpoint))
     }
 
     fun setAngle(angle: Supplier<Angle>): Command = run {
-        setpoint = angle.get()
-        motor.setControl(positionRequest.withPosition(angle.get()))
+        setpoint = angle.get().coerceIn(MIN_ANGLE, MAX_ANGLE)
+        motor.setControl(positionRequest.withPosition(setpoint))
     }
 
     override fun periodic() {
