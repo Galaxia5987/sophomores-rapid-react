@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.Commands.*
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.drive
 import frc.robot.lib.controllers.TunableHolonomicDriveController
+import frc.robot.lib.extensions.mps
 import org.littletonrobotics.junction.Logger
 
 private val translationController =
@@ -65,7 +66,7 @@ val controller =
  */
 fun alignToPose(
     goalPose: Pose2d,
-    linearVelocity: LinearVelocity = Units.MetersPerSecond.zero(),
+    linearVelocity: LinearVelocity = 0.mps,
     tolerance: Pose2d = TOLERANCE,
     poseSupplier: () -> Pose2d = { drive.pose },
     atGoalDebounce: Time = Seconds.of(0.1),
