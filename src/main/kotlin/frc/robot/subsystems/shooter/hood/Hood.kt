@@ -14,7 +14,6 @@ import frc.robot.lib.sysid.SysIdable
 import frc.robot.lib.universal_motor.UniversalTalonFX
 import frc.robot.subsystems.shooter.turret.MAX_ANGLE
 import frc.robot.subsystems.shooter.turret.MIN_ANGLE
-import java.util.function.Supplier
 import org.littletonrobotics.junction.AutoLogOutput
 import org.littletonrobotics.junction.Logger
 import org.littletonrobotics.junction.mechanism.LoggedMechanism2d
@@ -59,7 +58,7 @@ class Hood : SubsystemBase(), SysIdable {
         motor.setControl(positionRequest.withPosition(setpoint))
     }
 
-    fun setAngle(angle: ()-> Angle): Command = run {
+    fun setAngle(angle: () -> Angle): Command = run {
         setpoint = angle.invoke().coerceIn(MIN_ANGLE, MAX_ANGLE)
         motor.setControl(positionRequest.withPosition(setpoint))
     }

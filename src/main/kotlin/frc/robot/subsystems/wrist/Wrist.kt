@@ -16,7 +16,6 @@ import org.littletonrobotics.junction.Logger
 import org.littletonrobotics.junction.mechanism.LoggedMechanism2d
 import org.littletonrobotics.junction.mechanism.LoggedMechanismLigament2d
 
-
 class Wrist : SubsystemBase() {
     @AutoLogOutput private var mechanism = LoggedMechanism2d(6.0, 4.0)
 
