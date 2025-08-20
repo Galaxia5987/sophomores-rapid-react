@@ -3,6 +3,7 @@ package frc.robot.subsystems.shooter.flywheel
 import com.ctre.phoenix6.controls.Follower
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC
 import com.ctre.phoenix6.controls.VoltageOut
+import edu.wpi.first.units.measure.Angle
 import edu.wpi.first.units.measure.AngularVelocity
 import edu.wpi.first.units.measure.Voltage
 import edu.wpi.first.wpilibj2.command.Command
@@ -38,15 +39,15 @@ class Flywheel : SubsystemBase(), SysIdable {
     fun setVelocity(velocity: AngularVelocity): Command =
         runOnce {
                 velocitySetpoint = velocity
-                mainMotor.setControl(velocityTorque.withVelocity(velocity))
+                mainMotor.setControl(velocityTorque.withVelocity(velocitySetpoint))
             }
             .withName("$name/setVelocity")
 
-    fun setVelocity(velocity: Supplier<AngularVelocity>): Command =
+    fun setVelocity(velocity:  () -> AngularVelocity): Command =
         run {
-                velocitySetpoint = velocity.get()
+                velocitySetpoint = velocity.invoke()
                 mainMotor.setControl(
-                    velocityTorque.withVelocity(velocity.get())
+                    velocityTorque.withVelocity(velocitySetpoint)
                 )
             }
             .withName("$name/setVelocity")

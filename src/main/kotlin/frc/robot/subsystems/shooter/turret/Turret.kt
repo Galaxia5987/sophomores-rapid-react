@@ -36,9 +36,9 @@ class Turret : SubsystemBase() {
         motor.setControl(motionMagicTorque.withPosition(position))
     }
 
-    fun setAngle(position: Supplier<Angle>) = run {
-        angleSetpoint = position.get()
-        motor.setControl(motionMagicTorque.withPosition(position.get()))
+    fun setAngle(position: () -> Angle) = run {
+        angleSetpoint = position.invoke()
+        motor.setControl(motionMagicTorque.withPosition(position.invoke()))
     }
 
     override fun periodic() {
