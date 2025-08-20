@@ -19,28 +19,20 @@ import frc.robot.roller
 import frc.robot.subsystems.drive.alignToPose
 import frc.robot.subsystems.shooter.flywheel.SLOW_ROTATION
 import frc.robot.subsystems.shooter.hood.HoodAngles
+import frc.robot.subsystems.shooter.turret.MAX_ANGLE
+import frc.robot.subsystems.shooter.turret.MIN_ANGLE
 
 val robotDistanceFromBasket
     get() = drive.pose.distanceFromPoint(HUB_LOCATION.translation)
 
+val angleToBasket get()=
+    drive.pose.rotationToPoint(HUB_LOCATION.translation)
+
 val turretRotationToBasket: Angle
-    get() {
-        val robotHeading: Angle = drive.pose.rotation.degrees.deg
-        val angleToBasket =
-            drive.pose.rotationToPoint(HUB_LOCATION.translation)
-        var relativeAngle = angleToBasket - robotHeading
-        val maxAngle = 135.deg
-        relativeAngle =
-            when {
-                relativeAngle > maxAngle -> maxAngle
-                relativeAngle < -maxAngle -> -maxAngle
-                else -> relativeAngle
-            }
+    get() = (angleToBasket[deg].coerceIn(MIN_ANGLE[deg],MAX_ANGLE[deg])).deg
 
-        return relativeAngle
-    }
+val shootingAngle get()= angleToBasket-turretRotationToBasket
 
-val shootingAngle get() = drive.pose.rotationToPoint(HUB_LOCATION.translation)
 val hoodAngle
     get() =
         when (robotDistanceFromBasket) {
