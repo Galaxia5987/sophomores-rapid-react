@@ -80,8 +80,8 @@ fun startShooting() =
     sequence(
             drive.lock(),
             waitUntil(flywheel.isAtSetVelocity),
-            hopper.start(),
-            roller.intake()
+        parallel(hopper.start(),
+            roller.intake())
         )
         .withName("$COMMAND_NAME_PREFIX/Shooting")
 
