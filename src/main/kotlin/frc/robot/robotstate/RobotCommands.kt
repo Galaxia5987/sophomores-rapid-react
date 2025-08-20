@@ -22,7 +22,7 @@ import frc.robot.subsystems.shooter.hood.HoodAngles
 import frc.robot.subsystems.shooter.turret.MAX_ANGLE
 import frc.robot.subsystems.shooter.turret.MIN_ANGLE
 
-val robotDistanceFromBasket
+val robotDistanceFromHub
     get() = drive.pose.distanceFromPoint(HUB_LOCATION.translation)
 
 val angleToBasket
@@ -36,7 +36,7 @@ val swerveAngle
 
 val hoodAngle
     get() =
-        when (robotDistanceFromBasket) {
+        when (robotDistanceFromHub) {
             in HoodAngles.NEAR.range -> HoodAngles.NEAR.angle
             in HoodAngles.MID.range -> HoodAngles.MID.angle
             in HoodAngles.FAR.range -> HoodAngles.FAR.angle
@@ -45,7 +45,7 @@ val hoodAngle
 
 val flywheelTargetVelocity
     get() =
-        when (robotDistanceFromBasket[m]) {
+        when (robotDistanceFromHub[m]) {
             in 0.2..0.6 -> 10
             in 0.6..1.0 -> 20
             in 1.0..1.4 -> 30
