@@ -19,7 +19,7 @@ val isInDeadZone = Trigger {
         INNER_SHOOTING_AREA.contains(driveTranslation)
 }
 val atShootingRotation = Trigger {
-    drive.pose.rotation.measure.isNear(shootingAngle, ROTATION_TOLERANCE)
+    drive.pose.rotation.measure.isNear(swerveAngle, ROTATION_TOLERANCE)
 }
 
 val isIntaking = Trigger { state == RobotState.INTAKING }
