@@ -40,13 +40,16 @@ val turretRotationToBasket: Angle
 
 val hoodAngle
     get() =
-        when {
-            robotDistanceFromBasket in HoodAngles.NEAR.range ->
+        when (robotDistanceFromBasket) {
+            in HoodAngles.NEAR.range ->
                 HoodAngles.NEAR.angle
-            robotDistanceFromBasket in HoodAngles.MID.range ->
+
+            in HoodAngles.MID.range ->
                 HoodAngles.MID.angle
-            robotDistanceFromBasket in HoodAngles.FAR.range ->
+
+            in HoodAngles.FAR.range ->
                 HoodAngles.FAR.angle
+
             else -> 45.deg
         }
 
