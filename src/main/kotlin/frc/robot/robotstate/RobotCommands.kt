@@ -15,6 +15,7 @@ import frc.robot.lib.extensions.rotationToPoint
 import frc.robot.lib.extensions.rps
 import frc.robot.lib.extensions.toRotation2d
 import frc.robot.lib.getPose2d
+import frc.robot.lib.name
 import frc.robot.roller
 import frc.robot.subsystems.drive.alignToPose
 import frc.robot.subsystems.shooter.flywheel.SLOW_ROTATION
@@ -74,7 +75,7 @@ fun driveToShootingPoint() =
                 }
             alignToPose((getPose2d(setpoint, swerveAngle.toRotation2d())))
         }
-        .withName("Drive/Drive to shooting point")
+        .name("Drive")
 
 fun startShooting() =
     sequence(
@@ -82,16 +83,16 @@ fun startShooting() =
             waitUntil(flywheel.isAtSetVelocity),
             parallel(hopper.start(), roller.intake())
         )
-        .withName("$COMMAND_NAME_PREFIX/Shooting")
+        .name(COMMAND_NAME_PREFIX)
 
 fun stopShooting() =
     parallel(hopper.stop(), roller.stop())
-        .withName("$COMMAND_NAME_PREFIX/StopShooting")
+        .name(COMMAND_NAME_PREFIX)
 
 fun startIntaking() =
     parallel(roller.intake(), hopper.start())
-        .withName("$COMMAND_NAME_PREFIX/Intake")
+        .name(COMMAND_NAME_PREFIX)
 
 fun stopIntaking() =
     parallel(roller.stop(), hopper.stop())
-        .withName("$COMMAND_NAME_PREFIX/StopIntake")
+        .name(COMMAND_NAME_PREFIX)
