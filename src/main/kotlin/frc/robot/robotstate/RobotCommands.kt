@@ -29,7 +29,7 @@ val angleToBasket
     get() = drive.pose.rotationToPoint(HUB_LOCATION.translation)
 
 val turretRotationToBasket: Angle
-    get() = (angleToBasket[deg].coerceIn(MIN_ANGLE[deg], MAX_ANGLE[deg])).deg
+    get() = (angleToBasket.coerceIn(MIN_ANGLE, MAX_ANGLE))
 
 val shootingAngle
     get() = angleToBasket - turretRotationToBasket
