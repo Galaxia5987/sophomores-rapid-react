@@ -39,10 +39,6 @@ val RobotCommandsLogger
             isInDeadZone
         )
         Logger.recordOutput(
-            "$COMMAND_NAME_PREFIX/fly wheel target velocity",
-            flywheelTargetVelocity
-        )
-        Logger.recordOutput(
             "$COMMAND_NAME_PREFIX/turret rotation",
             turretRotationToBasket[deg]
         )
