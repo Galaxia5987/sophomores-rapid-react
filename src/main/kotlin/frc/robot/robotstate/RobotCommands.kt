@@ -41,15 +41,9 @@ val turretRotationToBasket: Angle
 val hoodAngle
     get() =
         when (robotDistanceFromBasket) {
-            in HoodAngles.NEAR.range ->
-                HoodAngles.NEAR.angle
-
-            in HoodAngles.MID.range ->
-                HoodAngles.MID.angle
-
-            in HoodAngles.FAR.range ->
-                HoodAngles.FAR.angle
-
+            in HoodAngles.NEAR.range -> HoodAngles.NEAR.angle
+            in HoodAngles.MID.range -> HoodAngles.MID.angle
+            in HoodAngles.FAR.range -> HoodAngles.FAR.angle
             else -> 45.deg
         }
 
@@ -82,13 +76,12 @@ fun driveToShootingPoint() =
                 } else {
                     OUTER_SHOOTING_AREA.nearest(robotTranslation)
                 }
-            alignToPose((getPose2d(setpoint,drive.pose.rotation)))
+            alignToPose((getPose2d(setpoint, drive.pose.rotation)))
         }
         .withName("Drive/Drive to shooting point")
 
 fun shooting() =
     sequence(
-
             drive.lock(),
             waitUntil(flywheel.isAtSetVelocity),
             hopper.start(),
