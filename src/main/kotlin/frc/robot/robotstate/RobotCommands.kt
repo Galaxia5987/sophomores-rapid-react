@@ -11,8 +11,9 @@ import frc.robot.lib.extensions.deg
 import frc.robot.lib.extensions.distanceFromPoint
 import frc.robot.lib.extensions.get
 import frc.robot.lib.extensions.m
-import frc.robot.lib.extensions.rotationFromPoint
+import frc.robot.lib.extensions.rotationToPoint
 import frc.robot.lib.extensions.rps
+import frc.robot.lib.extensions.toRotation2d
 import frc.robot.lib.getPose2d
 import frc.robot.roller
 import frc.robot.subsystems.drive.alignToPose
@@ -39,6 +40,7 @@ val turretRotationToBasket: Angle
         return relativeAngle
     }
 
+val shootingAngle get() = drive.pose.rotationToPoint(HUB_LOCATION.translation)
 val hoodAngle
     get() =
         when (robotDistanceFromBasket) {
@@ -77,7 +79,7 @@ fun driveToShootingPoint() =
                 } else {
                     OUTER_SHOOTING_AREA.nearest(robotTranslation)
                 }
-            alignToPose((getPose2d(setpoint, drive.pose.rotation)))
+            alignToPose((getPose2d(setpoint, shootingAngle.toRotation2d())))
         }
         .withName("Drive/Drive to shooting point")
 
