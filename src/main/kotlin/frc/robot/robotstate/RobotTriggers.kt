@@ -18,6 +18,9 @@ val isInDeadZone = Trigger {
     !OUTER_SHOOTING_AREA.contains(driveTranslation) ||
         INNER_SHOOTING_AREA.contains(driveTranslation)
 }
+ val atShootingRotation = Trigger{
+    drive.pose.rotation.measure.isNear(shootingAngle,ROTATION_TOLERANCE)
+ }
 
 val isIntaking = Trigger { state == RobotState.INTAKING }
 private val hasFrontBall = roller.hasBall
@@ -45,7 +48,8 @@ val RobotCommandsLogger
 fun bindRobotCommands() {
     isShooting.apply {
         and(ballsEmpty).onTrue(setIntakeing(), stopShooting())
-        and(isInDeadZone.negate()).onTrue(shooting())
+        and(isInDeadZone.negate()).
+            and(atShootingRotation).onTrue(shooting())
         and(isInDeadZone).onTrue(driveToShootingPoint())
     }
     isIntaking.apply {

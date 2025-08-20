@@ -1,9 +1,11 @@
 package frc.robot.robotstate
 
 import edu.wpi.first.math.geometry.Ellipse2d
+import frc.robot.lib.extensions.deg
 import frc.robot.lib.extensions.m
 import frc.robot.lib.getPose2d
 
+val ROTATION_TOLERANCE = 1.deg
 val HUB_LOCATION = getPose2d(8.2.m, 4.1.m)
 const val COMMAND_NAME_PREFIX = "RobotCompositions"
 val OUTER_SHOOTING_AREA =
