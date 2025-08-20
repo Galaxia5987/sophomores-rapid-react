@@ -70,7 +70,7 @@ fun driveToShootingPoint() =
             val robotTranslation = drive.pose.translation
             val setpoint =
                 if (
-                    INNER_SHOOTING_AREA.getDistance(robotTranslation) >
+                    INNER_SHOOTING_AREA.getDistance(robotTranslation) <
                         OUTER_SHOOTING_AREA.getDistance(robotTranslation)
                 ) {
                     INNER_SHOOTING_AREA.nearest(robotTranslation)
