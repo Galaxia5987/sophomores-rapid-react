@@ -21,11 +21,12 @@ import frc.robot.subsystems.shooter.hood.HoodAngles
 
 val robotDistanceFromBasket
     get() = drive.pose.distanceFromPoint(HUB_LOCATION.translation)
+
 val turretRotationToBasket: Angle
     get() {
         val robotHeading: Angle = drive.pose.rotation.degrees.deg
         val angleToBasket =
-            drive.pose.rotationFromPoint(HUB_LOCATION.translation)
+            drive.pose.rotationToPoint(HUB_LOCATION.translation)
         var relativeAngle = angleToBasket - robotHeading
         val maxAngle = 135.deg
         relativeAngle =
