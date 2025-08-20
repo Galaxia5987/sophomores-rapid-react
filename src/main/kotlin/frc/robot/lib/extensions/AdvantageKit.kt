@@ -11,7 +11,6 @@ import edu.wpi.first.util.struct.StructSerializable
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.Subsystem
-import edu.wpi.first.wpilibj2.command.WrapperCommand
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import kotlin.reflect.KProperty
 import org.littletonrobotics.junction.AutoLogOutputManager
@@ -180,17 +179,21 @@ fun HolonomicDriveController.log() {
     recordOutput("Alignment/Controllers/AtGoal", atReference())
 }
 
-fun Subsystem.nameRun(functionName: String = Throwable().stackTrace[1].methodName , action: ()-> Unit): Command =
-    Commands.run(action, this)
-        .withName("$name/${functionName}")
+fun Subsystem.nameRun(
+    functionName: String = Throwable().stackTrace[1].methodName,
+    action: () -> Unit
+): Command = Commands.run(action, this).withName("$name/${functionName}")
 
+fun Subsystem.nameRunOnce(
+    functionName: String = Throwable().stackTrace[1].methodName,
+    action: () -> Unit
+) = Commands.runOnce(action, this).withName("$name/${functionName}")
 
-fun Subsystem.nameRunOnce(functionName: String = Throwable().stackTrace[1].methodName , action: ()-> Unit) =
-    Commands.runOnce(action, this)
-        .withName("$name/${functionName}")
-
-fun Command.name(className: String = Throwable().stackTrace[1].className.substringAfterLast('.'), functionName: String = Throwable().stackTrace[1].methodName) =
-    this.withName("$className/$functionName")
+fun Command.name(
+    className: String =
+        Throwable().stackTrace[1].className.substringAfterLast('.'),
+    functionName: String = Throwable().stackTrace[1].methodName
+) = this.withName("$className/$functionName")
 
 // ```
 // This provides a replacement for the @AutoLog annotation as well as the ability to manually
