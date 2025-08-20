@@ -24,7 +24,7 @@ val atShootingRotation = Trigger {
 val isIntaking = Trigger { state == RobotState.INTAKING }
 private val hasFrontBall = roller.hasBall
 val hasBackBall = hopper.hasBall
-private val ballsEmpty = roller.hasBall.negate().and(hopper.hasBall.negate())
+private val ballsEmpty = hasFrontBall.and(hasBackBall).negate()
 
 
 val RobotCommandsLogger
