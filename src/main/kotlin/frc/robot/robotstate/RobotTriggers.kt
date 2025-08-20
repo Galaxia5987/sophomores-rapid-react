@@ -15,8 +15,8 @@ private val ballsEmpty = roller.hasBall.negate().and(hopper.hasBall.negate())
 val isShooting = Trigger { state == RobotState.SHOOTING }
 val isInDeadZone = Trigger {
     val driveTranslation = drive.pose.translation
-    !OUTER_SHOOTING_AREA.contains(drive.pose.translation) ||
-        INNER_SHOOTING_AREA.contains(drive.pose.translation)
+    !OUTER_SHOOTING_AREA.contains(driveTranslation) ||
+        INNER_SHOOTING_AREA.contains(driveTranslation)
 }
 
 val isIntaking = Trigger { state == RobotState.INTAKING }
