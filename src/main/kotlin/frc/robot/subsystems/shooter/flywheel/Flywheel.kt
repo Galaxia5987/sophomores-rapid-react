@@ -3,7 +3,6 @@ package frc.robot.subsystems.shooter.flywheel
 import com.ctre.phoenix6.controls.Follower
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC
 import com.ctre.phoenix6.controls.VoltageOut
-import edu.wpi.first.units.measure.Angle
 import edu.wpi.first.units.measure.AngularVelocity
 import edu.wpi.first.units.measure.Voltage
 import edu.wpi.first.wpilibj2.command.Command
@@ -14,7 +13,6 @@ import frc.robot.lib.extensions.rps
 import frc.robot.lib.extensions.sec
 import frc.robot.lib.sysid.SysIdable
 import frc.robot.lib.universal_motor.UniversalTalonFX
-import java.util.function.Supplier
 import org.littletonrobotics.junction.Logger
 
 class Flywheel : SubsystemBase(), SysIdable {
@@ -39,11 +37,13 @@ class Flywheel : SubsystemBase(), SysIdable {
     fun setVelocity(velocity: AngularVelocity): Command =
         runOnce {
                 velocitySetpoint = velocity
-                mainMotor.setControl(velocityTorque.withVelocity(velocitySetpoint))
+                mainMotor.setControl(
+                    velocityTorque.withVelocity(velocitySetpoint)
+                )
             }
             .withName("$name/setVelocity")
 
-    fun setVelocity(velocity:  () -> AngularVelocity): Command =
+    fun setVelocity(velocity: () -> AngularVelocity): Command =
         run {
                 velocitySetpoint = velocity.invoke()
                 mainMotor.setControl(
