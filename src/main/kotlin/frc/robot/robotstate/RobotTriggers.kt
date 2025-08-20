@@ -31,7 +31,7 @@ val RobotCommandsLogger
         Logger.recordOutput("$COMMAND_NAME_PREFIX/RobotState", state)
         Logger.recordOutput(
             "$COMMAND_NAME_PREFIX/RobotDistanceFromHub",
-            robotDistanceFromBasket
+            robotDistanceFromHub
         )
         Logger.recordOutput(
             "$COMMAND_NAME_PREFIX/is in dead zone",
