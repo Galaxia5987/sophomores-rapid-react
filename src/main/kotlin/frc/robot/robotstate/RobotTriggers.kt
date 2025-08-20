@@ -40,7 +40,7 @@ val RobotCommandsLogger
         )
         Logger.recordOutput(
             "$COMMAND_NAME_PREFIX/turret rotation",
-            turretRotationToBasket[deg]
+            turretRotationToHub[deg]
         )
         Logger.recordOutput("$COMMAND_NAME_PREFIX/hoodRotation", hoodAngle)
     }
