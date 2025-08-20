@@ -58,8 +58,8 @@ class Hood : SubsystemBase(), SysIdable {
         motor.setControl(positionRequest.withPosition(setpoint))
     }
 
-    fun setAngle(angle: Supplier<Angle>): Command = run {
-        setpoint = angle.get().coerceIn(MIN_ANGLE, MAX_ANGLE)
+    fun setAngle(angle: ()-> Angle): Command = run {
+        setpoint = angle.invoke().coerceIn(MIN_ANGLE, MAX_ANGLE)
         motor.setControl(positionRequest.withPosition(setpoint))
     }
 
