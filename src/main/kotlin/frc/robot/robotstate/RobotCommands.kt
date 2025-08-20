@@ -24,10 +24,10 @@ import frc.robot.subsystems.shooter.turret.MAX_ANGLE
 import frc.robot.subsystems.shooter.turret.MIN_ANGLE
 
 val robotDistanceFromHub
-    get() = drive.pose.distanceFromPoint(HUB_LOCATION.translation)
+    get() = drive.pose.distanceFromPoint(HUB_LOCATION)
 
 val angleToHub
-    get() = drive.pose.rotationToPoint(HUB_LOCATION.translation)
+    get() = drive.pose.rotationToPoint(HUB_LOCATION)
 
 val turretRotationToHub: Angle
     get() = angleToHub.coerceIn(MIN_ANGLE, MAX_ANGLE)
