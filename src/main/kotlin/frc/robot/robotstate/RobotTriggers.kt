@@ -63,8 +63,8 @@ fun bindRobotCommands() {
     applyLeds()
 }
 
-private fun setRobotState(newStates: RobotState) =
-    Commands.runOnce({ state = newStates })
+private fun setRobotState(newState: RobotState) =
+    Commands.runOnce({ state = newState })
 
 fun setShooting() = setRobotState(RobotState.SHOOTING)
 
