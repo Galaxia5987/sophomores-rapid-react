@@ -9,6 +9,7 @@ import frc.robot.lib.extensions.deg
 import frc.robot.lib.extensions.get
 import frc.robot.lib.onTrue
 import frc.robot.roller
+import frc.robot.turret
 import org.littletonrobotics.junction.Logger
 
 val isShooting = Trigger { state == RobotState.SHOOTING }
@@ -17,9 +18,7 @@ val isInDeadZone = Trigger {
     !OUTER_SHOOTING_AREA.contains(driveTranslation) ||
         INNER_SHOOTING_AREA.contains(driveTranslation)
 }
-val atShootingRotation = Trigger {
-    drive.pose.rotation.measure.isNear(swerveAngle, ROTATION_TOLERANCE)
-}
+val atShootingRotation = turret.isAtSetpoint.and {drive.pose.rotation.measure.isNear(swerveAngle, ROTATION_TOLERANCE)}
 
 val isIntaking = Trigger { state == RobotState.INTAKING }
 private val hasFrontBall = roller.hasBall
