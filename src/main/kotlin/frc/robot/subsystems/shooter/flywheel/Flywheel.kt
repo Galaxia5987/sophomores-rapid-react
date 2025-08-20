@@ -11,6 +11,9 @@ import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.lib.extensions.get
 import frc.robot.lib.extensions.rps
 import frc.robot.lib.extensions.sec
+import frc.robot.lib.name
+import frc.robot.lib.namedRun
+import frc.robot.lib.namedRunOnce
 import frc.robot.lib.sysid.SysIdable
 import frc.robot.lib.universal_motor.UniversalTalonFX
 import org.littletonrobotics.junction.Logger
@@ -35,27 +38,25 @@ class Flywheel : SubsystemBase(), SysIdable {
             .debounce(AT_SET_VELOCITY_DEBOUNCE[sec])
 
     fun setVelocity(velocity: AngularVelocity): Command =
-        runOnce {
+        namedRunOnce {
                 velocitySetpoint = velocity
                 mainMotor.setControl(
                     velocityTorque.withVelocity(velocitySetpoint)
                 )
             }
-            .withName("$name/setVelocity")
 
     fun setVelocity(velocity: () -> AngularVelocity): Command =
-        run {
+        namedRun {
                 velocitySetpoint = velocity.invoke()
                 mainMotor.setControl(
                     velocityTorque.withVelocity(velocitySetpoint)
                 )
             }
-            .withName("$name/setVelocity")
 
     fun slowRotation() =
-        setVelocity(SLOW_ROTATION).withName("$name/slowRotation")
+        setVelocity(SLOW_ROTATION).name()
 
-    fun stop() = setVelocity(0.rps).withName("$name/stop")
+    fun stop() = setVelocity(0.rps).name()
 
     override fun setVoltage(voltage: Voltage) {
         mainMotor.setControl(voltageOut.withOutput(voltage))
