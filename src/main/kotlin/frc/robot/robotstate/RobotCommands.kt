@@ -27,7 +27,7 @@ val robotDistanceFromHub
     get() = drive.pose.distanceFromPoint(HUB_LOCATION)
 
 val angleToHub
-    get() = drive.pose.rotationToPoint(HUB_LOCATION)
+    get() = drive.pose.translation.rotationToPoint(HUB_LOCATION).measure
 
 val turretRotationToHub: Angle
     get() = angleToHub.coerceIn(MIN_ANGLE, MAX_ANGLE)
