@@ -26,14 +26,14 @@ import frc.robot.subsystems.shooter.turret.MIN_ANGLE
 val robotDistanceFromHub
     get() = drive.pose.distanceFromPoint(HUB_LOCATION)
 
-val angleToHub
+val robotRotationFromHub
     get() = drive.pose.translation.rotationToPoint(HUB_LOCATION).measure
 
 val turretRotationToHub: Angle
-    get() = angleToHub.coerceIn(MIN_ANGLE, MAX_ANGLE)
+    get() = robotRotationFromHub.coerceIn(MIN_ANGLE, MAX_ANGLE)
 
 val swerveAngle
-    get() = angleToHub - turretRotationToHub
+    get() = robotRotationFromHub - turretRotationToHub
 
 val hoodAngle
     get() =
