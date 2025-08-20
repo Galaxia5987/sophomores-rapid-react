@@ -51,7 +51,7 @@ object RobotContainer {
     private fun configureDefaultCommands() {
         drive.defaultCommand =
             DriveCommands.joystickDrive(
-                {driverController.leftX },
+                { driverController.leftX },
                 { -driverController.leftY },
                 { -driverController.rightX * 0.8 }
             )

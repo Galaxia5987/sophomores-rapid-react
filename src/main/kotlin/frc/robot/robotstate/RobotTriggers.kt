@@ -18,9 +18,9 @@ val isInDeadZone = Trigger {
     !OUTER_SHOOTING_AREA.contains(driveTranslation) ||
         INNER_SHOOTING_AREA.contains(driveTranslation)
 }
- val atShootingRotation = Trigger{
-    drive.pose.rotation.measure.isNear(shootingAngle,ROTATION_TOLERANCE)
- }
+val atShootingRotation = Trigger {
+    drive.pose.rotation.measure.isNear(shootingAngle, ROTATION_TOLERANCE)
+}
 
 val isIntaking = Trigger { state == RobotState.INTAKING }
 private val hasFrontBall = roller.hasBall
@@ -41,15 +41,17 @@ val RobotCommandsLogger
             "$COMMAND_NAME_PREFIX/fly wheel target velocity",
             flywheelTargetVelocity
         )
-        Logger.recordOutput("$COMMAND_NAME_PREFIX/turret rotation",turretRotationToBasket[deg])
+        Logger.recordOutput(
+            "$COMMAND_NAME_PREFIX/turret rotation",
+            turretRotationToBasket[deg]
+        )
         Logger.recordOutput("$COMMAND_NAME_PREFIX/hoodRotation", hoodAngle)
     }
 
 fun bindRobotCommands() {
     isShooting.apply {
         and(ballsEmpty).onTrue(setIntakeing(), stopShooting())
-        and(isInDeadZone.negate()).
-            and(atShootingRotation).onTrue(shooting())
+        and(isInDeadZone.negate()).and(atShootingRotation).onTrue(shooting())
         and(isInDeadZone).onTrue(driveToShootingPoint())
     }
     isIntaking.apply {
