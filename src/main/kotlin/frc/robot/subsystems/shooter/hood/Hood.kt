@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.lib.extensions.deg
+import frc.robot.lib.extensions.get
 import frc.robot.lib.sysid.SysIdable
 import frc.robot.lib.universal_motor.UniversalTalonFX
 import frc.robot.subsystems.shooter.turret.MAX_ANGLE
@@ -65,7 +66,7 @@ class Hood : SubsystemBase(), SysIdable {
 
     override fun periodic() {
         motor.updateInputs()
-        ligament.setAngle(setpoint.`in`(deg))
+        ligament.setAngle(setpoint[deg])
         Logger.processInputs("Subsystems/$name", motor.inputs)
         Logger.recordOutput("Subsystems/$name/isAtSetpoint", isAtSetpoint)
         Logger.recordOutput("Subsystems/$name/setpoint", setpoint)
