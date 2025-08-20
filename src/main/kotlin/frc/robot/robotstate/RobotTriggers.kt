@@ -27,8 +27,7 @@ val hasBackBall = hopper.hasBall
 private val ballsEmpty = hasFrontBall.and(hasBackBall).negate()
 
 
-val RobotCommandsLogger
-    get() = {
+fun robotCommandsLogger() {
         Logger.recordOutput("$COMMAND_NAME_PREFIX/RobotState", state)
         Logger.recordOutput(
             "$COMMAND_NAME_PREFIX/RobotDistanceFromHub",
