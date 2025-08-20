@@ -11,7 +11,6 @@ import frc.robot.lib.onTrue
 import frc.robot.roller
 import org.littletonrobotics.junction.Logger
 
-private val ballsEmpty = roller.hasBall.negate().and(hopper.hasBall.negate())
 val isShooting = Trigger { state == RobotState.SHOOTING }
 val isInDeadZone = Trigger {
     val driveTranslation = drive.pose.translation
@@ -25,6 +24,8 @@ val atShootingRotation = Trigger {
 val isIntaking = Trigger { state == RobotState.INTAKING }
 private val hasFrontBall = roller.hasBall
 val hasBackBall = hopper.hasBall
+private val ballsEmpty = roller.hasBall.negate().and(hopper.hasBall.negate())
+
 
 val RobotCommandsLogger
     get() = {
