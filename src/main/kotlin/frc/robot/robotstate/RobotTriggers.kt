@@ -20,13 +20,16 @@ val isInDeadZone = Trigger {
 }
 val atShootingRotation =
     turret.isAtSetpoint.and {
-        drive.pose.rotation.measure.isNear(swerveCompensationAngle, ROTATION_TOLERANCE)
+        drive.pose.rotation.measure.isNear(
+            swerveCompensationAngle,
+            ROTATION_TOLERANCE
+        )
     }
 
 val isIntaking = Trigger { state == RobotState.INTAKING }
 private val hasFrontBall = roller.hasBall
 val hasBackBall = hopper.hasBall
-private val ballsEmpty = hasFrontBall.and(hasBackBall).negate()
+private val ballsEmpty = hasFrontBall.or(hasBackBall).negate()
 
 fun robotCommandsLogger() {
     recordOutput("$COMMAND_NAME_PREFIX/RobotState", state)
