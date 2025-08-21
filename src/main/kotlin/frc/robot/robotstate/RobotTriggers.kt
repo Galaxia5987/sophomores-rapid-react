@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.applyLeds
 import frc.robot.drive
 import frc.robot.hopper
-import frc.robot.lib.extensions.deg
 import frc.robot.lib.extensions.get
 import frc.robot.lib.onTrue
 import frc.robot.roller
@@ -38,16 +37,21 @@ fun robotCommandsLogger() {
         robotDistanceFromHub
     )
     recordOutput("$COMMAND_NAME_PREFIX/is in dead zone", isInDeadZone)
-    recordOutput("$COMMAND_NAME_PREFIX/Turret rotation to Hub",turretAngleToHub)
-    recordOutput("$COMMAND_NAME_PREFIX/atShootingRotation",atShootingRotation)
+    recordOutput(
+        "$COMMAND_NAME_PREFIX/Turret rotation to Hub",
+        turretAngleToHub
+    )
+    recordOutput("$COMMAND_NAME_PREFIX/atShootingRotation", atShootingRotation)
 }
 
 fun bindRobotCommands() {
     isShooting.apply {
         and(ballsEmpty).onTrue(setIntakeing(), stopShooting())
-        and(isInDeadZone.negate()).
-            and(atShootingRotation).onTrue(startShooting())
-        and((isInDeadZone).or(atShootingRotation.negate())).onTrue(driveToShootingPoint())
+        and(isInDeadZone.negate())
+            .and(atShootingRotation)
+            .onTrue(startShooting())
+        and((isInDeadZone).or(atShootingRotation.negate()))
+            .onTrue(driveToShootingPoint())
     }
     isIntaking.apply {
         and(ballsEmpty).onTrue(startIntaking())
