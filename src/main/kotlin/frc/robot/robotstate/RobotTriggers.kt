@@ -38,11 +38,8 @@ fun robotCommandsLogger() {
         robotDistanceFromHub
     )
     recordOutput("$COMMAND_NAME_PREFIX/is in dead zone", isInDeadZone)
-    recordOutput(
-        "$COMMAND_NAME_PREFIX/turret rotation",
-        turretAngleToHub[deg]
-    )
-    recordOutput("$COMMAND_NAME_PREFIX/hoodRotation", hoodAngle)
+    recordOutput("$COMMAND_NAME_PREFIX/turret rotation", turretAngleToHub[deg])
+    recordOutput("$COMMAND_NAME_PREFIX/atShootingRotation",atShootingRotation)
 }
 
 fun bindRobotCommands() {
