@@ -56,7 +56,7 @@ val controller =
  * "circle" button is held.
  *
  * @param goalPose The target pose that the robot should align to.
- * @param linearVelocity The desired linear velocity when driving to the pose.
+ * @param goalEndVelocity The desired linear velocity when reaching the desired pose.
  * Defaults to 0 m/s.
  * @param tolerance The acceptable tolerance around the goal pose to consider
  * alignment complete. Defaults to [TOLERANCE].
@@ -65,7 +65,7 @@ val controller =
  */
 fun alignToPose(
     goalPose: Pose2d,
-    linearVelocity: LinearVelocity = 0.mps,
+    goalEndVelocity: LinearVelocity = 0.mps,
     tolerance: Pose2d = TOLERANCE,
     poseSupplier: () -> Pose2d = { drive.pose },
     atGoalDebounce: Time = Seconds.of(0.1),
@@ -85,7 +85,7 @@ fun alignToPose(
                         holonomicController.first.calculate(
                             poseSupplier.invoke(),
                             goalPose,
-                            linearVelocity.`in`(MetersPerSecond),
+                            goalEndVelocity.`in`(MetersPerSecond),
                             goalPose.rotation
                         )
                     )
