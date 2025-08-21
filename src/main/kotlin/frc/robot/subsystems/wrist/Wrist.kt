@@ -45,7 +45,7 @@ class Wrist : SubsystemBase() {
 
     @AutoLogOutput
     val atSetpoint = Trigger {
-        motor.inputs.position.isNear(setpoint, POINTE_TOLERANCE)
+        motor.inputs.position.isNear(setpoint, SETPOINT_TOLERANCE)
     }
 
     override fun periodic() {
