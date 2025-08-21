@@ -20,7 +20,7 @@ val isInDeadZone = Trigger {
 }
 val atShootingRotation =
     turret.isAtSetpoint.and {
-        drive.pose.rotation.measure.isNear(swerveAngleToBasket, ROTATION_TOLERANCE)
+        drive.pose.rotation.measure.isNear(swerveCompensationAngle, ROTATION_TOLERANCE)
     }
 
 val isIntaking = Trigger { state == RobotState.INTAKING }
