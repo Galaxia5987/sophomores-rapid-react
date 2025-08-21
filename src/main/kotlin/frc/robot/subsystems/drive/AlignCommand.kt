@@ -56,8 +56,8 @@ val controller =
  * "circle" button is held.
  *
  * @param goalPose The target pose that the robot should align to.
- * @param goalEndVelocity The desired linear velocity when reaching the desired pose.
- * Defaults to 0 m/s.
+ * @param goalEndVelocity The desired linear velocity when reaching the desired
+ * pose. Defaults to 0 m/s.
  * @param tolerance The acceptable tolerance around the goal pose to consider
  * alignment complete. Defaults to [TOLERANCE].
  * @param holonomicController The holonomic controller to use for the alignment.
