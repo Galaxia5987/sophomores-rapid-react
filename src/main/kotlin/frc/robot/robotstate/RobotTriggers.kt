@@ -7,10 +7,12 @@ import frc.robot.drive
 import frc.robot.hopper
 import frc.robot.lib.extensions.deg
 import frc.robot.lib.extensions.get
+import frc.robot.lib.extensions.log
 import frc.robot.lib.onTrue
 import frc.robot.roller
 import frc.robot.turret
 import org.littletonrobotics.junction.Logger
+import org.littletonrobotics.junction.Logger.recordOutput
 
 val isShooting = Trigger { state == RobotState.SHOOTING }
 val isInDeadZone = Trigger {
@@ -29,17 +31,17 @@ val hasBackBall = hopper.hasBall
 private val ballsEmpty = hasFrontBall.and(hasBackBall).negate()
 
 fun robotCommandsLogger() {
-    Logger.recordOutput("$COMMAND_NAME_PREFIX/RobotState", state)
-    Logger.recordOutput(
+    recordOutput("$COMMAND_NAME_PREFIX/RobotState", state)
+    recordOutput(
         "$COMMAND_NAME_PREFIX/RobotDistanceFromHub",
         robotDistanceFromHub
     )
-    Logger.recordOutput("$COMMAND_NAME_PREFIX/is in dead zone", isInDeadZone)
-    Logger.recordOutput(
+    recordOutput("$COMMAND_NAME_PREFIX/is in dead zone", isInDeadZone)
+    recordOutput(
         "$COMMAND_NAME_PREFIX/turret rotation",
         turretRotationToHub[deg]
     )
-    Logger.recordOutput("$COMMAND_NAME_PREFIX/hoodRotation", hoodAngle)
+    recordOutput("$COMMAND_NAME_PREFIX/hoodRotation", hoodAngle)
 }
 
 fun bindRobotCommands() {
