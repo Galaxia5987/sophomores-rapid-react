@@ -12,7 +12,7 @@ import frc.robot.robotstate.bindRobotCommands
 import frc.robot.robotstate.flywheelTargetVelocity
 import frc.robot.robotstate.hoodAngle
 import frc.robot.robotstate.setIntakeing
-import frc.robot.robotstate.turretRotationToHub
+import frc.robot.robotstate.turretAngleToHub
 import frc.robot.subsystems.drive.DriveCommands
 import org.ironmaple.simulation.SimulatedArena
 import org.littletonrobotics.junction.AutoLogOutput
@@ -58,7 +58,7 @@ object RobotContainer {
 
         flywheel.defaultCommand =
             flywheel.setVelocity { flywheelTargetVelocity }
-        turret.defaultCommand = turret.setAngle { turretRotationToHub }
+        turret.defaultCommand = turret.setAngle { turretAngleToHub }
         hood.defaultCommand = hood.setAngle { hoodAngle }
     }
 

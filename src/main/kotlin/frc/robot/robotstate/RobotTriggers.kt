@@ -20,7 +20,7 @@ val isInDeadZone = Trigger {
 }
 val atShootingRotation =
     turret.isAtSetpoint.and {
-        drive.pose.rotation.measure.isNear(swerveAngle, ROTATION_TOLERANCE)
+        drive.pose.rotation.measure.isNear(swerveAngleToBasket, ROTATION_TOLERANCE)
     }
 
 val isIntaking = Trigger { state == RobotState.INTAKING }
@@ -37,7 +37,7 @@ fun robotCommandsLogger() {
     recordOutput("$COMMAND_NAME_PREFIX/is in dead zone", isInDeadZone)
     recordOutput(
         "$COMMAND_NAME_PREFIX/turret rotation",
-        turretRotationToHub[deg]
+        turretAngleToHub[deg]
     )
     recordOutput("$COMMAND_NAME_PREFIX/hoodRotation", hoodAngle)
 }
