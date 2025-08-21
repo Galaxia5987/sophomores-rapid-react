@@ -19,4 +19,9 @@ fun Subsystem.namedRunOnce(
 fun Command.named(
     prefixName: String = OuterStackTrace.className.substringAfterLast('.'),
     commandName: String = OuterStackTrace.methodName
-) = this.withName("$prefixName/$commandName")
+): Command {
+    if (this.requirements.size == 1) {
+        return this.withName("${this.requirements.first().name}/$commandName")
+    }
+    return this.withName("$prefixName/$commandName")
+}
