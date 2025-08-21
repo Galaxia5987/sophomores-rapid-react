@@ -7,11 +7,9 @@ import frc.robot.drive
 import frc.robot.hopper
 import frc.robot.lib.extensions.deg
 import frc.robot.lib.extensions.get
-import frc.robot.lib.extensions.log
 import frc.robot.lib.onTrue
 import frc.robot.roller
 import frc.robot.turret
-import org.littletonrobotics.junction.Logger
 import org.littletonrobotics.junction.Logger.recordOutput
 
 val isShooting = Trigger { state == RobotState.SHOOTING }
