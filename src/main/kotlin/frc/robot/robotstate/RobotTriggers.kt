@@ -45,10 +45,9 @@ fun robotCommandsLogger() {
 fun bindRobotCommands() {
     isShooting.apply {
         and(ballsEmpty).onTrue(setIntakeing(), stopShooting())
-        and(isInDeadZone.negate())
-            .and(atShootingRotation)
-            .onTrue(startShooting())
-        and(isInDeadZone).onTrue(driveToShootingPoint())
+        and(isInDeadZone.negate()).
+            and(atShootingRotation).onTrue(startShooting())
+        and((isInDeadZone).or(atShootingRotation.negate())).onTrue(driveToShootingPoint())
     }
     isIntaking.apply {
         and(ballsEmpty).onTrue(startIntaking())
