@@ -7,14 +7,22 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue
 import com.ctre.phoenix6.signals.SensorDirectionValue
 import edu.wpi.first.units.measure.Current
+import edu.wpi.first.wpilibj.Filesystem
 import frc.robot.lib.Gains
 import frc.robot.lib.extensions.amps
 import frc.robot.lib.extensions.deg
 import frc.robot.lib.extensions.get
+import frc.robot.lib.math.interpolation.InterpolatingDoubleMap
+import frc.robot.lib.shooting.ShootingTableReader
 
 const val MOTOR_ID = 3
 
 val SETPOINT_TOLERANCE = 0.5.deg
+
+val HOOD_ANGLE_BY_DISTANCE: InterpolatingDoubleMap =
+    ShootingTableReader.parse(
+        Filesystem.getDeployDirectory().path + "/shootData/distanceToAngle.csv"
+    )
 
 val STATOR_LIMIT = 30.amps
 val SUPPLY_LIMIT: Current = STATOR_LIMIT * 2.0
