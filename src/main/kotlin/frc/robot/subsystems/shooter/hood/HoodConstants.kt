@@ -6,24 +6,23 @@ import com.ctre.phoenix6.configs.FeedbackConfigs
 import com.ctre.phoenix6.configs.TalonFXConfiguration
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue
 import com.ctre.phoenix6.signals.SensorDirectionValue
-import edu.wpi.first.units.measure.Angle
 import edu.wpi.first.units.measure.Current
-import edu.wpi.first.units.measure.Distance
+import edu.wpi.first.wpilibj.Filesystem
 import frc.robot.lib.Gains
 import frc.robot.lib.extensions.amps
 import frc.robot.lib.extensions.deg
 import frc.robot.lib.extensions.get
-import frc.robot.lib.extensions.m
+import frc.robot.lib.math.interpolation.InterpolatingDoubleMap
+import frc.robot.lib.shooting.ShootingTableReader
 
 const val MOTOR_ID = 3
 
 val SETPOINT_TOLERANCE = 0.5.deg
 
-enum class HoodAngles(val angle: Angle, val range: ClosedRange<Distance>) {
-    NEAR(15.deg, 1.m..1.6.m),
-    MID(30.deg, 1.6.m..3.m),
-    FAR(45.deg, 3.m..5.m)
-}
+val HOOD_ANGLE_BY_DISTANCE: InterpolatingDoubleMap =
+    ShootingTableReader.parse(
+        Filesystem.getDeployDirectory().path + "/shootData/distanceToAngle.csv"
+    )
 
 val STATOR_LIMIT = 30.amps
 val SUPPLY_LIMIT: Current = STATOR_LIMIT * 2.0

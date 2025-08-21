@@ -7,13 +7,17 @@ import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine
+import frc.robot.lib.extensions.deg
 import frc.robot.lib.extensions.enableAutoLogOutputFor
+import frc.robot.lib.extensions.get
+import frc.robot.lib.extensions.m
+import frc.robot.lib.math.interpolation.InterpolatingDouble
 import frc.robot.robotstate.bindRobotCommands
-import frc.robot.robotstate.flywheelTargetVelocity
-import frc.robot.robotstate.hoodAngle
+import frc.robot.robotstate.robotDistanceFromHub
 import frc.robot.robotstate.setIntakeing
 import frc.robot.robotstate.turretAngleToHub
 import frc.robot.subsystems.drive.DriveCommands
+import frc.robot.subsystems.shooter.hood.HOOD_ANGLE_BY_DISTANCE
 import org.ironmaple.simulation.SimulatedArena
 import org.littletonrobotics.junction.AutoLogOutput
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser
@@ -24,6 +28,7 @@ object RobotContainer {
 
     private val autoChooser: LoggedDashboardChooser<Command>
 
+    var hoodAngle = InterpolatingDouble(robotDistanceFromHub[m])
     init {
         drive // Ensure Drive is initialized
 
@@ -55,11 +60,12 @@ object RobotContainer {
                 { -driverController.leftY },
                 { -driverController.rightX * 0.8 }
             )
-
-        flywheel.defaultCommand =
-            flywheel.setVelocity { flywheelTargetVelocity }
         turret.defaultCommand = turret.setAngle { turretAngleToHub }
-        hood.defaultCommand = hood.setAngle { hoodAngle }
+        hood.defaultCommand =
+            hood.setAngle {
+                hoodAngle.value = robotDistanceFromHub[m]
+                HOOD_ANGLE_BY_DISTANCE.getInterpolated(hoodAngle).value.deg
+            }
     }
 
     private fun configureButtonBindings() {

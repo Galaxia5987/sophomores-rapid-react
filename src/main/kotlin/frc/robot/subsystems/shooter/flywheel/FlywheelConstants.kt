@@ -6,13 +6,22 @@ import com.ctre.phoenix6.configs.MotorOutputConfigs
 import com.ctre.phoenix6.configs.TalonFXConfiguration
 import com.ctre.phoenix6.signals.InvertedValue
 import com.ctre.phoenix6.signals.NeutralModeValue
+import edu.wpi.first.wpilibj.Filesystem
 import frc.robot.lib.Gains
 import frc.robot.lib.extensions.amps
 import frc.robot.lib.extensions.get
 import frc.robot.lib.extensions.rps
 import frc.robot.lib.extensions.sec
+import frc.robot.lib.math.interpolation.InterpolatingDoubleMap
+import frc.robot.lib.shooting.ShootingTableReader
 
 val SLOW_ROTATION = 10.rps
+val SHOOTER_VELOCITY_BY_DISTANCE: InterpolatingDoubleMap =
+    ShootingTableReader.parse(
+        Filesystem.getDeployDirectory().path +
+            "/shootData/distanceToVelocity.csv"
+    )
+
 const val MAIN_MOTOR_PORT = 5
 const val AUX_MOTOR_PORT = 6
 val STATOR_CURRENT_LIMIT = 100.amps
