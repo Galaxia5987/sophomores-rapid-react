@@ -29,11 +29,11 @@ val robotDistanceFromHub
 val robotRotationFromHub
     get() = drive.pose.translation.rotationToPoint(HUB_LOCATION).measure
 
-val turretRotationToHub: Angle
+val turretAngleToHub: Angle
     get() = robotRotationFromHub.coerceIn(MIN_ANGLE, MAX_ANGLE)
 
-val swerveAngle
-    get() = robotRotationFromHub - turretRotationToHub
+val swerveAngleToBasket
+    get() = robotRotationFromHub - turretAngleToHub
 
 val hoodAngle
     get() =
@@ -73,7 +73,7 @@ fun driveToShootingPoint() =
                 } else {
                     OUTER_SHOOTING_AREA.nearest(robotTranslation)
                 }
-            alignToPose((getPose2d(setpoint, swerveAngle.toRotation2d())))
+            alignToPose((getPose2d(setpoint, swerveAngleToBasket.toRotation2d())))
         }
         .named("Drive")
 
