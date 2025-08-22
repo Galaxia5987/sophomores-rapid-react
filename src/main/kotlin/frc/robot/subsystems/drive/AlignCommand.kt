@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.Commands.*
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.drive
 import frc.robot.lib.controllers.TunableHolonomicDriveController
+import frc.robot.lib.extensions.mps
 import org.littletonrobotics.junction.Logger
 
 private val translationController =
@@ -55,8 +56,8 @@ val controller =
  * "circle" button is held.
  *
  * @param goalPose The target pose that the robot should align to.
- * @param linearVelocity The desired linear velocity when driving to the pose.
- * Defaults to 0 m/s.
+ * @param goalEndVelocity The desired linear velocity when reaching the desired
+ * pose. Defaults to 0 m/s.
  * @param tolerance The acceptable tolerance around the goal pose to consider
  * alignment complete. Defaults to [TOLERANCE].
  * @param holonomicController The holonomic controller to use for the alignment.
@@ -64,7 +65,7 @@ val controller =
  */
 fun alignToPose(
     goalPose: Pose2d,
-    linearVelocity: LinearVelocity = MetersPerSecond.zero(),
+    goalEndVelocity: LinearVelocity = 0.mps,
     tolerance: Pose2d = TOLERANCE,
     poseSupplier: () -> Pose2d = { drive.pose },
     atGoalDebounce: Time = Seconds.of(0.1),
@@ -84,7 +85,7 @@ fun alignToPose(
                         holonomicController.first.calculate(
                             poseSupplier.invoke(),
                             goalPose,
-                            linearVelocity.`in`(MetersPerSecond),
+                            goalEndVelocity.`in`(MetersPerSecond),
                             goalPose.rotation
                         )
                     )
