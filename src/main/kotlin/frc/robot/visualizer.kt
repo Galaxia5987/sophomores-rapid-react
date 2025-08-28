@@ -75,4 +75,5 @@ fun getSubsystemPose(): Array<Pose3d>{
 }
 fun logSubsystemPose(){
     Logger.recordOutput("RobotPose3d", getSubsystemPose())
+    Logger.
 }
