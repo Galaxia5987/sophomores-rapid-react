@@ -34,6 +34,8 @@ class Hood : SubsystemBase(), SysIdable {
             gearRatio = MOTOR_TO_MECHANISM_RATIO
         )
 
+    val inputs get() = motor.inputs
+
     private val positionRequest = PositionTorqueCurrentFOC(0.0)
     private val voltageRequest = VoltageOut(0.0)
 

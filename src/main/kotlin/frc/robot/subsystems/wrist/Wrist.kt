@@ -10,6 +10,7 @@ import frc.robot.lib.extensions.deg
 import frc.robot.lib.extensions.degrees
 import frc.robot.lib.extensions.get
 import frc.robot.lib.extensions.kg2m
+import frc.robot.lib.named
 import frc.robot.lib.universal_motor.UniversalTalonFX
 import org.littletonrobotics.junction.AutoLogOutput
 import org.littletonrobotics.junction.Logger
@@ -34,12 +35,14 @@ class Wrist : SubsystemBase() {
             config = TalonFXConfiguration()
         )
 
+    val inputs = motor.inputs
+
     private val positionRequest = PositionVoltage(0.0)
 
     fun setAngle(angle: Angle): Command = runOnce {
         setpoint = angle
         motor.setControl(positionRequest.withPosition(angle))
-    }
+    }.named()
 
     fun reset() = setAngle(0.0.degrees)
 

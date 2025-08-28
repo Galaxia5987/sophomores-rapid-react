@@ -1,15 +1,10 @@
 package frc.robot
 
 import edu.wpi.first.math.geometry.Pose3d
-import edu.wpi.first.math.geometry.Translation2d
-import edu.wpi.first.math.geometry.Translation3d
-import edu.wpi.first.units.Units.Meters
-import edu.wpi.first.units.measure.Angle
 import frc.robot.lib.extensions.deg
-import frc.robot.lib.extensions.log
 import frc.robot.lib.getPose3d
 import frc.robot.lib.getRotation3d
-import frc.robot.subsystems.drive.Drive
+import frc.robot.lib.getTranslation3d
 import org.littletonrobotics.junction.Logger
 
 //private val swerveModulePose: Array<Translation2d> =
@@ -69,11 +64,34 @@ import org.littletonrobotics.junction.Logger
 //    return swervePosesDrive
 //}
 
+val wristTranslation get() = getTranslation3d(0.0)
+val wristRotation get() = getRotation3d(pitch = wrist.inputs.position)
+val wristPose get() = getPose3d(wristTranslation,wristRotation)
+
+val turretTranslation get() = getTranslation3d(0.0)
+val turretRotation get() = getRotation3d(yaw = turret.input.position)
+val turretPose get() = getPose3d(turretTranslation,turretRotation)
+
+val hoodTranslation get() = getTranslation3d(0.0)
+val hoodRotation get() = turretRotation + getRotation3d(pitch = hood.inputs.position)
+val hoodPose get() = getPose3d(hoodTranslation,hoodRotation)
+
+val flywheelTranslation get() = getTranslation3d(0.0)
+val flywheelRotation get() = hoodRotation + getRotation3d(pitch = (-10).deg)
+val flywheelPose get() = getPose3d(flywheelTranslation,flywheelRotation)
 
 fun getSubsystemPose(): Array<Pose3d>{
-    return Array(13){getPose3d()}
+    val subsystemPoseArray =  Array(13){getPose3d()}
+/*swerve 0-3
+*
+*/
+    subsystemPoseArray[4] = wristPose
+    subsystemPoseArray[5] = turretPose
+    subsystemPoseArray[6] = hoodPose
+    subsystemPoseArray[7] = flywheelPose
+
+    return subsystemPoseArray
 }
 fun logSubsystemPose(){
-    Logger.recordOutput("RobotPose3d", getSubsystemPose())
-    Logger.
+    Logger.recordOutput("RobotPose3d", *getSubsystemPose())
 }
