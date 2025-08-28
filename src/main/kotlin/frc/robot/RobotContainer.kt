@@ -32,7 +32,6 @@ object RobotContainer {
     var hoodAngle = InterpolatingDouble(robotDistanceFromHub[m])
     init {
         drive // Ensure Drive is initialized
-        wrist.setAngle(WristAngles.DOWN.angle)
         autoChooser =
             LoggedDashboardChooser(
                 "Auto Choices",

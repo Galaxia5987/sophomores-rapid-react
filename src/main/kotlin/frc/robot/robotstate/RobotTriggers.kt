@@ -8,7 +8,9 @@ import frc.robot.hopper
 import frc.robot.lib.extensions.get
 import frc.robot.lib.onTrue
 import frc.robot.roller
+import frc.robot.subsystems.wrist.WristAngles
 import frc.robot.turret
+import frc.robot.wrist
 import org.littletonrobotics.junction.Logger.recordOutput
 
 val isShooting = Trigger { state == RobotState.SHOOTING }
@@ -45,6 +47,7 @@ fun robotCommandsLogger() {
 }
 
 fun bindRobotCommands() {
+    wrist.atSetpoint.onFalse(wrist.setAngle(WristAngles.DOWN.angle))
     isShooting.apply {
         and(ballsEmpty).onTrue(setIntakeing(), stopShooting())
         and(isInDeadZone.negate())
