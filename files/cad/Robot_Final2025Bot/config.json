@@ -1,5 +1,5 @@
 {
-  "name": "202OffSeason",
+  "name": "2022OffSeason",
   "sourceUrl": "",
   "disableSimplification": false,
   "rotations": [
@@ -281,13 +281,13 @@
         },
         {
           "axis": "z",
-          "degrees": -90
+          "degrees": 90
         }
       ],
       "zeroedPosition": [
+        -0.56,
         0,
-        0,
-        0
+        0.28
       ]
     },
     {
@@ -303,9 +303,9 @@
         }
       ],
       "zeroedPosition": [
-        -0.0,
+        -0.56,
         0,
-        -0.02
+        0.28
       ]
     },
     {
