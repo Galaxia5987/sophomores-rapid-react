@@ -59,7 +59,7 @@ object RobotContainer {
             DriveCommands.joystickDrive(
                 { driverController.leftX },
                 { -driverController.leftY },
-                { -driverController.rightX * 0.8 }
+                { -driverController.l2Axis * 0.8 }
             )
         turret.defaultCommand = turret.setAngle { turretAngleToHub }
         hood.defaultCommand =
@@ -74,6 +74,8 @@ object RobotContainer {
         // Switch to X pattern when X button is pressed
 
         driverController.circle().onTrue(setIntakeing())
+        driverController.square().onTrue(wrist.setAngle(WristAngles.UP.angle))
+        driverController.cross().onTrue(wrist.setAngle(WristAngles.DOWN.angle))
         // Reset gyro / odometry
         val resetOdometry =
             if (CURRENT_MODE == Mode.SIM)

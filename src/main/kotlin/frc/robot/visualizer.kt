@@ -1,8 +1,11 @@
 package frc.robot
 
+import edu.wpi.first.math.Vector
 import edu.wpi.first.math.geometry.Pose3d
+import edu.wpi.first.math.geometry.Rotation3d
 import edu.wpi.first.math.geometry.Translation2d
 import edu.wpi.first.math.geometry.Translation3d
+import edu.wpi.first.math.numbers.N3
 import edu.wpi.first.units.measure.Angle
 import frc.robot.lib.extensions.deg
 import frc.robot.lib.extensions.get
@@ -87,9 +90,9 @@ val turretPose
     get() = getPose3d(turretTranslation, turretRotation)
 
 val hoodTranslation
-    get() = getTranslation3d(0.0)
+    get() = getTranslation3d(0.0,0.15,0.5)
 val hoodRotation
-    get() = turretRotation + getRotation3d(pitch = hood.inputs.position)
+    get() = getRotation3d(50.deg+hood.inputs.position,0.deg,  turret.input.position)
 val hoodPose
     get() = getPose3d(hoodTranslation, hoodRotation)
 
@@ -109,8 +112,8 @@ fun getSubsystemPose(): Array<Pose3d> {
         subsystemPoseArray[2*i+1] = modulePose
     }
     subsystemPoseArray[8] = wristPose
-    subsystemPoseArray[5] = turretPose
-    subsystemPoseArray[6] = hoodPose
+    subsystemPoseArray[15] = turretPose
+    subsystemPoseArray[17] = hoodPose
     subsystemPoseArray[7] = flywheelPose
 
     return subsystemPoseArray
