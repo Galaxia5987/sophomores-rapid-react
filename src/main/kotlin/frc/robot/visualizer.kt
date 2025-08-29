@@ -100,13 +100,13 @@ val flywheelRotation
 val flywheelPose
     get() = getPose3d(flywheelTranslation, flywheelRotation)
 
-val subsystemPoseArray = Array(13) { getPose3d() }
+val subsystemPoseArray = Array(19) { getPose3d() }
 
 fun getSubsystemPose(): Array<Pose3d> {
     val swerveModulesPoses = getAllSwerveModulePoseDrive()
 
     swerveModulesPoses.forEachIndexed { i, modulePose ->
-        subsystemPoseArray[i] = modulePose
+        subsystemPoseArray[2*i+1] = modulePose
     }
     subsystemPoseArray[4] = wristPose
     subsystemPoseArray[5] = turretPose
