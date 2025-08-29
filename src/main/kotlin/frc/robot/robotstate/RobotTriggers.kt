@@ -47,7 +47,6 @@ fun robotCommandsLogger() {
 }
 
 fun bindRobotCommands() {
-    wrist.atSetpoint.onFalse(wrist.setAngle(WristAngles.DOWN.angle))
     isShooting.apply {
         and(ballsEmpty).onTrue(setIntakeing(), stopShooting())
         and(isInDeadZone.negate())
