@@ -32,7 +32,7 @@ class Wrist : SubsystemBase() {
             MOTOR_PORT,
             momentOfInertia = 0.0025.kg2m,
             gearRatio = GEAR_RATIO,
-            config = TalonFXConfiguration()
+            config = MOTOR_CONFIG
         )
 
     val inputs = motor.inputs
@@ -44,7 +44,6 @@ class Wrist : SubsystemBase() {
                 setpoint = angle
                 motor.setControl(positionRequest.withPosition(angle))
             }
-            .named()
 
     fun reset() = setAngle(0.0.degrees)
 
