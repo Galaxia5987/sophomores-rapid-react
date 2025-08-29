@@ -73,7 +73,7 @@ private fun getAllSwerveModulePoseDrive(): Array<Pose3d> {
 }
 
 val wristTranslation
-    get() = getTranslation3d(0.0)
+    get() = getTranslation3d(0.0,0.0,0.3)
 val wristRotation
     get() = getRotation3d(pitch = wrist.inputs.position)
 val wristPose
@@ -108,7 +108,7 @@ fun getSubsystemPose(): Array<Pose3d> {
     swerveModulesPoses.forEachIndexed { i, modulePose ->
         subsystemPoseArray[2*i+1] = modulePose
     }
-    subsystemPoseArray[4] = wristPose
+    subsystemPoseArray[8] = wristPose
     subsystemPoseArray[5] = turretPose
     subsystemPoseArray[6] = hoodPose
     subsystemPoseArray[7] = flywheelPose
