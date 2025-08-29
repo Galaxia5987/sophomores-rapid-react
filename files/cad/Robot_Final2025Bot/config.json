@@ -1,6 +1,6 @@
 {
-  "name": "Hyperion",
-  "sourceUrl": "https://cad.onshape.com/documents/9e305a824e87fdd775b1f389",
+  "name": "2022OffSeason",
+  "sourceUrl": "",
   "disableSimplification": false,
   "rotations": [
     {
@@ -143,7 +143,7 @@
       "zeroedPosition": [
         0,
         0,
-        0.0
+        0
       ]
     },
     {
@@ -285,9 +285,9 @@
         }
       ],
       "zeroedPosition": [
-        -0.0,
+        -0.56,
         0,
-        -0.0
+        0.28
       ]
     },
     {
@@ -303,9 +303,9 @@
         }
       ],
       "zeroedPosition": [
-        -0.0,
+        -0.56,
         0,
-        -0.02
+        0.28
       ]
     },
     {
@@ -389,7 +389,95 @@
     },
 
     {
-      "_comment": "model_16 : Climb",
+      "_comment": "model_14 : Pre Shooter - Second",
+      "zeroedRotations": [
+        {
+          "axis": "x",
+          "degrees": 128
+        },
+        {
+          "axis": "y",
+          "degrees": 0
+        },
+        {
+          "axis": "z",
+          "degrees": -90
+        }
+      ],
+      "zeroedPosition": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "_comment": "model_15 : Shooter",
+      "zeroedRotations": [
+        {
+          "axis": "x",
+          "degrees": 128
+        },
+        {
+          "axis": "y",
+          "degrees": 0
+        },
+        {
+          "axis": "z",
+          "degrees": -90
+        }
+      ],
+      "zeroedPosition": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "_comment": "model_16 : Shooter Roller",
+      "zeroedRotations": [
+        {
+          "axis": "x",
+          "degrees": 128
+        },
+        {
+          "axis": "y",
+          "degrees": 0
+        },
+        {
+          "axis": "z",
+          "degrees": -90
+        }
+      ],
+      "zeroedPosition": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "_comment": "model_17 : Hood",
+      "zeroedRotations": [
+        {
+          "axis": "x",
+          "degrees": 128
+        },
+        {
+          "axis": "y",
+          "degrees": 0
+        },
+        {
+          "axis": "z",
+          "degrees": -90
+        }
+      ],
+      "zeroedPosition": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "_comment": "model_18 : Hood Roller",
       "zeroedRotations": [
         {
           "axis": "x",
