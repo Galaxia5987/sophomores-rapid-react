@@ -39,10 +39,12 @@ class Wrist : SubsystemBase() {
 
     private val positionRequest = PositionVoltage(0.0)
 
-    fun setAngle(angle: Angle): Command = runOnce {
-        setpoint = angle
-        motor.setControl(positionRequest.withPosition(angle))
-    }.named()
+    fun setAngle(angle: Angle): Command =
+        runOnce {
+                setpoint = angle
+                motor.setControl(positionRequest.withPosition(angle))
+            }
+            .named()
 
     fun reset() = setAngle(0.0.degrees)
 

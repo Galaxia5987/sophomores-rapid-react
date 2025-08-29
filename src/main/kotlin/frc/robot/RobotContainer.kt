@@ -18,7 +18,6 @@ import frc.robot.robotstate.setIntakeing
 import frc.robot.robotstate.turretAngleToHub
 import frc.robot.subsystems.drive.DriveCommands
 import frc.robot.subsystems.shooter.hood.HOOD_ANGLE_BY_DISTANCE
-import frc.robot.subsystems.wrist.WristAngles
 import org.ironmaple.simulation.SimulatedArena
 import org.littletonrobotics.junction.AutoLogOutput
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser

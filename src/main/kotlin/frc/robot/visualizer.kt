@@ -3,7 +3,6 @@ package frc.robot
 import edu.wpi.first.math.geometry.Pose3d
 import edu.wpi.first.math.geometry.Translation2d
 import edu.wpi.first.math.geometry.Translation3d
-import edu.wpi.first.units.Units.Meters
 import edu.wpi.first.units.measure.Angle
 import frc.robot.lib.extensions.deg
 import frc.robot.lib.extensions.get
@@ -18,7 +17,6 @@ private val swerveModulePose: Array<Translation2d> =
     Drive.getModuleTranslations()
 
 private val kWheelRadius = 0.0508.m
-
 
 private fun getSwerveModulePoseTurn(
     moduleX: Double,
@@ -74,28 +72,42 @@ private fun getAllSwerveModulePoseDrive(): Array<Pose3d> {
     return swervePosesDrive
 }
 
-val wristTranslation get() = getTranslation3d(0.0)
-val wristRotation get() = getRotation3d(pitch = wrist.inputs.position)
-val wristPose get() = getPose3d(wristTranslation,wristRotation)
+val wristTranslation
+    get() = getTranslation3d(0.0)
+val wristRotation
+    get() = getRotation3d(pitch = wrist.inputs.position)
+val wristPose
+    get() = getPose3d(wristTranslation, wristRotation)
 
-val turretTranslation get() = getTranslation3d(0.0)
-val turretRotation get() = getRotation3d(yaw = turret.input.position)
-val turretPose get() = getPose3d(turretTranslation,turretRotation)
+val turretTranslation
+    get() = getTranslation3d(0.0)
+val turretRotation
+    get() = getRotation3d(yaw = turret.input.position)
+val turretPose
+    get() = getPose3d(turretTranslation, turretRotation)
 
-val hoodTranslation get() = getTranslation3d(0.0)
-val hoodRotation get() = turretRotation + getRotation3d(pitch = hood.inputs.position)
-val hoodPose get() = getPose3d(hoodTranslation,hoodRotation)
+val hoodTranslation
+    get() = getTranslation3d(0.0)
+val hoodRotation
+    get() = turretRotation + getRotation3d(pitch = hood.inputs.position)
+val hoodPose
+    get() = getPose3d(hoodTranslation, hoodRotation)
 
-val flywheelTranslation get() = getTranslation3d(0.0)
-val flywheelRotation get() = hoodRotation + getRotation3d(pitch = (-10).deg)
-val flywheelPose get() = getPose3d(flywheelTranslation,flywheelRotation)
+val flywheelTranslation
+    get() = getTranslation3d(0.0)
+val flywheelRotation
+    get() = hoodRotation + getRotation3d(pitch = (-10).deg)
+val flywheelPose
+    get() = getPose3d(flywheelTranslation, flywheelRotation)
 
-val subsystemPoseArray =  Array(13){getPose3d()}
+val subsystemPoseArray = Array(13) { getPose3d() }
 
-fun getSubsystemPose(): Array<Pose3d>{
+fun getSubsystemPose(): Array<Pose3d> {
     val swerveModulesPoses = getAllSwerveModulePoseDrive()
 
-    swerveModulesPoses.forEachIndexed{i,modulePose -> subsystemPoseArray[i] = modulePose }
+    swerveModulesPoses.forEachIndexed { i, modulePose ->
+        subsystemPoseArray[i] = modulePose
+    }
     subsystemPoseArray[4] = wristPose
     subsystemPoseArray[5] = turretPose
     subsystemPoseArray[6] = hoodPose
@@ -103,6 +115,7 @@ fun getSubsystemPose(): Array<Pose3d>{
 
     return subsystemPoseArray
 }
-fun logSubsystemPose(){
+
+fun logSubsystemPose() {
     Logger.recordOutput("RobotPose3d", *getSubsystemPose())
 }
