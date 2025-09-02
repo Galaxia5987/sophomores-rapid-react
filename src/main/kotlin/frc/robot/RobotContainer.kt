@@ -59,7 +59,7 @@ object RobotContainer {
             DriveCommands.joystickDrive(
                 { driverController.leftX },
                 { -driverController.leftY },
-                { -driverController.l2Axis * 0.8 }
+                { -driverController.leftY * 0.8 }
             )
         turret.defaultCommand = turret.setAngle { turretAngleToHub }
         hood.defaultCommand =
