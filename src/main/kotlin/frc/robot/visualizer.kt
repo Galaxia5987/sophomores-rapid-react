@@ -3,6 +3,7 @@ package frc.robot
 import edu.wpi.first.math.Vector
 import edu.wpi.first.math.geometry.Pose3d
 import edu.wpi.first.math.geometry.Rotation3d
+import edu.wpi.first.math.geometry.Transform3d
 import edu.wpi.first.math.geometry.Translation2d
 import edu.wpi.first.math.geometry.Translation3d
 import edu.wpi.first.math.numbers.N3
@@ -82,26 +83,33 @@ val wristRotation
 val wristPose
     get() = getPose3d(wristTranslation, wristRotation)
 
+val rollerTranslation
+    get() = getTranslation3d(-0.25,0.0,0.0)
+val rollerRotation
+    get() = getRotation3d(0.0)
+val rollerPose
+    get() = wristPose + Transform3d(rollerTranslation, rollerRotation)
+
 val turretTranslation
-    get() = getTranslation3d(0.0)
+    get() = getTranslation3d(z=0.41)
 val turretRotation
     get() = getRotation3d(yaw = turret.input.position)
 val turretPose
     get() = getPose3d(turretTranslation, turretRotation)
 
 val hoodTranslation
-    get() = getTranslation3d(0.0,0.15,0.5)
+    get() = getTranslation3d(z=0.083,y=0.151)
 val hoodRotation
-    get() = getRotation3d(50.deg+hood.inputs.position,0.deg,  turret.input.position)
+    get() = getRotation3d(roll = 50.deg+hood.inputs.position)
 val hoodPose
-    get() = getPose3d(hoodTranslation, hoodRotation)
+    get() = turretPose + Transform3d(hoodTranslation, hoodRotation)
 
 val flywheelTranslation
     get() = getTranslation3d(0.0)
 val flywheelRotation
-    get() = hoodRotation + getRotation3d(pitch = (-10).deg)
+    get() = getRotation3d(pitch = (-10).deg , yaw = 90.deg )
 val flywheelPose
-    get() = getPose3d(flywheelTranslation, flywheelRotation)
+    get() = hoodPose+Transform3d(flywheelTranslation, flywheelRotation)
 
 val subsystemPoseArray = Array(19) { getPose3d() }
 
@@ -111,10 +119,11 @@ fun getSubsystemPose(): Array<Pose3d> {
     swerveModulesPoses.forEachIndexed { i, modulePose ->
         subsystemPoseArray[2*i+1] = modulePose
     }
+    subsystemPoseArray[9] = rollerPose
     subsystemPoseArray[8] = wristPose
     subsystemPoseArray[15] = turretPose
     subsystemPoseArray[17] = hoodPose
-    subsystemPoseArray[7] = flywheelPose
+    subsystemPoseArray[16] = flywheelPose
 
     return subsystemPoseArray
 }

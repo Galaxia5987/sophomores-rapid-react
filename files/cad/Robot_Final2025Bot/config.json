@@ -291,7 +291,7 @@
       ]
     },
     {
-      "_comment": "model_9 : Intake Roller Front",
+      "_comment": "model_9 : Intake Roller Front wait : -0.56,0,0.28",
       "zeroedRotations": [
         {
           "axis": "x",
@@ -303,9 +303,7 @@
         }
       ],
       "zeroedPosition": [
-        -0.56,
-        0,
-        0.28
+        0,0,0
       ]
     },
     {
@@ -429,7 +427,7 @@
       "zeroedPosition": [
         0,
         0,
-        0.41
+        0.0
       ]
     },
     {
@@ -471,8 +469,8 @@
         }
       ],
       "zeroedPosition": [
-        0,
-        0,
+        0.0,
+        0.0,
         0
       ]
     },
