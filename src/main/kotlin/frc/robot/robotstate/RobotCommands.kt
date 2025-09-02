@@ -1,5 +1,6 @@
 package frc.robot.robotstate
 
+import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.units.measure.Angle
 import edu.wpi.first.wpilibj2.command.Commands.parallel
 import edu.wpi.first.wpilibj2.command.Commands.sequence
@@ -12,7 +13,6 @@ import frc.robot.lib.extensions.get
 import frc.robot.lib.extensions.m
 import frc.robot.lib.extensions.rotationToPoint
 import frc.robot.lib.extensions.rps
-import frc.robot.lib.extensions.toRotation2d
 import frc.robot.lib.getPose2d
 import frc.robot.lib.named
 import frc.robot.roller
@@ -26,13 +26,16 @@ val robotDistanceFromHub
     get() = drive.pose.distanceFromPoint(HUB_LOCATION)
 
 val angleFromRobotHub
-    get() = drive.pose.translation.rotationToPoint(HUB_LOCATION).measure
+    get() =
+        (drive.pose.translation.rotationToPoint(HUB_LOCATION) -
+                drive.pose.rotation)
+            .measure
 
 val turretAngleToHub: Angle
     get() = angleFromRobotHub.coerceIn(MIN_ANGLE, MAX_ANGLE)
 
 val swerveCompensationAngle
-    get() = angleFromRobotHub - turretAngleToHub
+    get() = drive.rotation + Rotation2d(angleFromRobotHub - turretAngleToHub)
 
 fun driveToShootingPoint() =
     drive
@@ -47,9 +50,7 @@ fun driveToShootingPoint() =
                 } else {
                     OUTER_SHOOTING_AREA.nearest(robotTranslation)
                 }
-            alignToPose(
-                (getPose2d(setpoint, swerveCompensationAngle.toRotation2d()))
-            )
+            alignToPose((getPose2d(setpoint, swerveCompensationAngle)))
         }
         .named("Drive")
 

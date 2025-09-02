@@ -18,6 +18,7 @@ import frc.robot.robotstate.setIntakeing
 import frc.robot.robotstate.turretAngleToHub
 import frc.robot.subsystems.drive.DriveCommands
 import frc.robot.subsystems.shooter.hood.HOOD_ANGLE_BY_DISTANCE
+import frc.robot.subsystems.wrist.WristAngles
 import org.ironmaple.simulation.SimulatedArena
 import org.littletonrobotics.junction.AutoLogOutput
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser
@@ -31,7 +32,7 @@ object RobotContainer {
     var hoodAngle = InterpolatingDouble(robotDistanceFromHub[m])
     init {
         drive // Ensure Drive is initialized
-
+        wrist.setAngle(WristAngles.DOWN.angle)
         autoChooser =
             LoggedDashboardChooser(
                 "Auto Choices",
@@ -58,7 +59,7 @@ object RobotContainer {
             DriveCommands.joystickDrive(
                 { driverController.leftX },
                 { -driverController.leftY },
-                { -driverController.rightX * 0.8 }
+                { -driverController.leftY * 0.8 }
             )
         turret.defaultCommand = turret.setAngle { turretAngleToHub }
         hood.defaultCommand =
@@ -73,6 +74,8 @@ object RobotContainer {
         // Switch to X pattern when X button is pressed
 
         driverController.circle().onTrue(setIntakeing())
+        driverController.square().onTrue(wrist.setAngle(WristAngles.UP.angle))
+        driverController.cross().onTrue(wrist.setAngle(WristAngles.DOWN.angle))
         // Reset gyro / odometry
         val resetOdometry =
             if (CURRENT_MODE == Mode.SIM)

@@ -1,6 +1,5 @@
 package frc.robot.subsystems.wrist
 
-import com.ctre.phoenix6.configs.TalonFXConfiguration
 import com.ctre.phoenix6.controls.PositionVoltage
 import edu.wpi.first.units.measure.Angle
 import edu.wpi.first.wpilibj2.command.Command
@@ -31,8 +30,10 @@ class Wrist : SubsystemBase() {
             MOTOR_PORT,
             momentOfInertia = 0.0025.kg2m,
             gearRatio = GEAR_RATIO,
-            config = TalonFXConfiguration()
+            config = MOTOR_CONFIG
         )
+
+    val inputs = motor.inputs
 
     private val positionRequest = PositionVoltage(0.0)
 
