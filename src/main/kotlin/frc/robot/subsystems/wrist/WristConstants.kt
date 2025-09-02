@@ -12,7 +12,6 @@ import frc.robot.lib.extensions.amps
 import frc.robot.lib.extensions.deg
 import frc.robot.lib.extensions.get
 
-
 val SETPOINT_TOLERANCE = 1.0.deg
 const val MOTOR_PORT = 2
 const val GEAR_RATIO = 1 / 69.82

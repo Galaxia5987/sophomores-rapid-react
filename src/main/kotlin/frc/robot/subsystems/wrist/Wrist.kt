@@ -1,6 +1,5 @@
 package frc.robot.subsystems.wrist
 
-import com.ctre.phoenix6.configs.TalonFXConfiguration
 import com.ctre.phoenix6.controls.PositionVoltage
 import edu.wpi.first.units.measure.Angle
 import edu.wpi.first.wpilibj2.command.Command
@@ -10,7 +9,6 @@ import frc.robot.lib.extensions.deg
 import frc.robot.lib.extensions.degrees
 import frc.robot.lib.extensions.get
 import frc.robot.lib.extensions.kg2m
-import frc.robot.lib.named
 import frc.robot.lib.universal_motor.UniversalTalonFX
 import org.littletonrobotics.junction.AutoLogOutput
 import org.littletonrobotics.junction.Logger
@@ -39,11 +37,10 @@ class Wrist : SubsystemBase() {
 
     private val positionRequest = PositionVoltage(0.0)
 
-    fun setAngle(angle: Angle): Command =
-        runOnce {
-                setpoint = angle
-                motor.setControl(positionRequest.withPosition(angle))
-            }
+    fun setAngle(angle: Angle): Command = runOnce {
+        setpoint = angle
+        motor.setControl(positionRequest.withPosition(angle))
+    }
 
     fun reset() = setAngle(0.0.degrees)
 

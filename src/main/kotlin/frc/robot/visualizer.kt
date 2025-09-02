@@ -74,39 +74,41 @@ private fun getAllSwerveModulePoseDrive(): Array<Pose3d> {
 }
 
 val wristTranslation
-    get() = getTranslation3d(-0.3,0.0,0.28)
+    get() = getTranslation3d(-0.3, 0.0, 0.28)
 val wristRotation
     get() = getRotation3d(pitch = wrist.inputs.position)
 val wristPose
     get() = getPose3d(wristTranslation, wristRotation)
 
 val rollerTranslation
-    get() = getTranslation3d(-0.25,0.0,0.0)
+    get() = getTranslation3d(-0.25, 0.0, 0.0)
 val rollerRotation
     get() = getRotation3d(0.0)
 val rollerPose
     get() = wristPose + Transform3d(rollerTranslation, rollerRotation)
 
 val turretTranslation
-    get() = getTranslation3d(z=0.41)
+    get() = getTranslation3d(z = 0.41)
 val turretRotation
     get() = getRotation3d(yaw = turret.input.position)
 val turretPose
-    get() = getPose3d(turretTranslation, turretRotation) + Transform3d(getTranslation3d(0.0),getRotation3d(yaw=-90.deg))
+    get() =
+        getPose3d(turretTranslation, turretRotation) +
+            Transform3d(getTranslation3d(0.0), getRotation3d(yaw = -90.deg))
 
 val hoodTranslation
-    get() = getTranslation3d(z=0.083,y=0.151)
+    get() = getTranslation3d(z = 0.083, y = 0.151)
 val hoodRotation
-    get() = getRotation3d(roll = 50.deg+hood.inputs.position)
+    get() = getRotation3d(roll = 50.deg + hood.inputs.position)
 val hoodPose
     get() = turretPose + Transform3d(hoodTranslation, hoodRotation)
 
 val flywheelTranslation
     get() = getTranslation3d(0.0)
 val flywheelRotation
-    get() = getRotation3d(pitch = (-10).deg , yaw = 90.deg )
+    get() = getRotation3d(pitch = (-10).deg, yaw = 90.deg)
 val flywheelPose
-    get() = hoodPose+Transform3d(flywheelTranslation, flywheelRotation)
+    get() = hoodPose + Transform3d(flywheelTranslation, flywheelRotation)
 
 val subsystemPoseArray = Array(19) { getPose3d() }
 
@@ -114,7 +116,7 @@ fun getSubsystemPose(): Array<Pose3d> {
     val swerveModulesPoses = getAllSwerveModulePoseDrive()
 
     swerveModulesPoses.forEachIndexed { i, modulePose ->
-        subsystemPoseArray[2*i+1] = modulePose
+        subsystemPoseArray[2 * i + 1] = modulePose
     }
     subsystemPoseArray[8] = wristPose
     subsystemPoseArray[9] = rollerPose
