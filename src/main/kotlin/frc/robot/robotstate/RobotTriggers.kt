@@ -22,7 +22,7 @@ val isInDeadZone = Trigger {
 val atShootingRotation =
     turret.isAtSetpoint.and {
         drive.pose.rotation.measure.isNear(
-            swerveCompensationAngle,
+            swerveCompensationAngle.measure,
             ROTATION_TOLERANCE
         )
     }
