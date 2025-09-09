@@ -57,12 +57,13 @@ fun bindRobotCommands() {
         and(hasFrontBall)
             .and(hasBackBall)
             .onTrue(roller.stop(), hopper.stop(), setShooting())
-        and(hasBackBall).and(hasFrontBall.negate()).apply{
+        and(hasBackBall).and(hasFrontBall.negate()).apply {
             onTrue(stopIntaking())
-            and{!getBallPose3dArray.isEmpty()}.onTrue(roller.intake())
+            and { !getBallPose3dArray.isEmpty() }.onTrue(roller.intake())
         }
         and(ballsEmpty)
-            .and{!getBallPose3dArray.isEmpty()}.onTrue(startIntaking())
+            .and { !getBallPose3dArray.isEmpty() }
+            .onTrue(startIntaking())
     }
     applyLeds()
 }

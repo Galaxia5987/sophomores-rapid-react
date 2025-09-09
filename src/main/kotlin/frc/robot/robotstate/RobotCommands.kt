@@ -84,8 +84,7 @@ fun startIntaking() =
 
 fun stopIntaking() =
     parallel(roller.stop(), hopper.stop()).named(COMMAND_NAME_PREFIX)
-fun startIntakeBall()=
-    parallel(startIntaking(),drive.defer {
-        alignToPose(getBallGlobalPose)
-    }).named(COMMAND_NAME_PREFIX)
 
+fun startIntakeBall() =
+    parallel(startIntaking(), drive.defer { alignToPose(getBallGlobalPose) })
+        .named(COMMAND_NAME_PREFIX)
