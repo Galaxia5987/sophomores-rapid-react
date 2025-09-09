@@ -83,6 +83,6 @@ fun stopShooting() =
 fun stopIntaking() =
     parallel(roller.stop(), hopper.stop()).named(COMMAND_NAME_PREFIX)
 
-fun startIntakeBall() =
+fun startIntakingBall() =
     drive.defer { alignToPose(BallGlobalPoses.first()) }
         .named(COMMAND_NAME_PREFIX)
