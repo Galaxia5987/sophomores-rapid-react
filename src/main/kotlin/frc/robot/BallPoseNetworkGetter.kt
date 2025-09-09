@@ -17,5 +17,5 @@ fun initBallPoseNetworkTable() {
             .subscribe(arrayOf())
 }
 
-val getBallPose3dArray
-    get() = if (pose3dArray.isValid) pose3dArray.get() else (arrayOf<Pose3d>())
+val ballPoses
+    get() = pose3dArray.get()
