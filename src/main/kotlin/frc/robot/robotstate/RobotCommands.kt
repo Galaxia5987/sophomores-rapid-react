@@ -80,12 +80,10 @@ fun stopShooting() =
     parallel(flywheel.setVelocity(SLOW_ROTATION), hopper.stop(), roller.stop())
         .named(COMMAND_NAME_PREFIX)
 
-fun startIntaking() =
-    parallel(roller.intake(), hopper.start()).named(COMMAND_NAME_PREFIX)
-
 fun stopIntaking() =
     parallel(roller.stop(), hopper.stop()).named(COMMAND_NAME_PREFIX)
 
-fun startIntakeBall() =
-    parallel(startIntaking(), drive.defer { alignToPose(getBallGlobalPose) })
+fun alignToBall() =
+    drive
+        .defer { alignToPose(globalBallPoses.first()) }
         .named(COMMAND_NAME_PREFIX)
