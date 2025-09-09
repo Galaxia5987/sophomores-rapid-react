@@ -7,12 +7,14 @@ import edu.wpi.first.wpilibj2.command.Commands.sequence
 import edu.wpi.first.wpilibj2.command.Commands.waitUntil
 import frc.robot.drive
 import frc.robot.flywheel
+import frc.robot.getBallPose3dArray
 import frc.robot.hopper
 import frc.robot.lib.extensions.distanceFromPoint
 import frc.robot.lib.extensions.get
 import frc.robot.lib.extensions.m
 import frc.robot.lib.extensions.rotationToPoint
 import frc.robot.lib.extensions.rps
+import frc.robot.lib.extensions.toTransform
 import frc.robot.lib.getPose2d
 import frc.robot.lib.named
 import frc.robot.roller
@@ -36,6 +38,9 @@ val turretAngleToHub: Angle
 
 val swerveCompensationAngle
     get() = drive.rotation + Rotation2d(angleFromRobotHub - turretAngleToHub)
+
+val getBallGlobalPose
+    get() = drive.pose + getBallPose3dArray.first().toPose2d().toTransform()
 
 fun driveToShootingPoint() =
     drive
@@ -79,3 +84,8 @@ fun startIntaking() =
 
 fun stopIntaking() =
     parallel(roller.stop(), hopper.stop()).named(COMMAND_NAME_PREFIX)
+fun startIntakeBall()=
+    parallel(startIntaking(),drive.defer {
+        alignToPose(getBallGlobalPose)
+    }).named(COMMAND_NAME_PREFIX)
+

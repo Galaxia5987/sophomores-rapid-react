@@ -4,8 +4,8 @@ import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.applyLeds
 import frc.robot.drive
+import frc.robot.getBallPose3dArray
 import frc.robot.hopper
-import frc.robot.lib.extensions.get
 import frc.robot.lib.onTrue
 import frc.robot.roller
 import frc.robot.turret
@@ -54,11 +54,15 @@ fun bindRobotCommands() {
             .onTrue(driveToShootingPoint())
     }
     isIntaking.apply {
-        and(ballsEmpty).onTrue(startIntaking())
         and(hasFrontBall)
             .and(hasBackBall)
             .onTrue(roller.stop(), hopper.stop(), setShooting())
-        and(hasBackBall).and(hasFrontBall.negate()).onTrue(hopper.stop())
+        and(hasBackBall).and(hasFrontBall.negate()).apply{
+            onTrue(stopIntaking())
+            and{!getBallPose3dArray.isEmpty()}.onTrue(roller.intake())
+        }
+        and(ballsEmpty)
+            .and{!getBallPose3dArray.isEmpty()}.onTrue(startIntaking())
     }
     applyLeds()
 }
