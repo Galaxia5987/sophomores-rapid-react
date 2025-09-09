@@ -119,6 +119,8 @@ object Robot : LoggedRobot() {
         CommandScheduler.getInstance().onCommandInterrupt { command ->
             logCommandFunction(command, false, "interrupted")
         }
+
+        initializeNetworkTable()
     }
 
     /**
