@@ -42,7 +42,7 @@ fun robotCommandsLogger() {
         turretAngleToHub
     )
     recordOutput("$COMMAND_NAME_PREFIX/atShootingRotation", atShootingRotation)
-    recordOutput("$COMMAND_NAME_PREFIX/ballPose",*globalBallPoses)
+    recordOutput("$COMMAND_NAME_PREFIX/ballPose", *globalBallPoses)
 }
 
 fun bindRobotCommands() {
