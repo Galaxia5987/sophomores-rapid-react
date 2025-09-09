@@ -8,7 +8,7 @@ const val tableKey = "RealsenseVision"
 const val poses3dKey = "/$tableKey/poses"
 lateinit var pose3dArray: StructArraySubscriber<Pose3d>
 
-fun initializeNetworkTable() {
+fun initBallPoseNetworkTable() {
     val inst = NetworkTableInstance.getDefault()
     val table = inst.getTable(tableKey)
     pose3dArray =
