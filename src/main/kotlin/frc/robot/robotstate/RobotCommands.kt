@@ -1,5 +1,6 @@
 package frc.robot.robotstate
 
+import edu.wpi.first.math.geometry.Pose3d
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.units.measure.Angle
 import edu.wpi.first.wpilibj2.command.Commands.parallel
@@ -23,6 +24,8 @@ import frc.robot.subsystems.shooter.flywheel.SHOOTER_VELOCITY_BY_DISTANCE
 import frc.robot.subsystems.shooter.flywheel.SLOW_ROTATION
 import frc.robot.subsystems.shooter.turret.MAX_ANGLE
 import frc.robot.subsystems.shooter.turret.MIN_ANGLE
+import org.littletonrobotics.junction.AutoLogOutput
+import kotlin.collections.map
 
 val robotDistanceFromHub
     get() = drive.pose.distanceFromPoint(HUB_LOCATION)
@@ -39,9 +42,10 @@ val turretAngleToHub: Angle
 val swerveCompensationAngle
     get() = drive.rotation + Rotation2d(angleFromRobotHub - turretAngleToHub)
 
+@get:AutoLogOutput
 val globalBallPoses
     get() =
-        robotRelativeBallPoses.map { drive.pose + it.toPose2d().toTransform() }
+        robotRelativeBallPoses.map { it + Pose3d(drive.pose).toTransform() }.toTypedArray()
 
 fun driveToShootingPoint() =
     drive
@@ -85,5 +89,5 @@ fun stopIntaking() =
 
 fun alignToBall() =
     drive
-        .defer { alignToPose(globalBallPoses.first()) }
+        .defer { alignToPose(globalBallPoses.first().toPose2d()) }
         .named(COMMAND_NAME_PREFIX)
