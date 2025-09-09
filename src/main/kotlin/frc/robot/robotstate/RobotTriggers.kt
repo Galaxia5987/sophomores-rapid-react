@@ -4,9 +4,9 @@ import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.applyLeds
 import frc.robot.drive
-import frc.robot.ballPoses
 import frc.robot.hopper
 import frc.robot.lib.onTrue
+import frc.robot.robotRelativeBallPoses
 import frc.robot.roller
 import frc.robot.turret
 import org.littletonrobotics.junction.Logger.recordOutput
@@ -15,7 +15,7 @@ val isShooting = Trigger { state == RobotState.SHOOTING }
 val isInDeadZone = Trigger {
     val driveTranslation = drive.pose.translation
     !OUTER_SHOOTING_AREA.contains(driveTranslation) ||
-            INNER_SHOOTING_AREA.contains(driveTranslation)
+        INNER_SHOOTING_AREA.contains(driveTranslation)
 }
 val atShootingRotation =
     turret.isAtSetpoint.and {
@@ -59,11 +59,12 @@ fun bindRobotCommands() {
             .onTrue(roller.stop(), hopper.stop(), setShooting())
         and(hasBackBall).and(hasFrontBall.negate()).apply {
             onTrue(stopIntaking())
-            and(ballPoses::isNotEmpty).onTrue(roller.intake())
+            and(robotRelativeBallPoses::isNotEmpty)
+                .onTrue(roller.intake(), alignToBall())
         }
         and(ballsEmpty)
-            .and(ballPoses::isNotEmpty)
-            .onTrue(roller.intake(), hopper.start())
+            .and(robotRelativeBallPoses::isNotEmpty)
+            .onTrue(roller.intake(), hopper.start(), alignToBall())
     }
     applyLeds()
 }

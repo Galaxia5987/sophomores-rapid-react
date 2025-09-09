@@ -40,7 +40,7 @@ val turretAngleToHub: Angle
 val swerveCompensationAngle
     get() = drive.rotation + Rotation2d(angleFromRobotHub - turretAngleToHub)
 
-val BallGlobalPoses
+val globalBallPoses
     get() = Array<Pose2d>(ballPoses.size) { i -> drive.pose + ballPoses[i].toPose2d().toTransform() }
 
 fun driveToShootingPoint() =
@@ -84,5 +84,5 @@ fun stopIntaking() =
     parallel(roller.stop(), hopper.stop()).named(COMMAND_NAME_PREFIX)
 
 fun startIntakingBall() =
-    drive.defer { alignToPose(BallGlobalPoses.first()) }
+    drive.defer { alignToPose(globalBallPoses.first()) }
         .named(COMMAND_NAME_PREFIX)

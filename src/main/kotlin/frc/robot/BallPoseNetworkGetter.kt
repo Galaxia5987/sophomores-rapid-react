@@ -11,6 +11,5 @@ val pose3dArray: StructArraySubscriber<Pose3d> by lazy {
     val table = inst.getTable(tableKey)
     table.getStructArrayTopic(poses3dKey, Pose3d.struct).subscribe(arrayOf())
 }
-
-val getBallPose3dArray
-    get() = if (pose3dArray.isValid) pose3dArray.get() else (arrayOf<Pose3d>())
+val robotRelativeBallPoses
+    get() = pose3dArray.get()
