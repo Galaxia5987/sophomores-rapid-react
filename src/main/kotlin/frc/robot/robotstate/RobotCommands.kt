@@ -1,6 +1,5 @@
 package frc.robot.robotstate
 
-import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.units.measure.Angle
 import edu.wpi.first.wpilibj2.command.Commands.parallel
@@ -8,7 +7,6 @@ import edu.wpi.first.wpilibj2.command.Commands.sequence
 import edu.wpi.first.wpilibj2.command.Commands.waitUntil
 import frc.robot.drive
 import frc.robot.flywheel
-import frc.robot.ballPoses
 import frc.robot.hopper
 import frc.robot.lib.extensions.distanceFromPoint
 import frc.robot.lib.extensions.get
@@ -18,6 +16,7 @@ import frc.robot.lib.extensions.rps
 import frc.robot.lib.extensions.toTransform
 import frc.robot.lib.getPose2d
 import frc.robot.lib.named
+import frc.robot.robotRelativeBallPoses
 import frc.robot.roller
 import frc.robot.subsystems.drive.alignToPose
 import frc.robot.subsystems.shooter.flywheel.SHOOTER_VELOCITY_BY_DISTANCE
@@ -41,7 +40,8 @@ val swerveCompensationAngle
     get() = drive.rotation + Rotation2d(angleFromRobotHub - turretAngleToHub)
 
 val globalBallPoses
-    get() = Array<Pose2d>(ballPoses.size) { i -> drive.pose + ballPoses[i].toPose2d().toTransform() }
+    get() =
+        robotRelativeBallPoses.map { drive.pose + it.toPose2d().toTransform() }
 
 fun driveToShootingPoint() =
     drive
@@ -50,7 +50,7 @@ fun driveToShootingPoint() =
             val setpoint =
                 if (
                     INNER_SHOOTING_AREA.getDistance(robotTranslation) <
-                    OUTER_SHOOTING_AREA.getDistance(robotTranslation)
+                        OUTER_SHOOTING_AREA.getDistance(robotTranslation)
                 ) {
                     INNER_SHOOTING_AREA.nearest(robotTranslation)
                 } else {
@@ -62,27 +62,30 @@ fun driveToShootingPoint() =
 
 fun startShooting() =
     sequence(
-        drive.lock(),
-        flywheel.setVelocity {
-            FLYWHEEL_VELOCITY_KEY.value = robotDistanceFromHub[m]
-            SHOOTER_VELOCITY_BY_DISTANCE.getInterpolated(
-                FLYWHEEL_VELOCITY_KEY
-            )
-                .value
-                .rps
-        },
-        waitUntil(flywheel.isAtSetVelocity),
-        parallel(hopper.start(), roller.intake())
-    )
+            drive.lock(),
+            flywheel.setVelocity {
+                FLYWHEEL_VELOCITY_KEY.value = robotDistanceFromHub[m]
+                SHOOTER_VELOCITY_BY_DISTANCE.getInterpolated(
+                        FLYWHEEL_VELOCITY_KEY
+                    )
+                    .value
+                    .rps
+            },
+            waitUntil(flywheel.isAtSetVelocity),
+            parallel(hopper.start(), roller.intake())
+        )
         .named(COMMAND_NAME_PREFIX)
 
 fun stopShooting() =
     parallel(flywheel.setVelocity(SLOW_ROTATION), hopper.stop(), roller.stop())
         .named(COMMAND_NAME_PREFIX)
 
+fun startIntaking() =
+    parallel(roller.intake(), hopper.start()).named(COMMAND_NAME_PREFIX)
+
 fun stopIntaking() =
     parallel(roller.stop(), hopper.stop()).named(COMMAND_NAME_PREFIX)
 
-fun startIntakingBall() =
-    drive.defer { alignToPose(globalBallPoses.first()) }
+fun startIntakeBall() =
+    parallel(startIntaking(), drive.defer { alignToPose(getBallGlobalPose) })
         .named(COMMAND_NAME_PREFIX)
