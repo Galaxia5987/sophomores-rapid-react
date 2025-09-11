@@ -8,4 +8,4 @@ enum class RobotState() {
     SHOOTING
 }
 
-@LoggedOutput var state = RobotState.IDLING
+@LoggedOutput(COMMAND_NAME_PREFIX) var state = RobotState.IDLING

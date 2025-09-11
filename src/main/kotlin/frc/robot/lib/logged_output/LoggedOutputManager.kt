@@ -26,7 +26,7 @@ object LoggedOutputManager : SubsystemBase() {
         name: String,
         declaringClass: String?
     ): String {
-        return key.ifBlank { "${declaringClass ?: "<unknown>"}//$name" }
+        return key.ifBlank { declaringClass ?: "<unknown>" }+"//$name"
     }
 
     fun <T> registerField(key: String, property: KProperty0<T>) {

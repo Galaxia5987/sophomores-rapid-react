@@ -27,7 +27,7 @@ import frc.robot.subsystems.shooter.turret.MIN_ANGLE
 import kotlin.collections.map
 import org.team5987.annotation.LoggedOutput
 
-@LoggedOutput
+@LoggedOutput(COMMAND_NAME_PREFIX)
 val robotDistanceFromHub
     get() = drive.pose.distanceFromPoint(HUB_LOCATION)
 
@@ -40,11 +40,11 @@ val angleFromRobotHub
 val turretAngleToHub: Angle
     get() = angleFromRobotHub.coerceIn(MIN_ANGLE, MAX_ANGLE)
 
-@LoggedOutput
+@LoggedOutput(COMMAND_NAME_PREFIX)
 val swerveCompensationAngle
     get() = drive.rotation + Rotation2d(angleFromRobotHub - turretAngleToHub)
 
-@LoggedOutput
+@LoggedOutput(COMMAND_NAME_PREFIX)
 val globalBallPoses
     get() =
         robotRelativeBallPoses
