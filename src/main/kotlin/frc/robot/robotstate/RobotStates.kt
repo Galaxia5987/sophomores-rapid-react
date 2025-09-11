@@ -1,9 +1,11 @@
 package frc.robot.robotstate
 
+import org.team5987.annotation.LoggedOutput
+
 enum class RobotState() {
     IDLING,
     INTAKING,
     SHOOTING
 }
 
-var state = RobotState.IDLING
+@LoggedOutput var state = RobotState.IDLING

@@ -14,7 +14,7 @@ import frc.robot.lib.extensions.m
 import frc.robot.lib.math.interpolation.InterpolatingDouble
 import frc.robot.robotstate.bindRobotCommands
 import frc.robot.robotstate.robotDistanceFromHub
-import frc.robot.robotstate.setIntakeing
+import frc.robot.robotstate.setIntaking
 import frc.robot.robotstate.turretAngleToHub
 import frc.robot.subsystems.drive.DriveCommands
 import frc.robot.subsystems.shooter.hood.HOOD_ANGLE_BY_DISTANCE
@@ -73,7 +73,7 @@ object RobotContainer {
 
         // Switch to X pattern when X button is pressed
 
-        driverController.circle().onTrue(setIntakeing())
+        driverController.circle().onTrue(setIntaking())
         driverController.square().onTrue(wrist.setAngle(WristAngles.UP.angle))
         driverController.cross().onTrue(wrist.setAngle(WristAngles.DOWN.angle))
         // Reset gyro / odometry

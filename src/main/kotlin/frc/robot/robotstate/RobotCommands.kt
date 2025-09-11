@@ -25,8 +25,9 @@ import frc.robot.subsystems.shooter.flywheel.SLOW_ROTATION
 import frc.robot.subsystems.shooter.turret.MAX_ANGLE
 import frc.robot.subsystems.shooter.turret.MIN_ANGLE
 import kotlin.collections.map
-import org.littletonrobotics.junction.AutoLogOutput
+import org.team5987.annotation.LoggedOutput
 
+@LoggedOutput
 val robotDistanceFromHub
     get() = drive.pose.distanceFromPoint(HUB_LOCATION)
 
@@ -39,10 +40,11 @@ val angleFromRobotHub
 val turretAngleToHub: Angle
     get() = angleFromRobotHub.coerceIn(MIN_ANGLE, MAX_ANGLE)
 
+@LoggedOutput
 val swerveCompensationAngle
     get() = drive.rotation + Rotation2d(angleFromRobotHub - turretAngleToHub)
 
-@get:AutoLogOutput
+@LoggedOutput
 val globalBallPoses
     get() =
         robotRelativeBallPoses

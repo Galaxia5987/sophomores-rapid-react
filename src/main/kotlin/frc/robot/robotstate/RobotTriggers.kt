@@ -9,14 +9,16 @@ import frc.robot.lib.onTrue
 import frc.robot.robotRelativeBallPoses
 import frc.robot.roller
 import frc.robot.turret
-import org.littletonrobotics.junction.Logger.recordOutput
+import org.team5987.annotation.LoggedOutput
 
-val isShooting = Trigger { state == RobotState.SHOOTING }
+@LoggedOutput
 val isInDeadZone = Trigger {
     val driveTranslation = drive.pose.translation
     !OUTER_SHOOTING_AREA.contains(driveTranslation) ||
         INNER_SHOOTING_AREA.contains(driveTranslation)
 }
+
+@LoggedOutput
 val atShootingRotation =
     turret.isAtSetpoint.and {
         drive.pose.rotation.measure.isNear(
@@ -25,29 +27,15 @@ val atShootingRotation =
         )
     }
 
+val isShooting = Trigger { state == RobotState.SHOOTING }
 val isIntaking = Trigger { state == RobotState.INTAKING }
 private val hasFrontBall = roller.hasBall
 val hasBackBall = hopper.hasBall
 private val ballsEmpty = hasFrontBall.or(hasBackBall).negate()
 
-fun robotCommandsLogger() {
-    recordOutput("$COMMAND_NAME_PREFIX/RobotState", state)
-    recordOutput(
-        "$COMMAND_NAME_PREFIX/RobotDistanceFromHub",
-        robotDistanceFromHub
-    )
-    recordOutput("$COMMAND_NAME_PREFIX/is in dead zone", isInDeadZone)
-    recordOutput(
-        "$COMMAND_NAME_PREFIX/Turret rotation to Hub",
-        turretAngleToHub
-    )
-    recordOutput("$COMMAND_NAME_PREFIX/atShootingRotation", atShootingRotation)
-    recordOutput("$COMMAND_NAME_PREFIX/ballPose", *globalBallPoses)
-}
-
 fun bindRobotCommands() {
     isShooting.apply {
-        and(ballsEmpty).onTrue(setIntakeing(), stopShooting())
+        and(ballsEmpty).onTrue(setIntaking(), stopShooting())
         and(isInDeadZone.negate())
             .and(atShootingRotation)
             .onTrue(startShooting())
@@ -75,4 +63,4 @@ private fun setRobotState(newState: RobotState) =
 
 fun setShooting() = setRobotState(RobotState.SHOOTING)
 
-fun setIntakeing() = setRobotState(RobotState.INTAKING)
+fun setIntaking() = setRobotState(RobotState.INTAKING)
