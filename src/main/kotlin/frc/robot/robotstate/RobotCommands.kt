@@ -1,26 +1,54 @@
 package frc.robot.robotstate
 
 import edu.wpi.first.math.geometry.Rotation2d
+import edu.wpi.first.math.kinematics.ChassisSpeeds
 import edu.wpi.first.units.measure.Angle
 import edu.wpi.first.wpilibj2.command.Commands.parallel
 import edu.wpi.first.wpilibj2.command.Commands.sequence
 import edu.wpi.first.wpilibj2.command.Commands.waitUntil
 import frc.robot.drive
 import frc.robot.flywheel
+import frc.robot.hood
 import frc.robot.hopper
+import frc.robot.lib.extensions.deg
 import frc.robot.lib.extensions.distanceFromPoint
 import frc.robot.lib.extensions.get
 import frc.robot.lib.extensions.m
 import frc.robot.lib.extensions.rotationToPoint
 import frc.robot.lib.extensions.rps
+import frc.robot.lib.extensions.toLinear
 import frc.robot.lib.getPose2d
+import frc.robot.lib.math.interpolation.InterpolatingDouble
 import frc.robot.lib.named
+import frc.robot.lib.shooting.ShotData
+import frc.robot.lib.shooting.calculateShot
 import frc.robot.roller
 import frc.robot.subsystems.drive.alignToPose
+import frc.robot.subsystems.shooter.flywheel.FLYWHEEL_DIAMETER
 import frc.robot.subsystems.shooter.flywheel.SHOOTER_VELOCITY_BY_DISTANCE
 import frc.robot.subsystems.shooter.flywheel.SLOW_ROTATION
+import frc.robot.subsystems.shooter.hood.HOOD_ANGLE_BY_DISTANCE
 import frc.robot.subsystems.shooter.turret.MAX_ANGLE
 import frc.robot.subsystems.shooter.turret.MIN_ANGLE
+
+var hoodAngle = InterpolatingDouble(robotDistanceFromHub[m])
+
+val compensatedShot: ShotData
+    get() {
+        val robotSpeeds =
+            ChassisSpeeds.fromRobotRelativeSpeeds(
+                drive.chassisSpeeds,
+                drive.rotation
+            )
+        val shooterExitVelocity =
+            flywheel.currentVelocity.toLinear(FLYWHEEL_DIAMETER, 1.0)
+        return calculateShot(
+            drive.pose,
+            HUB_LOCATION,
+            robotSpeeds,
+            shooterExitVelocity
+        )
+    }
 
 val robotDistanceFromHub
     get() = drive.pose.distanceFromPoint(HUB_LOCATION)
@@ -32,7 +60,7 @@ val angleFromRobotHub
             .measure
 
 val turretAngleToHub: Angle
-    get() = angleFromRobotHub.coerceIn(MIN_ANGLE, MAX_ANGLE)
+    get() = compensatedShot.turretAngle.measure.coerceIn(MIN_ANGLE, MAX_ANGLE)
 
 val swerveCompensationAngle
     get() = drive.rotation + Rotation2d(angleFromRobotHub - turretAngleToHub)
@@ -79,3 +107,9 @@ fun startIntaking() =
 
 fun stopIntaking() =
     parallel(roller.stop(), hopper.stop()).named(COMMAND_NAME_PREFIX)
+
+fun hoodCommand() =
+    hood.setAngle {
+        hoodAngle.value = compensatedShot.compensatedDistance[m]
+        HOOD_ANGLE_BY_DISTANCE.getInterpolated(hoodAngle).value.deg
+    }

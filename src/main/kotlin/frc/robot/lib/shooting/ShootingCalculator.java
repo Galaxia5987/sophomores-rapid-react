@@ -17,6 +17,7 @@ import org.littletonrobotics.junction.Logger;
  * <br>
  * Units in meters, radians, and m/s
  */
+@Deprecated
 @ExtensionMethod({GeomUtil.class})
 public class ShootingCalculator {
     public record ShotData(
