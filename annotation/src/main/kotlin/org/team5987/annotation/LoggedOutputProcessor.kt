@@ -35,23 +35,36 @@ class LoggedOutputProcessor(
 
             when (symbol) {
                 is KSPropertyDeclaration -> { // or is property getter
-                    val className = symbol.parentDeclaration?.qualifiedName?.asString() ?: continue
-                    val packageName = className.substringBeforeLast(".")
-                    val simpleName = className.substringAfterLast(".")
-                    val classType = ClassName(packageName, simpleName)
-                    val fieldName = symbol.simpleName.asString()
+                    val className = symbol.parentDeclaration?.qualifiedName?.asString()
+                    if (className != null) {
+                        val packageName = className.substringBeforeLast(".")
+                        val simpleName = className.substringAfterLast(".")
+                        val classType = ClassName(packageName, simpleName)
+                        val fieldName = symbol.simpleName.asString()
 
-                    logger.info("Registering field: $className.$fieldName with key=$key")
+                        logger.info("Registering field: $className.$fieldName with key=$key")
 
-                    // LoggedOutputManager.registerField("key", MyClass::myField)
-                    funSpecBuilder.addStatement(
-                        "LoggedOutputManager.registerField(%S, %T::%L)",
-                        key,
-                        classType,
-                        fieldName
-                    )
+                        // LoggedOutputManager.registerField("key", MyClass::myField)
+                        funSpecBuilder.addStatement(
+                            "LoggedOutputManager.registerField(%S, %T::%L)",
+                            key,
+                            classType,
+                            fieldName
+                        )
+                    } else {
+                        val methodName = symbol.simpleName.asString()
+                        // TOP-LEVEL FUNCTION
+                        val pkg = symbol.containingFile?.packageName?.asString() ?: continue
+                        val member = MemberName(pkg, methodName)
+
+                        funSpecBuilder.addStatement(
+                            "LoggedOutputManager.registerField(%S, ::%M)",
+                            key,
+                            member
+                        )
+                        logger.info("Registering field: $pkg.$methodName with key=$key")
+                    }
                 }
-
 
                 is KSFunctionDeclaration -> {
                     val methodName = symbol.simpleName.asString()
