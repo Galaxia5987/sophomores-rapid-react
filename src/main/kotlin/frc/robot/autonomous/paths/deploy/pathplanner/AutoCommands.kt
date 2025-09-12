@@ -12,26 +12,12 @@ fun Spath(pathName: String, mirror: Boolean = false): Command =
         else PathPlannerPath.fromPathFile(pathName)
     )
 
-fun AC1(): Command =
-    Commands.sequence(
-        AutoBuilder.followPath(PathPlannerPath.fromPathFile("AC1"))
-    )
+internal fun getPath(name: String): Command = AutoBuilder.followPath(PathPlannerPath.fromPathFile(name))
 
-fun C1S(): Command =
-    Commands.sequence(
-        AutoBuilder.followPath(PathPlannerPath.fromPathFile("C1S"))
-    )
-
-fun CC2(): Command =
-    Commands.sequence(
-        AutoBuilder.followPath(PathPlannerPath.fromPathFile("CC2"))
-    )
-
-fun C2C3(): Command =
-    Commands.sequence(
-        AutoBuilder.followPath(PathPlannerPath.fromPathFile("C2C3"))
-    )
-
+fun AC1(): Command = getPath("AC1")
+fun C1S(): Command = getPath("C1S")
+fun CC2(): Command = getPath("CC2")
+fun C2C3(): Command = getPath("C2C3")
 fun AC1SRP(): Command =
     Commands.sequence(
         AC1().until { RobotState.SHOOTING.equals(RobotState.SHOOTING) },
