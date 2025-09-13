@@ -1,6 +1,8 @@
 package frc.robot.robotstate
 
+import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.math.geometry.Rotation2d
+import edu.wpi.first.math.geometry.Translation2d
 import edu.wpi.first.math.kinematics.ChassisSpeeds
 import edu.wpi.first.units.measure.Angle
 import edu.wpi.first.wpilibj2.command.Commands.parallel
@@ -30,6 +32,7 @@ import frc.robot.subsystems.shooter.flywheel.SLOW_ROTATION
 import frc.robot.subsystems.shooter.hood.HOOD_ANGLE_BY_DISTANCE
 import frc.robot.subsystems.shooter.turret.MAX_ANGLE
 import frc.robot.subsystems.shooter.turret.MIN_ANGLE
+import org.littletonrobotics.junction.Logger
 
 var hoodAngle = InterpolatingDouble(robotDistanceFromHub[m])
 
@@ -42,12 +45,51 @@ val compensatedShot: ShotData
             )
         val shooterExitVelocity =
             flywheel.currentVelocity.toLinear(FLYWHEEL_DIAMETER, 1.0)
-        return calculateShot(
-            drive.pose,
-            HUB_LOCATION,
-            robotSpeeds,
+        val shot =
+            calculateShot(
+                drive.pose,
+                HUB_LOCATION,
+                robotSpeeds,
+                shooterExitVelocity
+            )
+        Logger.recordOutput(
+            "onMoveShoot/compensatedShot/compensatedDistance",
+            shot.compensatedDistance
+        )
+        Logger.recordOutput(
+            "onMoveShoot/compensatedShot/compensatedTarget",
+            Pose2d(shot.compensatedTarget, Rotation2d())
+        )
+        Logger.recordOutput(
+            "onMoveShoot/compensatedShot/turretAngle",
+            shot.turretAngle
+        )
+
+        Logger.recordOutput(
+            "onMoveShoot/regularShot/distance",
+            robotDistanceFromHub
+        )
+        Logger.recordOutput(
+            "onMoveShoot/regularShot/target",
+            Pose2d(HUB_LOCATION, Rotation2d())
+        )
+        Logger.recordOutput(
+            "onMoveShoot/regularShot/turretAngle",
+            angleFromRobotHub
+        )
+        Logger.recordOutput(
+            "onMoveShoot/shooterExitVelocity",
             shooterExitVelocity
         )
+        Logger.recordOutput(
+            "onMoveShoot/velocityVector",
+            Translation2d(
+                robotSpeeds.vxMetersPerSecond,
+                robotSpeeds.vyMetersPerSecond
+            )
+        )
+
+        return shot
     }
 
 val robotDistanceFromHub
