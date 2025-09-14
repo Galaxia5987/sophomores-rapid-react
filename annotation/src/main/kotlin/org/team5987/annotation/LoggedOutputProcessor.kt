@@ -1,5 +1,6 @@
 package org.team5987.annotation
 
+import com.google.devtools.ksp.getAllSuperTypes
 import com.google.devtools.ksp.processing.*
 import com.google.devtools.ksp.symbol.*
 import com.squareup.kotlinpoet.*
@@ -99,6 +100,24 @@ class LoggedOutputProcessor(
                             classType,
                             methodName
                         )
+                    }
+                }
+                is KSClassDeclaration ->{
+
+                    val pkg = symbol.containingFile?.packageName?.asString()?:continue
+                    val className = symbol.simpleName.asString()
+                    val classType = ClassName(pkg,className)
+                    symbol.getAllProperties().forEach {
+                        val methodName = it.simpleName.asString()
+                        val pkg = it.containingFile?.packageName?.asString()
+                        if (pkg!=null) {
+                            funSpecBuilder.addStatement(
+                                "LoggedOutputManager.registerField(%S, %T::%L)",
+                                className,
+                                classType,
+                                methodName
+                            )
+                        }
                     }
                 }
             }
