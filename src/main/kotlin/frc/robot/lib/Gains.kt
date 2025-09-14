@@ -26,8 +26,6 @@ data class Gains(
             kV = this@Gains.kV
             kG = this@Gains.kG
         }
-
-
 }
 
 class LoggedNetworkGains(
@@ -39,24 +37,32 @@ class LoggedNetworkGains(
     kV: Double = 0.0,
     kA: Double = 0.0,
     kG: Double = 0.0,
-    key: String = (Throwable().stackTrace[1]?.fileName?.substringBeforeLast('.') + ""),
+    key: String =
+        (Throwable().stackTrace[1]?.fileName?.substringBeforeLast('.') + ""),
 ) {
-    val kP: LoggedNetworkNumber = LoggedNetworkNumber("/Tuning/${"$key/$name"}/kP", kP)
-    val kI: LoggedNetworkNumber = LoggedNetworkNumber("/Tuning/${"$key/$name"}/kI", kD)
-    val kD: LoggedNetworkNumber = LoggedNetworkNumber("/Tuning/${"$key/$name"}/kD", kI)
-    val kS: LoggedNetworkNumber = LoggedNetworkNumber("/Tuning/${"$key/$name"}/kS", kS)
-    val kV: LoggedNetworkNumber = LoggedNetworkNumber("/Tuning/${"$key/$name"}/kV", kV)
-    val kA: LoggedNetworkNumber = LoggedNetworkNumber("/Tuning/${"$key/$name"}/kA", kA)
-    val kG: LoggedNetworkNumber = LoggedNetworkNumber("/Tuning/${"$key/$name"}/kG", kG)
+    val kP: LoggedNetworkNumber =
+        LoggedNetworkNumber("/Tuning/${"$key/$name"}/kP", kP)
+    val kI: LoggedNetworkNumber =
+        LoggedNetworkNumber("/Tuning/${"$key/$name"}/kI", kD)
+    val kD: LoggedNetworkNumber =
+        LoggedNetworkNumber("/Tuning/${"$key/$name"}/kD", kI)
+    val kS: LoggedNetworkNumber =
+        LoggedNetworkNumber("/Tuning/${"$key/$name"}/kS", kS)
+    val kV: LoggedNetworkNumber =
+        LoggedNetworkNumber("/Tuning/${"$key/$name"}/kV", kV)
+    val kA: LoggedNetworkNumber =
+        LoggedNetworkNumber("/Tuning/${"$key/$name"}/kA", kA)
+    val kG: LoggedNetworkNumber =
+        LoggedNetworkNumber("/Tuning/${"$key/$name"}/kG", kG)
 
-    fun toSlotConfig() = Slot0Configs().apply {
-        kP = this@LoggedNetworkGains.kP.get()
-        kI = this@LoggedNetworkGains.kI.get()
-        kD = this@LoggedNetworkGains.kD.get()
-        kA = this@LoggedNetworkGains.kA.get()
-        kS = this@LoggedNetworkGains.kS.get()
-        kV = this@LoggedNetworkGains.kV.get()
-        kG = this@LoggedNetworkGains.kG.get()
-    }
+    fun toSlotConfig() =
+        Slot0Configs().apply {
+            kP = this@LoggedNetworkGains.kP.get()
+            kI = this@LoggedNetworkGains.kI.get()
+            kD = this@LoggedNetworkGains.kD.get()
+            kA = this@LoggedNetworkGains.kA.get()
+            kS = this@LoggedNetworkGains.kS.get()
+            kV = this@LoggedNetworkGains.kV.get()
+            kG = this@LoggedNetworkGains.kG.get()
+        }
 }
-
