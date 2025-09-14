@@ -19,7 +19,7 @@ class LoggedOutputProcessor(
 
         if (symbols.none()) {
             logger.warn("No @LoggedOutput symbols found this round.")
-            generateEmptyFile(codeGenerator,resolver)
+            generateEmptyFile(codeGenerator, resolver)
             return emptyList()
         }
 
@@ -104,15 +104,16 @@ class LoggedOutputProcessor(
                         )
                     }
                 }
-                is KSClassDeclaration ->{
 
-                    val pkg = symbol.containingFile?.packageName?.asString()?:continue
+                is KSClassDeclaration -> {
+
+                    val pkg = symbol.containingFile?.packageName?.asString() ?: continue
                     val className = symbol.simpleName.asString()
-                    val classType = ClassName(pkg,className)
+                    val classType = ClassName(pkg, className)
                     symbol.getAllProperties().forEach {
                         val methodName = it.simpleName.asString()
                         val pkg = it.containingFile?.packageName?.asString()
-                        if (pkg!=null) {
+                        if (pkg != null) {
                             funSpecBuilder.addStatement(
                                 "LoggedOutputManager.registerField(%S, %T::%L)",
                                 className,
@@ -145,9 +146,8 @@ class LoggedOutputProcessor(
     }
 }
 
-private var emittedRegistry = false
-fun generateEmptyFile(codeGenerator: CodeGenerator,resolver: Resolver){
-    if (!emittedRegistry) {
+fun generateEmptyFile(codeGenerator: CodeGenerator, resolver: Resolver) {
+    try {
         val pkg = "frc.robot.lib.logged_output.generated"
         val name = "LoggedRegistry"
         val file = FileSpec.builder(pkg, name)
@@ -164,7 +164,7 @@ fun generateEmptyFile(codeGenerator: CodeGenerator,resolver: Resolver){
             *resolver.getAllFiles().toList().toTypedArray()
         )
         file.writeTo(codeGenerator, deps)
-        emittedRegistry = true
+    } catch (e: FileAlreadyExistsException) {
     }
 }
 
