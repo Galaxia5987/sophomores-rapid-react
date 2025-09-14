@@ -60,7 +60,6 @@ val controller =
  * @param holonomicController The holonomic controller to use for the alignment.
  * Defaults to [controller]
  */
-
 fun alignToPose(
     goalPose: Pose2d,
     tolerance: Pose2d = TOLERANCE,
@@ -69,23 +68,16 @@ fun alignToPose(
         Pair(controller, DEFAULT_CONTROLLER_NAME),
 ): Command =
     runOnce({
-        setTolerance(tolerance)
-        resetProfiledPID(
-            drive.pose,
-            drive.fieldOrientedSpeeds
-        )
-        setGoal(goalPose)
-        Logger.recordOutput(
-            "Alignment/Controllers/CurrentRunningController",
-            holonomicController.second
-        )
-    })
+            setTolerance(tolerance)
+            resetProfiledPID(drive.pose, drive.fieldOrientedSpeeds)
+            setGoal(goalPose)
+            Logger.recordOutput(
+                "Alignment/Controllers/CurrentRunningController",
+                holonomicController.second
+            )
+        })
         .andThen(
-            run({
-                drive.runVelocity(
-                    getSpeed(drive.pose).invoke()
-                )
-            })
+            run({ drive.runVelocity(getSpeed(drive.pose).invoke()) })
                 .until(
                     Trigger { controller.atReference() }
                         .debounce(atGoalDebounce.`in`(Seconds))
@@ -93,7 +85,4 @@ fun alignToPose(
         )
         .withName("Drive/AlignToPose")
 
-fun alignCommand(pose: Pose2d): Command =
-    drive.defer {
-        alignToPose(pose)
-    }
+fun alignCommand(pose: Pose2d): Command = drive.defer { alignToPose(pose) }
