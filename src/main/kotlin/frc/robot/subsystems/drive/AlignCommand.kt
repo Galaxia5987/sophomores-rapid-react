@@ -3,9 +3,7 @@ package frc.robot.subsystems.drive
 import edu.wpi.first.math.controller.PIDController
 import edu.wpi.first.math.controller.ProfiledPIDController
 import edu.wpi.first.math.geometry.Pose2d
-import edu.wpi.first.units.Units.MetersPerSecond
 import edu.wpi.first.units.Units.Seconds
-import edu.wpi.first.units.measure.LinearVelocity
 import edu.wpi.first.units.measure.Time
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.Commands.*
@@ -62,36 +60,40 @@ val controller =
  * @param holonomicController The holonomic controller to use for the alignment.
  * Defaults to [controller]
  */
+
 fun alignToPose(
     goalPose: Pose2d,
-    linearVelocity: LinearVelocity = MetersPerSecond.zero(),
     tolerance: Pose2d = TOLERANCE,
-    poseSupplier: () -> Pose2d = { drive.pose },
     atGoalDebounce: Time = Seconds.of(0.1),
     holonomicController: Pair<TunableHolonomicDriveController, String> =
         Pair(controller, DEFAULT_CONTROLLER_NAME),
 ): Command =
     runOnce({
-            controller.setTolerance(tolerance)
-            Logger.recordOutput(
-                "Alignment/Controllers/CurrentRunningController",
-                holonomicController.second
-            )
-        })
+        setTolerance(tolerance)
+        resetProfiledPID(
+            drive.pose,
+            drive.fieldOrientedSpeeds
+        )
+        setGoal(goalPose)
+        Logger.recordOutput(
+            "Alignment/Controllers/CurrentRunningController",
+            holonomicController.second
+        )
+    })
         .andThen(
             run({
-                    drive.runVelocity(
-                        holonomicController.first.calculate(
-                            poseSupplier.invoke(),
-                            goalPose,
-                            linearVelocity.`in`(MetersPerSecond),
-                            goalPose.rotation
-                        )
-                    )
-                })
+                drive.runVelocity(
+                    getSpeed(drive.pose).invoke()
+                )
+            })
                 .until(
                     Trigger { controller.atReference() }
                         .debounce(atGoalDebounce.`in`(Seconds))
                 )
         )
         .withName("Drive/AlignToPose")
+
+fun alignCommand(pose: Pose2d): Command =
+    drive.defer {
+        alignToPose(pose)
+    }
