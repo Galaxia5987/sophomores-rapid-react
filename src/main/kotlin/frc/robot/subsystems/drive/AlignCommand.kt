@@ -111,11 +111,11 @@ private fun profiledAlignToPose(
         })
         .andThen(
             run({
-                drive.runVelocity(getSpeedSetpoint(poseSupplier.invoke()).invoke())
-            })
-                .until(
-                    atGoal
-                )
+                    drive.runVelocity(
+                        getSpeedSetpoint(poseSupplier.invoke()).invoke()
+                    )
+                })
+                .until(atGoal)
         )
         .withName("Drive/profiledAlignToPose")
 
