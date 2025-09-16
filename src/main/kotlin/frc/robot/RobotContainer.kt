@@ -30,6 +30,7 @@ object RobotContainer {
     private val autoChooser: LoggedDashboardChooser<Command>
 
     var hoodAngle = InterpolatingDouble(robotDistanceFromHub[m])
+
     init {
         drive // Ensure Drive is initialized
         wrist.setAngle(WristAngles.DOWN.angle)
