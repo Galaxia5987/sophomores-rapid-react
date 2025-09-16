@@ -9,8 +9,11 @@ import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine
 import frc.robot.lib.extensions.enableAutoLogOutputFor
 import frc.robot.lib.extensions.get
+import frc.robot.lib.extensions.m
+import frc.robot.lib.math.interpolation.InterpolatingDouble
 import frc.robot.robotstate.bindRobotCommands
 import frc.robot.robotstate.hoodCommand
+import frc.robot.robotstate.robotDistanceFromHub
 import frc.robot.robotstate.setIntakeing
 import frc.robot.robotstate.turretAngleToHub
 import frc.robot.subsystems.drive.DriveCommands

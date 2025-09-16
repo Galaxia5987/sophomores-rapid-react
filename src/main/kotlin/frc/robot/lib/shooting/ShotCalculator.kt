@@ -51,8 +51,11 @@ fun calculateShot(
     // On move compensation
     val shotTime = distance / shooterSpeed
     val shotOffset = velocityVector.times(shotTime)
+    val xOffset = hubPose.x - robotPose.x
+    val yOffset = hubPose.y - robotPose.y
+    val rotationOffset = Rotation2d(xOffset, -yOffset)
     val compensatedTarget =
-        hubPose.plus(shotOffset).minus(robotPose.translation)
+        hubPose.plus(shotOffset).rotateAround(hubPose, rotationOffset)
     val turretAngle =
         robotPose.translation.rotationToPoint(compensatedTarget) -
             robotPose.rotation

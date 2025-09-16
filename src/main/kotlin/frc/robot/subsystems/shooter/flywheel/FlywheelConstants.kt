@@ -30,7 +30,7 @@ val SUPPLY_CURRENT_LIMIT = 50.amps
 val GAINS = Gains(kP = 2.0)
 val TOLERANCE = 0.1.rps
 val AT_SET_VELOCITY_DEBOUNCE = 0.2.sec
-val FLYWHEEL_DIAMETER = 20.mm
+val FLYWHEEL_DIAMETER = 101.6.mm
 val MOTOR_CONFIG =
     TalonFXConfiguration().apply {
         MotorOutput =
