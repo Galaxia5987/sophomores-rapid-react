@@ -27,7 +27,8 @@ val linearMaxAcceleration =
 var rotationalMaxVelocity =
     LoggedNetworkNumber("$COMMAND_NAME_PREFIX/rotationMaxVelocity", 7.0)
 var rotationalMaxAcceleration =
-    LoggedNetworkNumber("$COMMAND_NAME_PREFIX/rotationMaxAcceleration ", 360.0)
+    LoggedNetworkNumber("$COMMAND_NAME_PREFIX/rotationMaxAcceleration", 360.0)
+var atGoalDebounce = LoggedNetworkNumber("$COMMAND_NAME_PREFIX/atGoalDebounce",0.05)
 
 private val linearLimits
     get() = Constraints(linearMaxVelocity.get(), linearMaxAcceleration.get())
@@ -88,7 +89,7 @@ val atGoal: Trigger =
     Trigger(xController::atGoal)
         .and(yController::atGoal)
         .and(thetaController::atGoal)
-        .debounce(0.05)
+        .debounce(atGoalDebounce.get())
 
 fun resetProfiledPID(botPose: Pose2d, botSpeeds: ChassisSpeeds) {
     xController.reset(botPose.x, botSpeeds.vxMetersPerSecond)
