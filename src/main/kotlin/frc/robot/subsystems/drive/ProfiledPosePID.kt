@@ -4,8 +4,12 @@ import edu.wpi.first.math.controller.ProfiledPIDController
 import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.math.kinematics.ChassisSpeeds
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints
+import edu.wpi.first.units.measure.Time
+
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.lib.LoggedNetworkGains
+import frc.robot.lib.extensions.get
+import frc.robot.lib.extensions.sec
 import org.littletonrobotics.junction.networktables.LoggedNetworkNumber
 import org.team5987.annotation.LoggedOutput
 
@@ -18,17 +22,15 @@ private val yGains =
     )
 
 private val thetaGains = LoggedNetworkGains("thetaGains", 6.0)
-
-val linearMaxVelocity =
+private val linearMaxVelocity =
     LoggedNetworkNumber("$COMMAND_NAME_PREFIX/linearMaxVelocity", 4.69)
-val linearMaxAcceleration =
+private val linearMaxAcceleration =
     LoggedNetworkNumber("$COMMAND_NAME_PREFIX/linearMaxAcceleration", 2.8)
 
-var rotationalMaxVelocity =
+private var rotationalMaxVelocity =
     LoggedNetworkNumber("$COMMAND_NAME_PREFIX/rotationMaxVelocity", 7.0)
-var rotationalMaxAcceleration =
+private var rotationalMaxAcceleration =
     LoggedNetworkNumber("$COMMAND_NAME_PREFIX/rotationMaxAcceleration", 360.0)
-var atGoalDebounce = LoggedNetworkNumber("$COMMAND_NAME_PREFIX/atGoalDebounce",0.05)
 
 private val linearLimits
     get() = Constraints(linearMaxVelocity.get(), linearMaxAcceleration.get())
@@ -85,11 +87,15 @@ fun setGoal(desiredPose: Pose2d) {
     thetaController.setGoal(desiredPose.rotation.radians)
 }
 
-val atGoal: Trigger =
-    Trigger(xController::atGoal)
-        .and(yController::atGoal)
-        .and(thetaController::atGoal)
-        .debounce(atGoalDebounce.get())
+lateinit var atGoal: Trigger
+
+fun initAtSetGoalTrigger(debounce: Time) {
+    atGoal =
+        Trigger(xController::atGoal)
+            .and(yController::atGoal)
+            .and(thetaController::atGoal)
+            .debounce(debounce[sec])
+}
 
 fun resetProfiledPID(botPose: Pose2d, botSpeeds: ChassisSpeeds) {
     xController.reset(botPose.x, botSpeeds.vxMetersPerSecond)

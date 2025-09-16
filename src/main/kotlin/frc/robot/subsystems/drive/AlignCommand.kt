@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.Commands.*
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.drive
 import frc.robot.lib.controllers.TunableHolonomicDriveController
+import frc.robot.lib.extensions.sec
 import org.littletonrobotics.junction.Logger
 
 private val translationController =
@@ -100,10 +101,11 @@ private fun profiledAlignToPose(
     goalPose: Pose2d,
     tolerance: Pose2d = TOLERANCE,
     poseSupplier: () -> Pose2d = { drive.pose },
-    atGoalDebounce: Time = Seconds.of(0.1),
+    atGoalDebounce: Time = 0.1.sec,
 ): Command =
     runOnce({
             setTolerance(tolerance)
+            initAtSetGoalTrigger(atGoalDebounce)
             resetProfiledPID(poseSupplier.invoke(), drive.fieldOrientedSpeeds)
             setGoal(goalPose)
         })
@@ -112,8 +114,7 @@ private fun profiledAlignToPose(
                 drive.runVelocity(getSpeedSetpoint(poseSupplier.invoke()).invoke())
             })
                 .until(
-                    Trigger { controller.atReference() }
-                        .debounce(atGoalDebounce.`in`(Seconds))
+                    atGoal
                 )
         )
         .withName("Drive/profiledAlignToPose")
