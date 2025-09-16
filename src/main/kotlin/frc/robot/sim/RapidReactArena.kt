@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Pose3d
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.math.geometry.Translation2d
 import java.util.*
+import org.dyn4j.geometry.Circle
 import org.ironmaple.simulation.SimulatedArena
 
 class RapidReactArena : SimulatedArena(RapidReactFieldObstacleMap()) {
@@ -35,10 +36,8 @@ class RapidReactArena : SimulatedArena(RapidReactFieldObstacleMap()) {
                 Translation2d(17.548 - 1.672, 0.0)
             )
 
-            // the pillar in the middle of the field
-            super.addRectangularObstacle(
-                0.305,
-                0.305,
+            super.addCustomObstacle(
+                Circle(0.75),
                 Pose2d(8.774, 4.026, Rotation2d())
             )
         }
