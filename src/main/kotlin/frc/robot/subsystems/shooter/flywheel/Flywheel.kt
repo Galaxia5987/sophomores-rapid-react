@@ -27,7 +27,7 @@ class Flywheel : SubsystemBase(), SysIdable {
     private val voltageOut = VoltageOut(0.0)
     private var velocitySetpoint = 0.rps
     val currentVelocity
-            get() = mainMotor.inputs.velocity
+        get() = mainMotor.inputs.velocity
     init {
         auxMotor.setControl(Follower(MAIN_MOTOR_PORT, false))
     }
