@@ -40,20 +40,14 @@ class LoggedNetworkGains(
     key: String =
         (Throwable().stackTrace[1]?.fileName?.substringBeforeLast('.') + ""),
 ) {
-    val kP: LoggedNetworkNumber =
-        LoggedNetworkNumber("/Tuning/${"$key/$name"}/kP", kP)
-    val kI: LoggedNetworkNumber =
-        LoggedNetworkNumber("/Tuning/${"$key/$name"}/kI", kD)
-    val kD: LoggedNetworkNumber =
-        LoggedNetworkNumber("/Tuning/${"$key/$name"}/kD", kI)
-    val kS: LoggedNetworkNumber =
-        LoggedNetworkNumber("/Tuning/${"$key/$name"}/kS", kS)
-    val kV: LoggedNetworkNumber =
-        LoggedNetworkNumber("/Tuning/${"$key/$name"}/kV", kV)
-    val kA: LoggedNetworkNumber =
-        LoggedNetworkNumber("/Tuning/${"$key/$name"}/kA", kA)
-    val kG: LoggedNetworkNumber =
-        LoggedNetworkNumber("/Tuning/${"$key/$name"}/kG", kG)
+    val path = "/Tuning/$key/$name"
+    val kP: LoggedNetworkNumber = LoggedNetworkNumber("$path/kP", kP)
+    val kI: LoggedNetworkNumber = LoggedNetworkNumber("$path}/kI", kD)
+    val kD: LoggedNetworkNumber = LoggedNetworkNumber("$path/kD", kI)
+    val kS: LoggedNetworkNumber = LoggedNetworkNumber("$path/kS", kS)
+    val kV: LoggedNetworkNumber = LoggedNetworkNumber("$path/kV", kV)
+    val kA: LoggedNetworkNumber = LoggedNetworkNumber("$path/kA", kA)
+    val kG: LoggedNetworkNumber = LoggedNetworkNumber("$path/kG", kG)
 
     fun toSlotConfig() =
         Slot0Configs().apply {
