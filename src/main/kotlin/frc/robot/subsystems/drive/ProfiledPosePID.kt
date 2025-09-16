@@ -2,21 +2,29 @@ package frc.robot.subsystems.drive
 
 import edu.wpi.first.math.controller.ProfiledPIDController
 import edu.wpi.first.math.geometry.Pose2d
-import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.math.kinematics.ChassisSpeeds
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints
-import edu.wpi.first.units.Units
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.lib.LoggedNetworkGains
-import org.littletonrobotics.junction.Logger
+import org.littletonrobotics.junction.networktables.LoggedNetworkNumber
 import org.team5987.annotation.LoggedOutput
 
 private val gainsX = LoggedNetworkGains("gainX", 4.0)
 private val gainsY =
+const val COMMAND_NAME_PREFIX = "AutoAlignment"
     LoggedNetworkGains(
         "gainY",
     )
 private val gainsTheta = LoggedNetworkGains("gainTheta", 6.0)
+val linearMaxVelocity =
+    LoggedNetworkNumber("$COMMAND_NAME_PREFIX/linearMaxVelocity", 4.69)
+val linearMaxAcceleration =
+    LoggedNetworkNumber("$COMMAND_NAME_PREFIX/linearMaxAcceleration", 2.8)
+
+var rotationalMaxVelocity =
+    LoggedNetworkNumber("$COMMAND_NAME_PREFIX/rotationMaxVelocity", 7.0)
+var rotationalMaxAcceleration =
+    LoggedNetworkNumber("$COMMAND_NAME_PREFIX/rotationMaxAcceleration ", 360.0)
 
 private val LINEAR_CONSTRAINTS =
     Constraints(
@@ -31,6 +39,15 @@ private val ROTATIONAL_CONSTRAINTS =
         Units.DegreesPerSecondPerSecond.of(360.0)
             .`in`(Units.RadiansPerSecondPerSecond)
     )
+private val linearLimits
+    get() = Constraints(linearMaxVelocity.get(), linearMaxAcceleration.get())
+
+private val rotationalLimits
+    get() =
+        Constraints(
+            rotationalMaxVelocity.get(),
+            rotationalMaxAcceleration.get()
+        )
 
 val xController =
     ProfiledPIDController(
@@ -46,6 +63,8 @@ val yController =
         gainsY.kD.get(),
         LINEAR_CONSTRAINTS
     )
+            linearLimits
+            linearLimits
 
 val thetaController =
     ProfiledPIDController(
@@ -55,6 +74,7 @@ val thetaController =
             ROTATIONAL_CONSTRAINTS
         )
         .apply { enableContinuousInput(-Math.PI, Math.PI) }
+                rotationalLimits
 
 fun updateProfiledPID() {
     xController.setPID(gainsX.kP.get(), gainsX.kI.get(), gainsX.kD.get())
