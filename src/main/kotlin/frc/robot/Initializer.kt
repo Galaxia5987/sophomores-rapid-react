@@ -2,6 +2,7 @@ package frc.robot
 
 import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.math.geometry.Rotation2d
+import frc.robot.sim.RapidReactArena
 import frc.robot.subsystems.drive.*
 import frc.robot.subsystems.drive.ModuleIOs.ModuleIO
 import frc.robot.subsystems.drive.ModuleIOs.ModuleIOSim
@@ -29,6 +30,7 @@ val driveSimulation: SwerveDriveSimulation? =
                 Pose2d(3.0, 3.0, Rotation2d())
             )
             .apply {
+                SimulatedArena.overrideInstance(RapidReactArena())
                 SimulatedArena.getInstance().addDriveTrainSimulation(this)
             }
     else null
