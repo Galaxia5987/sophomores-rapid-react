@@ -9,13 +9,16 @@ import frc.robot.lib.LoggedNetworkGains
 import org.littletonrobotics.junction.networktables.LoggedNetworkNumber
 import org.team5987.annotation.LoggedOutput
 
-private val gainsX = LoggedNetworkGains("gainX", 4.0)
-private val gainsY =
 const val COMMAND_NAME_PREFIX = "AutoAlignment"
+
+private val xGains = LoggedNetworkGains("xGains", 4.0)
+private val yGains =
     LoggedNetworkGains(
-        "gainY",
+        "yGains",
     )
-private val gainsTheta = LoggedNetworkGains("gainTheta", 6.0)
+
+private val thetaGains = LoggedNetworkGains("thetaGains", 6.0)
+
 val linearMaxVelocity =
     LoggedNetworkNumber("$COMMAND_NAME_PREFIX/linearMaxVelocity", 4.69)
 val linearMaxAcceleration =
@@ -26,19 +29,6 @@ var rotationalMaxVelocity =
 var rotationalMaxAcceleration =
     LoggedNetworkNumber("$COMMAND_NAME_PREFIX/rotationMaxAcceleration ", 360.0)
 
-private val LINEAR_CONSTRAINTS =
-    Constraints(
-        TunerConstants.kSpeedAt12Volts.`in`(Units.MetersPerSecond),
-        Units.MetersPerSecondPerSecond.of(2.8)
-            .`in`(Units.MetersPerSecondPerSecond)
-    )
-
-private val ROTATIONAL_CONSTRAINTS =
-    Constraints(
-        TunerConstants.kMaxOmegaVelocity.`in`(Units.RadiansPerSecond),
-        Units.DegreesPerSecondPerSecond.of(360.0)
-            .`in`(Units.RadiansPerSecondPerSecond)
-    )
 private val linearLimits
     get() = Constraints(linearMaxVelocity.get(), linearMaxAcceleration.get())
 
@@ -49,45 +39,46 @@ private val rotationalLimits
             rotationalMaxAcceleration.get()
         )
 
-val xController =
-    ProfiledPIDController(
-        gainsX.kP.get(),
-        gainsX.kI.get(),
-        gainsX.kD.get(),
-        LINEAR_CONSTRAINTS
-    )
-val yController =
-    ProfiledPIDController(
-        gainsY.kP.get(),
-        gainsY.kI.get(),
-        gainsY.kD.get(),
-        LINEAR_CONSTRAINTS
-    )
+val xController
+    get() =
+        ProfiledPIDController(
+            xGains.kP.get(),
+            xGains.kI.get(),
+            xGains.kD.get(),
             linearLimits
-            linearLimits
-
-val thetaController =
-    ProfiledPIDController(
-            gainsTheta.kP.get(),
-            gainsTheta.kI.get(),
-            gainsTheta.kD.get(),
-            ROTATIONAL_CONSTRAINTS
         )
-        .apply { enableContinuousInput(-Math.PI, Math.PI) }
-                rotationalLimits
+val yController
+    get() =
+        ProfiledPIDController(
+            yGains.kP.get(),
+            yGains.kI.get(),
+            yGains.kD.get(),
+            linearLimits
+        )
 
-fun updateProfiledPID() {
-    xController.setPID(gainsX.kP.get(), gainsX.kI.get(), gainsX.kD.get())
-    yController.setPID(gainsY.kP.get(), gainsY.kI.get(), gainsY.kD.get())
-    thetaController.setPID(
-        gainsTheta.kP.get(),
-        gainsTheta.kI.get(),
-        gainsTheta.kD.get()
-    )
+val thetaController
+    get() =
+        ProfiledPIDController(
+                thetaGains.kP.get(),
+                thetaGains.kI.get(),
+                thetaGains.kD.get(),
+                rotationalLimits
+            )
+            .apply { enableContinuousInput(-Math.PI, Math.PI) }
+
+fun updateProfiledPIDGains() {
+    mapOf(
+            xController to xGains,
+            yController to yGains,
+            thetaController to thetaGains
+        )
+        .forEach { (controller, gains) ->
+            controller.setPID(gains.kP.get(), gains.kI.get(), gains.kD.get())
+        }
 }
 
 fun setGoal(desiredPose: Pose2d) {
-    updateProfiledPID()
+    updateProfiledPIDGains()
     xController.setGoal(desiredPose.x)
     yController.setGoal(desiredPose.y)
     thetaController.setGoal(desiredPose.rotation.radians)
@@ -120,37 +111,25 @@ fun setTolerance(pose2d: Pose2d) {
  */
 @LoggedOutput
 object AutoAlignment {
-    var XError = xController.positionError
-    var YError = yController.positionError
-    var ThetaError = thetaController.positionError
-    var XSetpoint = xController.setpoint.position
-    var YSetpoint = yController.setpoint.position
-    var ThetaSetpoint = thetaController.setpoint.position
-    var XGoal = xController.goal.position
-    var YGoal = yController.goal.position
-    var ThetaGoal = thetaController.goal.position
-    var AtGoal = atGoal.asBoolean
-    var XAtSetpoint = xController.atSetpoint()
-    var YAtSetpoint = yController.atSetpoint()
+    var xError = xController.positionError
+    var yError = yController.positionError
+    var thetaError = thetaController.positionError
+    var xSetpoint = xController.setpoint.position
+    var ySetpoint = yController.setpoint.position
+    var thetaSetpoint = thetaController.setpoint.position
+    var xGoal = xController.goal.position
+    var yGoal = yController.goal.position
+    var thetaGoal = thetaController.goal.position
+    var atGoalSupplier = atGoal.asBoolean
+    var xAtSetpoint = xController.atSetpoint()
+    var yAtSetpoint = yController.atSetpoint()
     var thetaAtSetpoint = thetaController.atSetpoint()
-    var GoalPose =
-        Pose2d(
-            xController.goal.position,
-            yController.goal.position,
-            Rotation2d.fromRadians(thetaController.goal.position)
-        )
 }
 
-fun getSpeed(botPose: Pose2d): () -> ChassisSpeeds = {
-    val fieldRelativeSpeeds =
-        ChassisSpeeds(
-            xController.calculate(botPose.x),
-            yController.calculate(botPose.y),
-            thetaController.calculate(botPose.rotation.radians)
-        )
-    Logger.recordOutput(
-        "AutoAlignment/fieldRelativeSpeeds",
-        fieldRelativeSpeeds
+fun getSpeedSetpoint(botPose: Pose2d): () -> ChassisSpeeds = {
+    ChassisSpeeds(
+        xController.calculate(botPose.x),
+        yController.calculate(botPose.y),
+        thetaController.calculate(botPose.rotation.radians)
     )
-    fieldRelativeSpeeds
 }
