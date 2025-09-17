@@ -20,6 +20,8 @@ data class ShotData(
     val compensatedDistance: Distance
 )
 
+const val NO_COMPENSATION_THRESHOLD = 0.15
+
 fun calculateShot(
     robotPose: Pose2d,
     hubPose: Translation2d,
@@ -34,8 +36,8 @@ fun calculateShot(
     val velocityNorm = hypot(velocityVector.x, velocityVector.y)
 
     if (
-        MathUtil.isNear(0.0, shooterSpeed, 0.15) ||
-            MathUtil.isNear(0.0, velocityNorm, 0.15)
+        MathUtil.isNear(0.0, shooterSpeed, NO_COMPENSATION_THRESHOLD) ||
+            MathUtil.isNear(0.0, velocityNorm, NO_COMPENSATION_THRESHOLD)
     ) {
         // No motion compensation, just regular interpolation
         val turretAngle =
