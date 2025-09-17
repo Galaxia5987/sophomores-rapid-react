@@ -2,7 +2,6 @@ package frc.robot.robotstate
 
 import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.math.geometry.Rotation2d
-import edu.wpi.first.math.geometry.Translation2d
 import edu.wpi.first.math.kinematics.ChassisSpeeds
 import edu.wpi.first.units.measure.Angle
 import edu.wpi.first.wpilibj2.command.Commands.parallel
@@ -52,41 +51,27 @@ val compensatedShot: ShotData
                 robotSpeeds,
                 shooterExitVelocity
             )
-        Logger.recordOutput(
-            "onMoveShoot/compensatedShot/compensatedDistance",
-            shot.compensatedDistance
-        )
-        Logger.recordOutput(
-            "onMoveShoot/compensatedShot/compensatedTarget",
-            Pose2d(shot.compensatedTarget, Rotation2d())
-        )
-        Logger.recordOutput(
-            "onMoveShoot/compensatedShot/turretAngle",
-            shot.turretAngle
-        )
 
-        Logger.recordOutput(
-            "onMoveShoot/regularShot/distance",
-            robotDistanceFromHub
-        )
-        Logger.recordOutput(
-            "onMoveShoot/regularShot/target",
-            Pose2d(HUB_LOCATION, Rotation2d())
-        )
-        Logger.recordOutput(
-            "onMoveShoot/regularShot/turretAngle",
-            angleFromRobotHub
-        )
+        mapOf(
+                "compensatedShot/compensatedTarget" to
+                    Pose2d(shot.compensatedTarget, Rotation2d()),
+                "regularShot/target" to Pose2d(HUB_LOCATION, Rotation2d())
+            )
+            .forEach { Logger.recordOutput("onMoveShoot/" + it.key, it.value) }
+        mapOf(
+                "compensatedShot/compensatedDistance" to
+                    shot.compensatedDistance,
+                "regularShot/distance" to robotDistanceFromHub,
+            )
+            .forEach { Logger.recordOutput("onMoveShoot/" + it.key, it.value) }
+        mapOf(
+                "compensatedShot/turretAngle" to shot.turretAngle.measure,
+                "regularShot/turretAngle" to angleFromRobotHub,
+            )
+            .forEach { Logger.recordOutput("onMoveShoot/" + it.key, it.value) }
         Logger.recordOutput(
             "onMoveShoot/shooterExitVelocity",
             shooterExitVelocity
-        )
-        Logger.recordOutput(
-            "onMoveShoot/velocityVector",
-            Translation2d(
-                robotSpeeds.vxMetersPerSecond,
-                robotSpeeds.vyMetersPerSecond
-            )
         )
 
         return shot
