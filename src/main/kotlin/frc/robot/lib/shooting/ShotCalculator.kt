@@ -20,6 +20,8 @@ data class ShotData(
     val compensatedDistance: Distance
 )
 
+const val DISABLE_COMPENSATION = false
+
 val NO_COMPENSATION_THRESHOLD: LinearVelocity = 0.15.mps // The speed threshold for disabling the compensation
 
 fun calculateShot(
@@ -35,7 +37,7 @@ fun calculateShot(
         Translation2d(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond)
     val velocityNorm = hypot(velocityVector.x, velocityVector.y)
 
-    if (arrayOf(velocityNorm, shooterSpeed).any { MathUtil.isNear(0.0, it, NO_COMPENSATION_THRESHOLD[mps])}) {
+    if (arrayOf(velocityNorm, shooterSpeed).any { MathUtil.isNear(0.0, it, NO_COMPENSATION_THRESHOLD[mps])} || DISABLE_COMPENSATION) {
         // No motion compensation, just regular interpolation
         val turretAngle =
             robotPose.translation.rotationToPoint(robotToHub) -
