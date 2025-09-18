@@ -12,7 +12,7 @@ import frc.robot.lib.extensions.get
 import frc.robot.lib.extensions.m
 import frc.robot.lib.math.interpolation.InterpolatingDouble
 import frc.robot.robotstate.bindRobotCommands
-import frc.robot.robotstate.hoodCommand
+import frc.robot.robotstate.hoodDefaultCommand
 import frc.robot.robotstate.robotDistanceFromHub
 import frc.robot.robotstate.setIntakeing
 import frc.robot.robotstate.turretAngleToHub
@@ -61,7 +61,7 @@ object RobotContainer {
                 { -driverController.leftY * 0.8 }
             )
         turret.defaultCommand = turret.setAngle { turretAngleToHub }
-        hood.defaultCommand = hoodCommand()
+        hood.defaultCommand = hoodDefaultCommand()
     }
 
     private fun configureButtonBindings() {

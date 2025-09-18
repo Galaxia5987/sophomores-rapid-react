@@ -135,7 +135,7 @@ fun startIntaking() =
 fun stopIntaking() =
     parallel(roller.stop(), hopper.stop()).named(COMMAND_NAME_PREFIX)
 
-fun hoodCommand() =
+fun hoodDefaultCommand() =
     hood.setAngle {
         hoodAngle.value = compensatedShot.compensatedDistance[m]
         HOOD_ANGLE_BY_DISTANCE.getInterpolated(hoodAngle).value.deg
