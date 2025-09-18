@@ -35,7 +35,7 @@ fun calculateShot(
     val shooterSpeed = shooterExitVelocity[mps]
     val velocityVector =
         Translation2d(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond)
-    val velocityNorm = hypot(velocityVector.x, velocityVector.y)
+    val velocityNorm = velocityVector.norm
 
     if (arrayOf(velocityNorm, shooterSpeed).any { MathUtil.isNear(0.0, it, NO_COMPENSATION_THRESHOLD[mps])} || DISABLE_COMPENSATION) {
         // No motion compensation, just regular interpolation
