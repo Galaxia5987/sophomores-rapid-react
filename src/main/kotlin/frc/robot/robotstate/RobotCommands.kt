@@ -57,18 +57,18 @@ val compensatedShot: ShotData
                     Pose2d(shot.compensatedTarget, Rotation2d()),
                 "regularShot/target" to Pose2d(HUB_LOCATION, Rotation2d())
             )
-            .forEach { Logger.recordOutput("onMoveShoot/" + it.key, it.value) }
+            .forEach { Logger.recordOutput("onMoveShoot/${it.key}", it.value) }
         mapOf(
                 "compensatedShot/compensatedDistance" to
                     shot.compensatedDistance,
                 "regularShot/distance" to robotDistanceFromHub,
             )
-            .forEach { Logger.recordOutput("onMoveShoot/" + it.key, it.value) }
+            .forEach { Logger.recordOutput("onMoveShoot/${it.key}", it.value) }
         mapOf(
                 "compensatedShot/turretAngle" to shot.turretAngle.measure,
                 "regularShot/turretAngle" to angleFromRobotHub,
             )
-            .forEach { Logger.recordOutput("onMoveShoot/" + it.key, it.value) }
+            .forEach { Logger.recordOutput("onMoveShoot/${it.key}", it.value) }
         Logger.recordOutput(
             "onMoveShoot/shooterExitVelocity",
             shooterExitVelocity
