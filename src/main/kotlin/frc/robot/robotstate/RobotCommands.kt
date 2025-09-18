@@ -43,7 +43,7 @@ val compensatedShot: ShotData
                 drive.rotation
             )
         val shooterExitVelocity =
-            flywheel.currentVelocity.toLinear(FLYWHEEL_DIAMETER, 1.0)
+            flywheel.velocity.toLinear(FLYWHEEL_DIAMETER, 1.0)
         val shot =
             calculateShot(
                 drive.pose,
