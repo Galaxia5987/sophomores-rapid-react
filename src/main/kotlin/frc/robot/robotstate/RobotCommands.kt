@@ -44,13 +44,7 @@ val compensatedShot: ShotData
             )
         val shooterExitVelocity =
             flywheel.velocity.toLinear(FLYWHEEL_DIAMETER, 1.0)
-        val shot =
-            calculateShot(
-                drive.pose,
-                HUB_LOCATION,
-                robotSpeeds,
-                shooterExitVelocity
-            )
+        val shot = calculateShot(drive.pose, robotSpeeds, shooterExitVelocity)
 
         mapOf(
                 "compensatedShot/compensatedTarget" to
