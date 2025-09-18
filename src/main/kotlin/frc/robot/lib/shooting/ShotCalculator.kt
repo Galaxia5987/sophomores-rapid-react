@@ -30,7 +30,7 @@ fun calculateShot(
     speeds: ChassisSpeeds,
     shooterExitVelocity: LinearVelocity
 ): ShotData {
-    val robotToHub = hubPose.minus(robotPose.translation)
+    val robotToHub = hubPose - robotPose.translation
     val distance = hypot(robotToHub.x, robotToHub.y)
     val shooterSpeed = shooterExitVelocity[mps]
     val velocityVector =
@@ -51,12 +51,12 @@ fun calculateShot(
 
     // On move compensation
     val shotTime = distance / shooterSpeed
-    val shotOffset = velocityVector.times(shotTime)
+    val shotOffset = velocityVector*shotTime
     val xOffset = hubPose.x - robotPose.x
     val yOffset = hubPose.y - robotPose.y
     val rotationOffset = Rotation2d(xOffset, -yOffset)
     val compensatedTarget =
-        hubPose.plus(shotOffset).rotateAround(hubPose, rotationOffset)
+        (hubPose+shotOffset).rotateAround(hubPose, rotationOffset)
     val turretAngle =
         robotPose.translation.rotationToPoint(compensatedTarget) -
             robotPose.rotation
