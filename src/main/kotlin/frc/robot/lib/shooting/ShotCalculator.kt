@@ -12,6 +12,7 @@ import frc.robot.lib.extensions.m
 import frc.robot.lib.extensions.mps
 import frc.robot.lib.extensions.rotationToPoint
 import frc.robot.robotstate.HUB_LOCATION
+import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean
 import kotlin.math.hypot
 
 data class ShotData(
@@ -20,7 +21,7 @@ data class ShotData(
     val compensatedDistance: Distance
 )
 
-const val DISABLE_COMPENSATION = false
+val disableCompensation = LoggedNetworkBoolean("/Tuning/disableShotCompensation", false)
 val SHOOT_POINT = HUB_LOCATION
 
 val NO_COMPENSATION_THRESHOLD: LinearVelocity =
@@ -41,7 +42,7 @@ fun calculateShot(
     if (
         arrayOf(velocityNorm, shooterSpeed).any {
             MathUtil.isNear(0.0, it, NO_COMPENSATION_THRESHOLD[mps])
-        } || DISABLE_COMPENSATION
+        } || disableCompensation.get()
     ) {
         // No motion compensation, just regular interpolation
         val turretAngle =
