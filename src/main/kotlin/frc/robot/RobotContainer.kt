@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine
 import frc.robot.autonomous.paths.deploy.pathplanner.AC1SRP
+import frc.robot.autonomous.paths.deploy.pathplanner.BRP2
 import frc.robot.autonomous.paths.deploy.pathplanner.CC2C3
 import frc.robot.lib.extensions.deg
 import frc.robot.lib.extensions.enableAutoLogOutputFor
@@ -124,10 +125,7 @@ object RobotContainer {
             "Drive SysId (Dynamic Reverse)",
             drive.sysIdDynamic(SysIdRoutine.Direction.kReverse)
         )
-        autoChooser.addDefaultOption(
-            "BRP2",
-            AutoBuilder.followPath(PathPlannerPath.fromPathFile("BRP2"))
-        )
+        autoChooser.addDefaultOption("BRP2", BRP2())
         autoChooser.addOption("AC1SRP", AC1SRP())
         autoChooser.addOption("CC2C3", CC2C3())
     }
