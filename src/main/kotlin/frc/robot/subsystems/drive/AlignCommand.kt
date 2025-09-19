@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.Commands.*
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.drive
 import frc.robot.lib.controllers.TunableHolonomicDriveController
+import frc.robot.lib.extensions.get
 import frc.robot.lib.extensions.sec
 import org.littletonrobotics.junction.Logger
 
@@ -115,7 +116,7 @@ private fun profiledAlignToPose(
                         getSpeedSetpoint(poseSupplier.invoke()).invoke()
                     )
                 })
-                .until(atGoal)
+                .until(atGoal.debounce(atGoalDebounce[sec]))
         )
         .withName("Drive/profiledAlignToPose")
 

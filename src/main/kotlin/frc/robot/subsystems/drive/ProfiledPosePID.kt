@@ -86,15 +86,10 @@ fun setGoal(desiredPose: Pose2d) {
     thetaController.setGoal(desiredPose.rotation.radians)
 }
 
-lateinit var atGoal: Trigger
-
-fun initAtSetGoalTrigger(debounce: Time) {
-    atGoal =
+var atGoal =
         Trigger(xController::atGoal)
             .and(yController::atGoal)
             .and(thetaController::atGoal)
-            .debounce(debounce[sec])
-}
 
 fun resetProfiledPID(botPose: Pose2d, botSpeeds: ChassisSpeeds) {
     xController.reset(botPose.x, botSpeeds.vxMetersPerSecond)
