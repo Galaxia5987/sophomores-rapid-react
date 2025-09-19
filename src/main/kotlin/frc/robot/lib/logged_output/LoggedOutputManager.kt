@@ -6,6 +6,7 @@ import edu.wpi.first.util.struct.StructSerializable
 import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.lib.extensions.toPrimitiveTypeJava
+import frc.robot.lib.isNotNull
 import java.util.function.*
 import kotlin.reflect.KFunction
 import kotlin.reflect.KProperty0
@@ -21,19 +22,30 @@ object LoggedOutputManager : SubsystemBase() {
 
     private fun makeKey(
         key: String,
+        path: String = "",
         name: String,
         declaringClass: String?
     ): String {
-        return key.ifBlank { declaringClass ?: "<unknown>" } + "//$name"
+        return if (path.isBlank())
+            key.ifBlank { "${ declaringClass ?: "<unknown>" }}//$name" }
+        else path + key.ifBlank { "//$name" }
     }
 
-    fun <T> registerField(key: String, property: KProperty0<T>) {
+    fun <T> registerField(
+        key: String,
+        property: KProperty0<T>,
+        path: String = ""
+    ) {
         val declaringClass = property.javaGetter?.declaringClass?.simpleName
-        val actualKey = makeKey(key, property.name, declaringClass)
+        val actualKey = makeKey(key, path, property.name, declaringClass)
         register(actualKey, property::get)
     }
 
-    fun <T> registerMethod(key: String, function: KFunction<T>) {
+    fun <T> registerMethod(
+        key: String,
+        function: KFunction<T>,
+        path: String = "",
+    ) {
         if (function.parameters.isNotEmpty()) {
             throw IllegalArgumentException(
                 "Only zero-arg functions are supported: $key"
@@ -42,7 +54,7 @@ object LoggedOutputManager : SubsystemBase() {
 
         val declaringClass =
             function.javaMethod?.declaringClass?.simpleName ?: "<top-level>"
-        val actualKey = makeKey(key, function.name, declaringClass)
+        val actualKey = makeKey(key, path, function.name, declaringClass)
         register(actualKey, function::call)
     }
 

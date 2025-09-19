@@ -32,9 +32,19 @@ class LoggedOutputProcessor(
         fileSpecBuilder.addImport("frc.robot.lib.logged_output", "LoggedOutputManager")
 
         for (symbol in symbols) {
-            val key = symbol.annotations
+            val baseVal = symbol.annotations
                 .first { it.shortName.asString() == "LoggedOutput" }
-                .arguments.first().value.toString()
+                .arguments
+            val key by lazy {
+                if (baseVal.first().name?.asString() == "key")
+                    baseVal.first().value.toString()
+                else baseVal[1].value.toString()
+            }
+
+            val path by lazy {
+                if (baseVal.first().name?.asString() == "path")
+                    baseVal.first().value.toString()
+                else baseVal[1].value.toString() }
 
             when (symbol) {
                 is KSPropertyDeclaration -> { // or is property getter
@@ -49,10 +59,11 @@ class LoggedOutputProcessor(
 
                         // LoggedOutputManager.registerField("key", MyClass::myField)
                         funSpecBuilder.addStatement(
-                            "LoggedOutputManager.registerField(%S, %T::%L)",
+                            "LoggedOutputManager.registerField(%S, %T::%L, %S)",
                             key,
                             classType,
-                            fieldName
+                            fieldName,
+                            path
                         )
                     } else {
                         val methodName = symbol.simpleName.asString()
@@ -61,9 +72,10 @@ class LoggedOutputProcessor(
                         val member = MemberName(pkg, methodName)
 
                         funSpecBuilder.addStatement(
-                            "LoggedOutputManager.registerField(%S, ::%M)",
+                            "LoggedOutputManager.registerField(%S, ::%M,%S)",
                             key,
-                            member
+                            member,
+                            path
                         )
                         logger.info("Registering field: $pkg.$methodName with key=$key")
                     }
@@ -82,9 +94,10 @@ class LoggedOutputProcessor(
 
                         // LoggedOutputManager.registerMethod("key", ::testFun)
                         funSpecBuilder.addStatement(
-                            "LoggedOutputManager.registerMethod(%S, ::%M)",
+                            "LoggedOutputManager.registerMethod(%S, ::%M, %S)",
                             key,
-                            member
+                            member,
+                            path
                         )
                     } else {
                         // METHOD INSIDE TYPE (object/companion/@JvmStatic works as KFunction0 if no receiver)
@@ -97,10 +110,11 @@ class LoggedOutputProcessor(
 
                         // LoggedOutputManager.registerMethod("key", MyType::methodName)
                         funSpecBuilder.addStatement(
-                            "LoggedOutputManager.registerMethod(%S, %T::%L)",
+                            "LoggedOutputManager.registerMethod(%S, %T::%L, %S)",
                             key,
                             classType,
-                            methodName
+                            methodName,
+                            path
                         )
                     }
                 }
@@ -115,10 +129,11 @@ class LoggedOutputProcessor(
                         val pkg = it.containingFile?.packageName?.asString()
                         if (pkg != null) {
                             funSpecBuilder.addStatement(
-                                "LoggedOutputManager.registerField(%S, %T::%L)",
-                                className,
+                                "LoggedOutputManager.registerField(%S, %T::%L, %S)",
+                                key,
                                 classType,
-                                methodName
+                                methodName,
+                                path
                             )
                         }
                     }
