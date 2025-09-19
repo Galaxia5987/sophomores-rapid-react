@@ -4,11 +4,9 @@ import edu.wpi.first.math.controller.ProfiledPIDController
 import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.math.kinematics.ChassisSpeeds
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints
-import edu.wpi.first.units.measure.Time
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.lib.LoggedNetworkGains
 import frc.robot.lib.extensions.get
-import frc.robot.lib.extensions.sec
 import org.littletonrobotics.junction.networktables.LoggedNetworkNumber
 import org.team5987.annotation.LoggedOutput
 
@@ -87,9 +85,9 @@ fun setGoal(desiredPose: Pose2d) {
 }
 
 var atGoal =
-        Trigger(xController::atGoal)
-            .and(yController::atGoal)
-            .and(thetaController::atGoal)
+    Trigger(xController::atGoal)
+        .and(yController::atGoal)
+        .and(thetaController::atGoal)
 
 fun resetProfiledPID(botPose: Pose2d, botSpeeds: ChassisSpeeds) {
     xController.reset(botPose.x, botSpeeds.vxMetersPerSecond)
