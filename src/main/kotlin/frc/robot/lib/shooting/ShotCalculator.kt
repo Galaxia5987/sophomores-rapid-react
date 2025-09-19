@@ -22,7 +22,7 @@ data class ShotData(
 )
 
 val disableCompensation = LoggedNetworkBoolean("/Tuning/disableShotCompensation", false)
-val SHOOT_POINT = HUB_LOCATION
+val SHOOT_TARGET = HUB_LOCATION
 
 val NO_COMPENSATION_THRESHOLD: LinearVelocity =
     0.15.mps // The speed threshold for disabling the compensation
@@ -32,7 +32,7 @@ fun calculateShot(
     speeds: ChassisSpeeds,
     shooterExitVelocity: LinearVelocity
 ): ShotData {
-    val robotToHub = SHOOT_POINT - robotPose.translation
+    val robotToHub = SHOOT_TARGET - robotPose.translation
     val distance = hypot(robotToHub.x, robotToHub.y)
     val shooterSpeed = shooterExitVelocity[mps]
     val velocityVector =
@@ -58,11 +58,11 @@ fun calculateShot(
     // On move compensation
     val shotTime = distance / shooterSpeed
     val shotOffset = velocityVector * shotTime
-    val xOffset = SHOOT_POINT.x - robotPose.x
-    val yOffset = SHOOT_POINT.y - robotPose.y
+    val xOffset = SHOOT_TARGET.x - robotPose.x
+    val yOffset = SHOOT_TARGET.y - robotPose.y
     val rotationOffset = Rotation2d(xOffset, -yOffset)
     val compensatedTarget =
-        (SHOOT_POINT + shotOffset).rotateAround(SHOOT_POINT, rotationOffset)
+        (SHOOT_TARGET + shotOffset).rotateAround(SHOOT_TARGET, rotationOffset)
     val turretAngle =
         robotPose.translation.rotationToPoint(compensatedTarget) -
             robotPose.rotation
