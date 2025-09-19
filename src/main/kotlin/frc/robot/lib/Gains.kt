@@ -40,7 +40,7 @@ class LoggedNetworkGains(
     key: String =
         (Throwable().stackTrace[1]?.fileName?.substringBeforeLast('.') + ""),
 ) {
-    val path = "/Tuning/$key/$name"
+    private val path = "/Tuning/$key/$name"
     val kP: LoggedNetworkNumber = LoggedNetworkNumber("$path/kP", kP)
     val kI: LoggedNetworkNumber = LoggedNetworkNumber("$path}/kI", kD)
     val kD: LoggedNetworkNumber = LoggedNetworkNumber("$path/kD", kI)
