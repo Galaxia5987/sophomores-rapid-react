@@ -6,7 +6,7 @@ import edu.wpi.first.util.struct.StructSerializable
 import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.lib.extensions.toPrimitiveTypeJava
-import frc.robot.lib.isNotNull
+import frc.robot.lib.ifNotNull
 import java.util.function.*
 import kotlin.reflect.KFunction
 import kotlin.reflect.KProperty0
@@ -73,39 +73,39 @@ object LoggedOutputManager : SubsystemBase() {
             when {
                 type == Boolean::class.javaPrimitiveType ->
                     addRunnable {
-                        value.isNotNull {
+                        value.ifNotNull {
                             Logger.recordOutput(key, it as Boolean)
                         }
                     }
                 type == Int::class.javaPrimitiveType ->
                     addRunnable {
-                        value.isNotNull { Logger.recordOutput(key, it as Int) }
+                        value.ifNotNull { Logger.recordOutput(key, it as Int) }
                     }
                 type == Long::class.javaPrimitiveType ->
                     addRunnable {
-                        value.isNotNull { Logger.recordOutput(key, it as Long) }
+                        value.ifNotNull { Logger.recordOutput(key, it as Long) }
                     }
                 type == Float::class.javaPrimitiveType ->
                     addRunnable {
-                        value.isNotNull {
+                        value.ifNotNull {
                             Logger.recordOutput(key, it as Float)
                         }
                     }
                 type == Double::class.javaPrimitiveType ->
                     addRunnable {
-                        value.isNotNull {
+                        value.ifNotNull {
                             Logger.recordOutput(key, it as Double)
                         }
                     }
                 type == String::class.javaPrimitiveType ->
                     addRunnable {
-                        value.isNotNull {
+                        value.ifNotNull {
                             Logger.recordOutput(key, it as String?)
                         }
                     }
                 type == LoggedMechanism2d::class.java ->
                     addRunnable {
-                        value.isNotNull {
+                        value.ifNotNull {
                             Logger.recordOutput(
                                 key,
                                 value as LoggedMechanism2d?
@@ -114,49 +114,49 @@ object LoggedOutputManager : SubsystemBase() {
                     }
                 type == Enum ->
                     addRunnable {
-                        value.isNotNull {
+                        value.ifNotNull {
                             Logger.recordOutput(key, (value as Enum<*>).name)
                         }
                     }
                 type.isRecord ->
                     addRunnable {
-                        value.isNotNull {
+                        value.ifNotNull {
                             Logger.recordOutput(key, value as Record)
                         }
                     }
                 BooleanSupplier::class.java.isAssignableFrom(type) ->
                     addRunnable {
-                        value.isNotNull {
+                        value.ifNotNull {
                             Logger.recordOutput(key, it as BooleanSupplier?)
                         }
                     }
                 IntSupplier::class.java.isAssignableFrom(type) ->
                     addRunnable {
-                        value.isNotNull {
+                        value.ifNotNull {
                             Logger.recordOutput(key, it as IntSupplier?)
                         }
                     }
                 LongSupplier::class.java.isAssignableFrom(type) ->
                     addRunnable {
-                        value.isNotNull {
+                        value.ifNotNull {
                             Logger.recordOutput(key, it as LongSupplier?)
                         }
                     }
                 DoubleSupplier::class.java.isAssignableFrom(type) ->
                     addRunnable {
-                        value.isNotNull {
+                        value.ifNotNull {
                             Logger.recordOutput(key, it as DoubleSupplier?)
                         }
                     }
                 Measure::class.java.isAssignableFrom(type) ->
                     addRunnable {
-                        value.isNotNull {
+                        value.ifNotNull {
                             Logger.recordOutput(key, it as Measure<*>?)
                         }
                     }
                 else -> {
                     addRunnable {
-                        value.isNotNull {
+                        value.ifNotNull {
                             try {
                                 Logger.recordOutput(
                                     key,
@@ -179,57 +179,57 @@ object LoggedOutputManager : SubsystemBase() {
             when {
                 componentType == Byte::class.javaPrimitiveType ->
                     addRunnable {
-                        value.isNotNull {
+                        value.ifNotNull {
                             Logger.recordOutput(key, value as ByteArray?)
                         }
                     }
                 componentType == Boolean::class.javaPrimitiveType ->
                     addRunnable {
-                        value.isNotNull {
+                        value.ifNotNull {
                             Logger.recordOutput(key, it as Boolean)
                         }
                     }
                 componentType == Int::class.javaPrimitiveType ->
                     addRunnable {
-                        value.isNotNull { Logger.recordOutput(key, it as Int) }
+                        value.ifNotNull { Logger.recordOutput(key, it as Int) }
                     }
                 componentType == Long::class.javaPrimitiveType ->
                     addRunnable {
-                        value.isNotNull { Logger.recordOutput(key, it as Long) }
+                        value.ifNotNull { Logger.recordOutput(key, it as Long) }
                     }
                 componentType == Float::class.javaPrimitiveType ->
                     addRunnable {
-                        value.isNotNull {
+                        value.ifNotNull {
                             Logger.recordOutput(key, it as Float)
                         }
                     }
                 componentType == Double::class.javaPrimitiveType ->
                     addRunnable {
-                        value.isNotNull {
+                        value.ifNotNull {
                             Logger.recordOutput(key, it as Double)
                         }
                     }
                 componentType == String::class.javaPrimitiveType ->
                     addRunnable {
-                        value.isNotNull {
+                        value.ifNotNull {
                             Logger.recordOutput(key, it as String?)
                         }
                     }
                 componentType == Enum ->
                     addRunnable {
-                        value.isNotNull {
+                        value.ifNotNull {
                             Logger.recordOutput(key, (value as Enum<*>).name)
                         }
                     }
                 componentType.isRecord ->
                     addRunnable {
-                        value.isNotNull {
+                        value.ifNotNull {
                             Logger.recordOutput(key, value as Record)
                         }
                     }
                 else -> {
                     addRunnable {
-                        value.isNotNull {
+                        value.ifNotNull {
                             try {
                                 Logger.recordOutput(
                                     key,
@@ -252,57 +252,57 @@ object LoggedOutputManager : SubsystemBase() {
             when {
                 componentType == Byte::class.javaPrimitiveType ->
                     addRunnable {
-                        value.isNotNull {
+                        value.ifNotNull {
                             Logger.recordOutput(key, value as ByteArray?)
                         }
                     }
                 componentType == Boolean::class.javaPrimitiveType ->
                     addRunnable {
-                        value.isNotNull {
+                        value.ifNotNull {
                             Logger.recordOutput(key, it as Boolean)
                         }
                     }
                 componentType == Int::class.javaPrimitiveType ->
                     addRunnable {
-                        value.isNotNull { Logger.recordOutput(key, it as Int) }
+                        value.ifNotNull { Logger.recordOutput(key, it as Int) }
                     }
                 componentType == Long::class.javaPrimitiveType ->
                     addRunnable {
-                        value.isNotNull { Logger.recordOutput(key, it as Long) }
+                        value.ifNotNull { Logger.recordOutput(key, it as Long) }
                     }
                 componentType == Float::class.javaPrimitiveType ->
                     addRunnable {
-                        value.isNotNull {
+                        value.ifNotNull {
                             Logger.recordOutput(key, it as Float)
                         }
                     }
                 componentType == Double::class.javaPrimitiveType ->
                     addRunnable {
-                        value.isNotNull {
+                        value.ifNotNull {
                             Logger.recordOutput(key, it as Double)
                         }
                     }
                 componentType == String::class.javaPrimitiveType ->
                     addRunnable {
-                        value.isNotNull {
+                        value.ifNotNull {
                             Logger.recordOutput(key, it as String?)
                         }
                     }
                 componentType == Enum ->
                     addRunnable {
-                        value.isNotNull {
+                        value.ifNotNull {
                             Logger.recordOutput(key, (value as Enum<*>).name)
                         }
                     }
                 componentType.isRecord ->
                     addRunnable {
-                        value.isNotNull {
+                        value.ifNotNull {
                             Logger.recordOutput(key, value as Record)
                         }
                     }
                 else -> {
                     addRunnable {
-                        value.isNotNull {
+                        value.ifNotNull {
                             try {
                                 Logger.recordOutput(
                                     key,
