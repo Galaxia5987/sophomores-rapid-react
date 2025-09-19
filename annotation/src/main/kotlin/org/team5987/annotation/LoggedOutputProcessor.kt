@@ -1,9 +1,10 @@
 package org.team5987.annotation
 
-import com.google.devtools.ksp.getAllSuperTypes
 import com.google.devtools.ksp.processing.*
+import com.google.devtools.ksp.processing.CodeGenerator
 import com.google.devtools.ksp.symbol.*
 import com.squareup.kotlinpoet.*
+import com.squareup.kotlinpoet.ksp.writeTo
 
 // Call `LoggedRegistry.registerAll()` on robot init!!!!!!
 
@@ -18,6 +19,7 @@ class LoggedOutputProcessor(
 
         if (symbols.none()) {
             logger.warn("No @LoggedOutput symbols found this round.")
+            generateEmptyFile(codeGenerator, resolver)
             return emptyList()
         }
 
@@ -102,15 +104,16 @@ class LoggedOutputProcessor(
                         )
                     }
                 }
-                is KSClassDeclaration ->{
 
-                    val pkg = symbol.containingFile?.packageName?.asString()?:continue
+                is KSClassDeclaration -> {
+
+                    val pkg = symbol.containingFile?.packageName?.asString() ?: continue
                     val className = symbol.simpleName.asString()
-                    val classType = ClassName(pkg,className)
+                    val classType = ClassName(pkg, className)
                     symbol.getAllProperties().forEach {
                         val methodName = it.simpleName.asString()
                         val pkg = it.containingFile?.packageName?.asString()
-                        if (pkg!=null) {
+                        if (pkg != null) {
                             funSpecBuilder.addStatement(
                                 "LoggedOutputManager.registerField(%S, %T::%L)",
                                 className,
@@ -140,6 +143,28 @@ class LoggedOutputProcessor(
         logger.info("LoggedOutputProcessor finished generating LoggedRegistry.kt")
 
         return emptyList()
+    }
+}
+
+fun generateEmptyFile(codeGenerator: CodeGenerator, resolver: Resolver) {
+    try {
+        val pkg = "frc.robot.lib.logged_output.generated"
+        val name = "LoggedRegistry"
+        val file = FileSpec.builder(pkg, name)
+            .addImport("frc.robot.lib.logged_output", "LoggedOutputManager")
+            .addFunction(
+                FunSpec.builder("registerAllLoggedOutputs")
+                    .addKdoc("Auto-generated stub. Safe to call even if no @LoggedOutput symbols were found.\n")
+                    .addStatement("// [LoggedOutputManager] registers all LoggedOutput fields and methods")
+                    .build()
+            )
+            .build()
+        val deps = Dependencies(
+            aggregating = true,
+            *resolver.getAllFiles().toList().toTypedArray()
+        )
+        file.writeTo(codeGenerator, deps)
+    } catch (e: FileAlreadyExistsException) {
     }
 }
 
