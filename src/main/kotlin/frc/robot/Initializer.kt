@@ -84,7 +84,7 @@ private val visionIOs =
                         {
                             Pose3d(
                                     it.value.translation.rotateAround(
-                                        Translation3d(0.0, 0.0, 0.0),
+                                        Translation3d(),
                                         getRotation3d(
                                             yaw = turret.inputs.position
                                         )
