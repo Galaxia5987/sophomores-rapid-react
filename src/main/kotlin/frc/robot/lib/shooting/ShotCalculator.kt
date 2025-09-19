@@ -33,7 +33,7 @@ fun calculateShot(
     shooterExitVelocity: LinearVelocity
 ): ShotData {
     val robotToHub = SHOOT_TARGET - robotPose.translation
-    val distance = hypot(robotToHub.x, robotToHub.y)
+    val distance = robotToHub.norm
     val shooterSpeed = shooterExitVelocity[mps]
     val velocityVector =
         Translation2d(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond)
