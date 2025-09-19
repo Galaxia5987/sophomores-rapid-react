@@ -4,6 +4,11 @@ import com.pathplanner.lib.auto.AutoBuilder
 import com.pathplanner.lib.path.PathPlannerPath
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.Commands
+import frc.robot.CURRENT_MODE
+import frc.robot.IS_RED
+import frc.robot.Mode
+import frc.robot.drive
+import frc.robot.driveSimulation
 import frc.robot.robotstate.RobotState
 
 fun Spath(pathName: String, mirror: Boolean = false): Command =
@@ -11,17 +16,34 @@ fun Spath(pathName: String, mirror: Boolean = false): Command =
         if (mirror) PathPlannerPath.fromPathFile(pathName).mirrorPath()
         else PathPlannerPath.fromPathFile(pathName)
     )
+internal fun runPath(name: String): Command {
+        val path = PathPlannerPath.fromPathFile(name)
+        return Commands.runOnce({
+            drive.resetOdometry(path.pathPoses[0])
+            //if (CURRENT_MODE == Mode.SIM) {
+             //   driveSimulation?.setSimulationWorldPose(path.pathPoses[0])
+            //}
+            AutoBuilder.resetOdom(path.pathPoses[0])
+        }).andThen(
+            AutoBuilder.followPath(path)
+        )
+    }
 
-internal fun getPath(name: String): Command = AutoBuilder.followPath(PathPlannerPath.fromPathFile(name))
 
-fun AC1(): Command = getPath("AC1")
-fun C1S(): Command = getPath("C1S")
-fun CC2(): Command = getPath("CC2")
-fun C2C3(): Command = getPath("C2C3")
+fun AC1(): Command = runPath("AC1")
+
+fun C1S(): Command = runPath("C1S")
+
+fun CC2(): Command = runPath("CC2")
+
+fun C2C3(): Command = runPath("C2C3")
+
+fun BRP2() : Command= runPath("BRP2")
+
 fun AC1SRP(): Command =
     Commands.sequence(
-        AC1().until { RobotState.SHOOTING.equals(RobotState.SHOOTING) },
-        C1S().until { RobotState.SHOOTING.equals(RobotState.SHOOTING) }
+        AC1(),
+        C1S()
     )
 
 fun CC2C3(): Command =
