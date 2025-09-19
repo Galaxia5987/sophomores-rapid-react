@@ -106,7 +106,6 @@ private fun profiledAlignToPose(
 ): Command =
     runOnce({
             setTolerance(tolerance)
-            initAtSetGoalTrigger(atGoalDebounce)
             resetProfiledPID(poseSupplier.invoke(), drive.fieldOrientedSpeeds)
             setGoal(goalPose)
         })
@@ -120,7 +119,7 @@ private fun profiledAlignToPose(
         )
         .withName("Drive/profiledAlignToPose")
 
-fun alignCommand(pose: Pose2d) = drive.defer { alignToPose(pose) }
+fun align(pose: Pose2d) = drive.defer { alignToPose(pose) }
 
 fun profiledAlignCommand(pose: Pose2d) =
     drive.defer { profiledAlignToPose(pose) }
