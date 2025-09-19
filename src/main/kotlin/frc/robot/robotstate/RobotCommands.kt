@@ -14,6 +14,7 @@ import frc.robot.hopper
 import frc.robot.lib.extensions.deg
 import frc.robot.lib.extensions.distanceFromPoint
 import frc.robot.lib.extensions.get
+import frc.robot.lib.extensions.log
 import frc.robot.lib.extensions.m
 import frc.robot.lib.extensions.rotationToPoint
 import frc.robot.lib.extensions.rps
@@ -31,7 +32,6 @@ import frc.robot.subsystems.shooter.flywheel.SLOW_ROTATION
 import frc.robot.subsystems.shooter.hood.HOOD_ANGLE_BY_DISTANCE
 import frc.robot.subsystems.shooter.turret.MAX_ANGLE
 import frc.robot.subsystems.shooter.turret.MIN_ANGLE
-import org.littletonrobotics.junction.Logger
 
 var hoodAngle = InterpolatingDouble(robotDistanceFromHub[m])
 
@@ -49,24 +49,15 @@ val compensatedShot: ShotData
         mapOf(
                 "compensatedShot/compensatedTarget" to
                     Pose2d(shot.compensatedTarget, Rotation2d()),
-                "regularShot/target" to Pose2d(HUB_LOCATION, Rotation2d())
-            )
-            .forEach { Logger.recordOutput("onMoveShoot/${it.key}", it.value) }
-        mapOf(
+                "regularShot/target" to Pose2d(HUB_LOCATION, Rotation2d()),
                 "compensatedShot/compensatedDistance" to
                     shot.compensatedDistance,
                 "regularShot/distance" to robotDistanceFromHub,
-            )
-            .forEach { Logger.recordOutput("onMoveShoot/${it.key}", it.value) }
-        mapOf(
                 "compensatedShot/turretAngle" to shot.turretAngle.measure,
                 "regularShot/turretAngle" to angleFromRobotHub,
+                "shooterExitVelocity" to shooterExitVelocity
             )
-            .forEach { Logger.recordOutput("onMoveShoot/${it.key}", it.value) }
-        Logger.recordOutput(
-            "onMoveShoot/shooterExitVelocity",
-            shooterExitVelocity
-        )
+            .forEach { it.log("onMoveShoot", it.key) }
 
         return shot
     }
