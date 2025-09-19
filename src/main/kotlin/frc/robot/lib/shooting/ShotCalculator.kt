@@ -13,7 +13,6 @@ import frc.robot.lib.extensions.mps
 import frc.robot.lib.extensions.rotationToPoint
 import frc.robot.robotstate.HUB_LOCATION
 import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean
-import kotlin.math.hypot
 
 data class ShotData(
     val compensatedTarget: Translation2d,
@@ -21,7 +20,8 @@ data class ShotData(
     val compensatedDistance: Distance
 )
 
-val disableCompensation = LoggedNetworkBoolean("/Tuning/disableShotCompensation", false)
+val disableCompensation =
+    LoggedNetworkBoolean("/Tuning/disableShotCompensation", false)
 val SHOOT_TARGET = HUB_LOCATION
 
 val NO_COMPENSATION_THRESHOLD: LinearVelocity =
