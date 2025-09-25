@@ -2,21 +2,26 @@ package frc.robot.autonomous.paths.deploy.pathplanner
 
 import com.pathplanner.lib.auto.AutoBuilder
 import com.pathplanner.lib.path.PathPlannerPath
+import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.Commands
-import frc.robot.CURRENT_MODE
 import frc.robot.IS_RED
-import frc.robot.Mode
 import frc.robot.drive
-import frc.robot.driveSimulation
+import frc.robot.lib.extensions.withRotation
 import frc.robot.robotstate.RobotState
+import frc.robot.subsystems.drive.gyroIOs.GyroIO
+import frc.robot.subsystems.drive.gyroIOs.GyroIOPigeon2
+import frc.robot.subsystems.drive.gyroIOs.GyroIOSim
+import org.ironmaple.simulation.drivesims.GyroSimulation
+
 
 fun Spath(pathName: String, mirror: Boolean = false): Command =
     AutoBuilder.followPath(
         if (mirror) PathPlannerPath.fromPathFile(pathName).mirrorPath()
         else PathPlannerPath.fromPathFile(pathName)
     )
-internal fun runPath(name: String): Command {
+
+        /*internal fun runPath(name: String): Command {
         val path = PathPlannerPath.fromPathFile(name)
         return Commands.runOnce({
             drive.resetOdometry(path.pathPoses[0])
@@ -27,7 +32,22 @@ internal fun runPath(name: String): Command {
         }).andThen(
             AutoBuilder.followPath(path)
         )
-    }
+    }*/
+        internal fun runPath(name: String): Command {
+            val path = PathPlannerPath.fromPathFile(name)
+            var startPose = path.pathPoses[0]
+
+            return Commands.runOnce({
+                if (IS_RED) {
+                    startPose = startPose.withRotation(startPose.rotation + Rotation2d.fromDegrees(180.0))
+                }
+                    drive.resetOdometry(startPose)
+                AutoBuilder.resetOdom(startPose)
+            }).andThen(
+                AutoBuilder.followPath(path)
+            )
+        }
+
 
 
 fun AC1(): Command = runPath("AC1")
