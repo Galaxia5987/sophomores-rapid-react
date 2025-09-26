@@ -3,6 +3,7 @@ package frc.robot.robotstate
 import edu.wpi.first.math.geometry.Pose3d
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.units.measure.Angle
+import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.Commands.parallel
 import edu.wpi.first.wpilibj2.command.Commands.sequence
 import edu.wpi.first.wpilibj2.command.Commands.waitUntil
@@ -19,7 +20,7 @@ import frc.robot.lib.getPose2d
 import frc.robot.lib.named
 import frc.robot.robotRelativeBallPoses
 import frc.robot.roller
-import frc.robot.subsystems.drive.alignToPose
+import frc.robot.subsystems.drive.profiledAlign
 import frc.robot.subsystems.shooter.flywheel.SHOOTER_VELOCITY_BY_DISTANCE
 import frc.robot.subsystems.shooter.flywheel.SLOW_ROTATION
 import frc.robot.subsystems.shooter.turret.MAX_ANGLE
@@ -51,22 +52,18 @@ val globalBallPoses
             .map { it + Pose3d(drive.pose).toTransform() }
             .toTypedArray()
 
-fun driveToShootingPoint() =
-    drive
-        .defer {
-            val robotTranslation = drive.pose.translation
-            val setpoint =
-                if (
-                    INNER_SHOOTING_AREA.getDistance(robotTranslation) <
-                        OUTER_SHOOTING_AREA.getDistance(robotTranslation)
-                ) {
-                    INNER_SHOOTING_AREA.nearest(robotTranslation)
-                } else {
-                    OUTER_SHOOTING_AREA.nearest(robotTranslation)
-                }
-            alignToPose((getPose2d(setpoint, swerveCompensationAngle)))
-        }
+fun driveToShootingPoint(): Command {
+    val robotTranslation = drive.pose.translation
+    val setpoint =
+        if (
+            INNER_SHOOTING_AREA.getDistance(robotTranslation) <
+                OUTER_SHOOTING_AREA.getDistance(robotTranslation)
+        )
+            INNER_SHOOTING_AREA.nearest(robotTranslation)
+        else OUTER_SHOOTING_AREA.nearest(robotTranslation)
+    return profiledAlign(getPose2d(setpoint, swerveCompensationAngle))
         .named("Drive")
+}
 
 fun startShooting() =
     sequence(
@@ -92,6 +89,5 @@ fun stopIntaking() =
     parallel(roller.stop(), hopper.stop()).named(COMMAND_NAME_PREFIX)
 
 fun alignToBall() =
-    drive
-        .defer { alignToPose(globalBallPoses.first().toPose2d()) }
+    profiledAlign(globalBallPoses.firstOrNull()?.toPose2d() ?: drive.pose)
         .named(COMMAND_NAME_PREFIX)

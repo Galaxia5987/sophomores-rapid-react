@@ -41,46 +41,64 @@ private val rotationalLimits
         )
 
 var xController =
-        ProfiledPIDController(
-            xGains.kP.get(),
-            xGains.kI.get(),
-            xGains.kD.get(),
-            linearLimits
-        )
+    ProfiledPIDController(
+        xGains.kP.get(),
+        xGains.kI.get(),
+        xGains.kD.get(),
+        linearLimits
+    )
 var yController =
-        ProfiledPIDController(
-            yGains.kP.get(),
-            yGains.kI.get(),
-            yGains.kD.get(),
-            linearLimits
-        )
+    ProfiledPIDController(
+        yGains.kP.get(),
+        yGains.kI.get(),
+        yGains.kD.get(),
+        linearLimits
+    )
 
 var thetaController =
-        ProfiledPIDController(
+    ProfiledPIDController(
             thetaGains.kP.get(),
             thetaGains.kI.get(),
             thetaGains.kD.get(),
             rotationalLimits
         )
-            .apply { enableContinuousInput(-Math.PI, Math.PI) }
-val controllers = mapOf("x" to {xController},"y" to {yController},"theta" to {thetaController}).apply {
-    forEach { (name, controller) ->
-        LoggedOutputManager.addRunnable {
-            val controller = controller.invoke()
-            recordOutput("AutoAlignment/Errors/$name", controller.positionError)
-            recordOutput("AutoAlignment/Setpoint/$name", controller.setpoint.position)
-            recordOutput("AutoAlignment/Goal/$name", controller.goal.position)
-            recordOutput("AutoAlignment/AtSetpoint/$name", controller.atSetpoint())
+        .apply { enableContinuousInput(-Math.PI, Math.PI) }
+val controllers =
+    mapOf(
+            "x" to { xController },
+            "y" to { yController },
+            "theta" to { thetaController }
+        )
+        .apply {
+            forEach { (name, controller) ->
+                LoggedOutputManager.addRunnable {
+                    val controller = controller.invoke()
+                    recordOutput(
+                        "AutoAlignment/Errors/$name",
+                        controller.positionError
+                    )
+                    recordOutput(
+                        "AutoAlignment/Setpoint/$name",
+                        controller.setpoint.position
+                    )
+                    recordOutput(
+                        "AutoAlignment/Goal/$name",
+                        controller.goal.position
+                    )
+                    recordOutput(
+                        "AutoAlignment/AtSetpoint/$name",
+                        controller.atSetpoint()
+                    )
+                }
+            }
         }
-    }
-}
 
 fun updateProfiledPIDGains() {
     mapOf(
-        xController to xGains,
-        yController to yGains,
-        thetaController to thetaGains
-    )
+            xController to xGains,
+            yController to yGains,
+            thetaController to thetaGains
+        )
         .forEach { (controller, gains) ->
             controller.setPID(gains.kP.get(), gains.kI.get(), gains.kD.get())
         }
@@ -125,4 +143,3 @@ fun getSpeedSetpoint(botPose: Pose2d): () -> ChassisSpeeds = {
         thetaController.calculate(botPose.rotation.radians)
     )
 }
-
