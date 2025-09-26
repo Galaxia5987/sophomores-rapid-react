@@ -23,7 +23,7 @@ internal fun runPath(name: String): Command {
             if (IS_RED) {
                 startPose =
                     startPose.withRotation(
-                        startPose.rotation + Rotation2d.fromDegrees(180.0)
+                        startPose.rotation + Rotation2d.k180deg
                     )
             }
             drive.resetOdometry(startPose)
