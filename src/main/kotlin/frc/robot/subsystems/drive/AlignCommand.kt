@@ -107,19 +107,19 @@ private fun profiledAlignToPose(
     endTrigger: Trigger = atGoal
 ): Command =
     runOnce({
-        setTolerance(tolerance)
-        resetProfiledPID(poseSupplier.invoke(), drive.fieldOrientedSpeeds)
-        setGoal(goalPose)
-    })
+            setTolerance(tolerance)
+            resetProfiledPID(poseSupplier.invoke(), drive.fieldOrientedSpeeds)
+            setGoal(goalPose)
+        })
         .andThen(
             run({
-                drive.runVelocity(
-                    ChassisSpeeds.fromFieldRelativeSpeeds(
-                        getSpeedSetpoint(poseSupplier.invoke()).invoke(),
-                        drive.rotation
+                    drive.runVelocity(
+                        ChassisSpeeds.fromFieldRelativeSpeeds(
+                            getSpeedSetpoint(poseSupplier.invoke()).invoke(),
+                            drive.rotation
+                        )
                     )
-                )
-            })
+                })
                 .until(endTrigger.debounce(atGoalDebounce[sec]))
                 .andThen(runOnce({ drive.runVelocity(ChassisSpeeds()) }))
         )

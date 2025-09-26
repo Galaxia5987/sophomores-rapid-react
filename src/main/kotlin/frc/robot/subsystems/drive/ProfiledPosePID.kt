@@ -57,18 +57,18 @@ var yController =
 
 var thetaController =
     ProfiledPIDController(
-        thetaGains.kP.get(),
-        thetaGains.kI.get(),
-        thetaGains.kD.get(),
-        rotationalLimits
-    )
+            thetaGains.kP.get(),
+            thetaGains.kI.get(),
+            thetaGains.kD.get(),
+            rotationalLimits
+        )
         .apply { enableContinuousInput(-Math.PI, Math.PI) }
 val controllers =
     mapOf(
-        "x" to { xController },
-        "y" to { yController },
-        "theta" to { thetaController }
-    )
+            "x" to { xController },
+            "y" to { yController },
+            "theta" to { thetaController }
+        )
         .apply {
             forEach { (name, controller) ->
                 LoggedOutputManager.addRunnable {
@@ -95,10 +95,10 @@ val controllers =
 
 fun updateProfiledPIDGains() {
     mapOf(
-        xController to xGains,
-        yController to yGains,
-        thetaController to thetaGains
-    )
+            xController to xGains,
+            yController to yGains,
+            thetaController to thetaGains
+        )
         .forEach { (controller, gains) ->
             controller.setPID(gains.kP.get(), gains.kI.get(), gains.kD.get())
         }
