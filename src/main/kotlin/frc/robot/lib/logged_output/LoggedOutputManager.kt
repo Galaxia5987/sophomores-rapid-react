@@ -66,7 +66,7 @@ object LoggedOutputManager : SubsystemBase() {
 
     @Suppress("UNCHECKED_CAST")
     private fun register(key: String, supplier: Supplier<*>) {
-        fun value()= supplier.get()
+        fun value() = supplier.get()
         val type = value()::class.java.toPrimitiveTypeJava()!!
         if (!type.isArray) {
             // Single types
@@ -79,11 +79,15 @@ object LoggedOutputManager : SubsystemBase() {
                     }
                 type == Int::class.javaPrimitiveType ->
                     addRunnable {
-                        value().ifNotNull { Logger.recordOutput(key, it as Int) }
+                        value().ifNotNull {
+                            Logger.recordOutput(key, it as Int)
+                        }
                     }
                 type == Long::class.javaPrimitiveType ->
                     addRunnable {
-                        value().ifNotNull { Logger.recordOutput(key, it as Long) }
+                        value().ifNotNull {
+                            Logger.recordOutput(key, it as Long)
+                        }
                     }
                 type == Float::class.javaPrimitiveType ->
                     addRunnable {
@@ -165,7 +169,7 @@ object LoggedOutputManager : SubsystemBase() {
                             } catch (e: ClassCastException) {
                                 DriverStation.reportError(
                                     "[LoggedOutputManager] Auto serialization is not supported for type " +
-                                            type.getSimpleName(),
+                                        type.getSimpleName(),
                                     false
                                 )
                             }
@@ -191,11 +195,15 @@ object LoggedOutputManager : SubsystemBase() {
                     }
                 componentType == Int::class.javaPrimitiveType ->
                     addRunnable {
-                        value().ifNotNull { Logger.recordOutput(key, it as Int) }
+                        value().ifNotNull {
+                            Logger.recordOutput(key, it as Int)
+                        }
                     }
                 componentType == Long::class.javaPrimitiveType ->
                     addRunnable {
-                        value().ifNotNull { Logger.recordOutput(key, it as Long) }
+                        value().ifNotNull {
+                            Logger.recordOutput(key, it as Long)
+                        }
                     }
                 componentType == Float::class.javaPrimitiveType ->
                     addRunnable {
@@ -238,7 +246,7 @@ object LoggedOutputManager : SubsystemBase() {
                             } catch (e: ClassCastException) {
                                 DriverStation.reportError(
                                     "[LoggedOutputManager] Auto serialization is not supported for array type " +
-                                            componentType.getSimpleName(),
+                                        componentType.getSimpleName(),
                                     false
                                 )
                             }
@@ -264,11 +272,15 @@ object LoggedOutputManager : SubsystemBase() {
                     }
                 componentType == Int::class.javaPrimitiveType ->
                     addRunnable {
-                        value().ifNotNull { Logger.recordOutput(key, it as Int) }
+                        value().ifNotNull {
+                            Logger.recordOutput(key, it as Int)
+                        }
                     }
                 componentType == Long::class.javaPrimitiveType ->
                     addRunnable {
-                        value().ifNotNull { Logger.recordOutput(key, it as Long) }
+                        value().ifNotNull {
+                            Logger.recordOutput(key, it as Long)
+                        }
                     }
                 componentType == Float::class.javaPrimitiveType ->
                     addRunnable {
@@ -311,7 +323,7 @@ object LoggedOutputManager : SubsystemBase() {
                             } catch (e: ClassCastException) {
                                 DriverStation.reportError(
                                     ("[LoggedOutputManager] Auto serialization is not supported for 2D array type " +
-                                            componentType.getSimpleName()),
+                                        componentType.getSimpleName()),
                                     false
                                 )
                             }
