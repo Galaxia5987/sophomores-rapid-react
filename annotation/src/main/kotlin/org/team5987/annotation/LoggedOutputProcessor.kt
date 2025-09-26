@@ -45,7 +45,6 @@ class LoggedOutputProcessor(
                 if (baseVal.first().name?.asString() == "path")
                     baseVal.first().value.toString()
                 else baseVal[1].value.toString() }
-
             when (symbol) {
                 is KSPropertyDeclaration -> { // or is property getter
                     val className = symbol.parentDeclaration?.qualifiedName?.asString()

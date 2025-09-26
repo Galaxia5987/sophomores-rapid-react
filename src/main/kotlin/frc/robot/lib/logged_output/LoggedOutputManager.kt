@@ -27,8 +27,8 @@ object LoggedOutputManager : SubsystemBase() {
         declaringClass: String?
     ): String {
         return if (path.isBlank())
-            key.ifBlank { "${ declaringClass ?: "<unknown>" }}//$name" }
-        else path + key.ifBlank { "//$name" }
+            key.ifBlank { "${ declaringClass ?: "<unknown>" }/$name" }
+        else path + key.ifBlank { "/$name" }
     }
 
     fun <T> registerField(
@@ -112,7 +112,7 @@ object LoggedOutputManager : SubsystemBase() {
                             )
                         }
                     }
-                type == Enum ->
+                type.isEnum ->
                     addRunnable {
                         value.ifNotNull {
                             Logger.recordOutput(key, (value as Enum<*>).name)
@@ -215,7 +215,7 @@ object LoggedOutputManager : SubsystemBase() {
                             Logger.recordOutput(key, it as String?)
                         }
                     }
-                componentType == Enum ->
+                componentType.isEnum ->
                     addRunnable {
                         value.ifNotNull {
                             Logger.recordOutput(key, (value as Enum<*>).name)
@@ -288,7 +288,7 @@ object LoggedOutputManager : SubsystemBase() {
                             Logger.recordOutput(key, it as String?)
                         }
                     }
-                componentType == Enum ->
+                componentType.isEnum ->
                     addRunnable {
                         value.ifNotNull {
                             Logger.recordOutput(key, (value as Enum<*>).name)
