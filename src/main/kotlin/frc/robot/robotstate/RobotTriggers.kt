@@ -48,12 +48,15 @@ fun bindRobotCommands() {
             .onTrue(roller.stop(), hopper.stop(), setShooting())
         and(hasBackBall).and(hasFrontBall.negate()).apply {
             onTrue(stopIntaking())
-            and(robotRelativeBallPoses::isNotEmpty)
-                .onTrue(roller.intake(), alignToBall())
+            and(robotRelativeBallPoses::isNotEmpty).apply {
+                onTrue(roller.intake())
+                and(globalBallPoses::isNotEmpty).onTrue(alignToBall())
+            }
         }
-        and(ballsEmpty)
-            .and(robotRelativeBallPoses::isNotEmpty)
-            .onTrue(roller.intake(), hopper.start(), alignToBall())
+        and(ballsEmpty).and(robotRelativeBallPoses::isNotEmpty).apply {
+            onTrue(roller.intake(), hopper.start())
+            and(globalBallPoses::isNotEmpty).onTrue(alignToBall())
+        }
     }
     applyLeds()
 }
