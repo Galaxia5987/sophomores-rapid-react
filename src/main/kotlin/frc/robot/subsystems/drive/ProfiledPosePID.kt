@@ -6,7 +6,8 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.lib.LoggedNetworkGains
-import frc.robot.lib.extensions.get
+import frc.robot.lib.logged_output.LoggedOutputManager
+import org.littletonrobotics.junction.Logger.recordOutput
 import org.littletonrobotics.junction.networktables.LoggedNetworkNumber
 import org.team5987.annotation.LoggedOutput
 
@@ -39,16 +40,14 @@ private val rotationalLimits
             rotationalMaxAcceleration.get()
         )
 
-val xController
-    get() =
+var xController =
         ProfiledPIDController(
             xGains.kP.get(),
             xGains.kI.get(),
             xGains.kD.get(),
             linearLimits
         )
-val yController
-    get() =
+var yController =
         ProfiledPIDController(
             yGains.kP.get(),
             yGains.kI.get(),
@@ -56,22 +55,32 @@ val yController
             linearLimits
         )
 
-val thetaController
-    get() =
+var thetaController =
         ProfiledPIDController(
-                thetaGains.kP.get(),
-                thetaGains.kI.get(),
-                thetaGains.kD.get(),
-                rotationalLimits
-            )
+            thetaGains.kP.get(),
+            thetaGains.kI.get(),
+            thetaGains.kD.get(),
+            rotationalLimits
+        )
             .apply { enableContinuousInput(-Math.PI, Math.PI) }
+val controllers = mapOf("x" to {xController},"y" to {yController},"theta" to {thetaController}).apply {
+    forEach { (name, controller) ->
+        LoggedOutputManager.addRunnable {
+            val controller = controller.invoke()
+            recordOutput("AutoAlignment/Errors/$name", controller.positionError)
+            recordOutput("AutoAlignment/Setpoint/$name", controller.setpoint.position)
+            recordOutput("AutoAlignment/Goal/$name", controller.goal.position)
+            recordOutput("AutoAlignment/AtSetpoint/$name", controller.atSetpoint())
+        }
+    }
+}
 
 fun updateProfiledPIDGains() {
     mapOf(
-            xController to xGains,
-            yController to yGains,
-            thetaController to thetaGains
-        )
+        xController to xGains,
+        yController to yGains,
+        thetaController to thetaGains
+    )
         .forEach { (controller, gains) ->
             controller.setPID(gains.kP.get(), gains.kI.get(), gains.kD.get())
         }
@@ -84,6 +93,7 @@ fun setGoal(desiredPose: Pose2d) {
     thetaController.setGoal(desiredPose.rotation.radians)
 }
 
+@LoggedOutput(path = "AutoAlignment")
 var atGoal =
     Trigger(xController::atGoal)
         .and(yController::atGoal)
@@ -108,23 +118,6 @@ fun setTolerance(pose2d: Pose2d) {
  * Returns field relative chassis speeds to the selected goal.
  * @botPose the current pose of the robot
  */
-@LoggedOutput
-object AutoAlignment {
-    var xError = xController.positionError
-    var yError = yController.positionError
-    var thetaError = thetaController.positionError
-    var xSetpoint = xController.setpoint.position
-    var ySetpoint = yController.setpoint.position
-    var thetaSetpoint = thetaController.setpoint.position
-    var xGoal = xController.goal.position
-    var yGoal = yController.goal.position
-    var thetaGoal = thetaController.goal.position
-    var atGoalSupplier = atGoal.asBoolean
-    var xAtSetpoint = xController.atSetpoint()
-    var yAtSetpoint = yController.atSetpoint()
-    var thetaAtSetpoint = thetaController.atSetpoint()
-}
-
 fun getSpeedSetpoint(botPose: Pose2d): () -> ChassisSpeeds = {
     ChassisSpeeds(
         xController.calculate(botPose.x),
@@ -132,3 +125,4 @@ fun getSpeedSetpoint(botPose: Pose2d): () -> ChassisSpeeds = {
         thetaController.calculate(botPose.rotation.radians)
     )
 }
+

@@ -42,7 +42,7 @@ class LoggedNetworkGains(
 ) {
     private val path = "/Tuning/$key/$name"
     val kP: LoggedNetworkNumber = LoggedNetworkNumber("$path/kP", kP)
-    val kI: LoggedNetworkNumber = LoggedNetworkNumber("$path}/kI", kD)
+    val kI: LoggedNetworkNumber = LoggedNetworkNumber("$path/kI", kD)
     val kD: LoggedNetworkNumber = LoggedNetworkNumber("$path/kD", kI)
     val kS: LoggedNetworkNumber = LoggedNetworkNumber("$path/kS", kS)
     val kV: LoggedNetworkNumber = LoggedNetworkNumber("$path/kV", kV)

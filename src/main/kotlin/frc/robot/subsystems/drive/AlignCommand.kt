@@ -3,6 +3,7 @@ package frc.robot.subsystems.drive
 import edu.wpi.first.math.controller.PIDController
 import edu.wpi.first.math.controller.ProfiledPIDController
 import edu.wpi.first.math.geometry.Pose2d
+import edu.wpi.first.math.kinematics.ChassisSpeeds
 import edu.wpi.first.units.Units.MetersPerSecond
 import edu.wpi.first.units.Units.Seconds
 import edu.wpi.first.units.measure.LinearVelocity
@@ -15,6 +16,7 @@ import frc.robot.lib.controllers.TunableHolonomicDriveController
 import frc.robot.lib.extensions.get
 import frc.robot.lib.extensions.mps
 import frc.robot.lib.extensions.sec
+import frc.robot.robotstate.isShooting
 import org.littletonrobotics.junction.Logger
 
 private val translationController =
@@ -65,7 +67,7 @@ val controller =
  * @param holonomicController The holonomic controller to use for the alignment.
  * Defaults to [controller]
  */
-fun alignToPose(
+private fun alignToPose(
     goalPose: Pose2d,
     linearVelocity: LinearVelocity = 0.mps,
     tolerance: Pose2d = TOLERANCE,
@@ -104,6 +106,7 @@ private fun profiledAlignToPose(
     tolerance: Pose2d = TOLERANCE,
     poseSupplier: () -> Pose2d = { drive.pose },
     atGoalDebounce: Time = 0.1.sec,
+    endTrigger: Trigger = atGoal
 ): Command =
     runOnce({
             setTolerance(tolerance)
@@ -113,14 +116,20 @@ private fun profiledAlignToPose(
         .andThen(
             run({
                     drive.runVelocity(
-                        getSpeedSetpoint(poseSupplier.invoke()).invoke()
+                        ChassisSpeeds.fromFieldRelativeSpeeds(
+                            getSpeedSetpoint(poseSupplier.invoke()).invoke(),
+                            drive.rotation
+                        )
                     )
                 })
-                .until(atGoal.debounce(atGoalDebounce[sec]))
+                .until(endTrigger.debounce(atGoalDebounce[sec]))
+                .andThen(runOnce({ drive.runVelocity(ChassisSpeeds()) }))
         )
         .withName("Drive/profiledAlignToPose")
 
 fun align(pose: Pose2d) = drive.defer { alignToPose(pose) }
 
-fun profiledAlignCommand(pose: Pose2d) =
-    drive.defer { profiledAlignToPose(pose) }
+fun profiledAlign(pose: Pose2d) =
+    drive.defer {
+        profiledAlignToPose(pose, endTrigger = isShooting.negate().or(atGoal))
+    }
