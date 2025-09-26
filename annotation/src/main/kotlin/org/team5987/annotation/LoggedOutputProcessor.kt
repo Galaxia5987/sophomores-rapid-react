@@ -160,7 +160,7 @@ class LoggedOutputProcessor(
     }
 }
 
-fun generateEmptyFile(codeGenerator: CodeGenerator, resolver: Resolver) {
+private fun generateEmptyFile(codeGenerator: CodeGenerator, resolver: Resolver) {
     try {
         val pkg = "frc.robot.lib.logged_output.generated"
         val name = "LoggedRegistry"
