@@ -15,18 +15,6 @@ fun Spath(pathName: String, mirror: Boolean = false): Command =
         else PathPlannerPath.fromPathFile(pathName)
     )
 
-/*internal fun runPath(name: String): Command {
-    val path = PathPlannerPath.fromPathFile(name)
-    return Commands.runOnce({
-        drive.resetOdometry(path.pathPoses[0])
-        //if (CURRENT_MODE == Mode.SIM) {
-         //   driveSimulation?.setSimulationWorldPose(path.pathPoses[0])
-        //}
-        AutoBuilder.resetOdom(path.pathPoses[0])
-    }).andThen(
-        AutoBuilder.followPath(path)
-    )
-}*/
 internal fun runPath(name: String): Command {
     val path = PathPlannerPath.fromPathFile(name)
     var startPose = path.pathPoses[0]
