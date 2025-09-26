@@ -3,6 +3,7 @@ package frc.robot.subsystems.drive
 import edu.wpi.first.math.controller.PIDController
 import edu.wpi.first.math.controller.ProfiledPIDController
 import edu.wpi.first.math.geometry.Pose2d
+import edu.wpi.first.math.kinematics.ChassisSpeeds
 import edu.wpi.first.units.Units.MetersPerSecond
 import edu.wpi.first.units.Units.Seconds
 import edu.wpi.first.units.measure.LinearVelocity
@@ -103,19 +104,24 @@ private fun profiledAlignToPose(
     tolerance: Pose2d = TOLERANCE,
     poseSupplier: () -> Pose2d = { drive.pose },
     atGoalDebounce: Time = 0.1.sec,
+    endTrigger: Trigger = atGoal
 ): Command =
     runOnce({
-            setTolerance(tolerance)
-            resetProfiledPID(poseSupplier.invoke(), drive.fieldOrientedSpeeds)
-            setGoal(goalPose)
-        })
+        setTolerance(tolerance)
+        resetProfiledPID(poseSupplier.invoke(), drive.fieldOrientedSpeeds)
+        setGoal(goalPose)
+    })
         .andThen(
             run({
-                    drive.runVelocity(
-                        getSpeedSetpoint(poseSupplier.invoke()).invoke()
+                drive.runVelocity(
+                    ChassisSpeeds.fromFieldRelativeSpeeds(
+                        getSpeedSetpoint(poseSupplier.invoke()).invoke(),
+                        drive.rotation
                     )
-                })
-                .until(atGoal.debounce(atGoalDebounce[sec]))
+                )
+            })
+                .until(endTrigger.debounce(atGoalDebounce[sec]))
+                .andThen(runOnce({ drive.runVelocity(ChassisSpeeds()) }))
         )
         .withName("Drive/profiledAlignToPose")
 
