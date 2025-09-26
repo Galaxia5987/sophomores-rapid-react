@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj2.command.Commands
 import frc.robot.IS_RED
 import frc.robot.drive
 import frc.robot.lib.extensions.withRotation
-import frc.robot.robotstate.RobotState
 
 fun Spath(pathName: String, mirror: Boolean = false): Command =
     AutoBuilder.followPath(
@@ -57,8 +56,4 @@ fun BRP2(): Command = runPath("BRP2")
 
 fun AC1SRP(): Command = Commands.sequence(AC1(), C1S())
 
-fun CC2C3(): Command =
-    Commands.sequence(
-        CC2().until { RobotState.SHOOTING.equals(RobotState.SHOOTING) },
-        C2C3().until { RobotState.SHOOTING.equals(RobotState.SHOOTING) }
-    )
+fun CC2C3(): Command = Commands.sequence(CC2(), C2C3())
