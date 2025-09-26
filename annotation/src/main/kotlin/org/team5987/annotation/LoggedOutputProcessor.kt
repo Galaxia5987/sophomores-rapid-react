@@ -1,8 +1,10 @@
 package org.team5987.annotation
 
 import com.google.devtools.ksp.processing.*
+import com.google.devtools.ksp.processing.CodeGenerator
 import com.google.devtools.ksp.symbol.*
 import com.squareup.kotlinpoet.*
+import com.squareup.kotlinpoet.ksp.writeTo
 
 // Call `LoggedRegistry.registerAll()` on robot init!!!!!!
 
@@ -17,6 +19,7 @@ class LoggedOutputProcessor(
 
         if (symbols.none()) {
             logger.warn("No @LoggedOutput symbols found this round.")
+            generateEmptyFile(codeGenerator, resolver)
             return emptyList()
         }
 
@@ -29,10 +32,19 @@ class LoggedOutputProcessor(
         fileSpecBuilder.addImport("frc.robot.lib.logged_output", "LoggedOutputManager")
 
         for (symbol in symbols) {
-            val key = symbol.annotations
+            val baseVal = symbol.annotations
                 .first { it.shortName.asString() == "LoggedOutput" }
-                .arguments.first().value.toString()
+                .arguments
+            val key by lazy {
+                if (baseVal.first().name?.asString() == "key")
+                    baseVal.first().value.toString()
+                else baseVal[1].value.toString()
+            }
 
+            val path by lazy {
+                if (baseVal.first().name?.asString() == "path")
+                    baseVal.first().value.toString()
+                else baseVal[1].value.toString() }
             when (symbol) {
                 is KSPropertyDeclaration -> { // or is property getter
                     val className = symbol.parentDeclaration?.qualifiedName?.asString()
@@ -46,10 +58,11 @@ class LoggedOutputProcessor(
 
                         // LoggedOutputManager.registerField("key", MyClass::myField)
                         funSpecBuilder.addStatement(
-                            "LoggedOutputManager.registerField(%S, %T::%L)",
+                            "LoggedOutputManager.registerField(%S, %T::%L, %S)",
                             key,
                             classType,
-                            fieldName
+                            fieldName,
+                            path
                         )
                     } else {
                         val methodName = symbol.simpleName.asString()
@@ -58,9 +71,10 @@ class LoggedOutputProcessor(
                         val member = MemberName(pkg, methodName)
 
                         funSpecBuilder.addStatement(
-                            "LoggedOutputManager.registerField(%S, ::%M)",
+                            "LoggedOutputManager.registerField(%S, ::%M,%S)",
                             key,
-                            member
+                            member,
+                            path
                         )
                         logger.info("Registering field: $pkg.$methodName with key=$key")
                     }
@@ -79,9 +93,10 @@ class LoggedOutputProcessor(
 
                         // LoggedOutputManager.registerMethod("key", ::testFun)
                         funSpecBuilder.addStatement(
-                            "LoggedOutputManager.registerMethod(%S, ::%M)",
+                            "LoggedOutputManager.registerMethod(%S, ::%M, %S)",
                             key,
-                            member
+                            member,
+                            path
                         )
                     } else {
                         // METHOD INSIDE TYPE (object/companion/@JvmStatic works as KFunction0 if no receiver)
@@ -94,11 +109,32 @@ class LoggedOutputProcessor(
 
                         // LoggedOutputManager.registerMethod("key", MyType::methodName)
                         funSpecBuilder.addStatement(
-                            "LoggedOutputManager.registerMethod(%S, %T::%L)",
+                            "LoggedOutputManager.registerMethod(%S, %T::%L, %S)",
                             key,
                             classType,
-                            methodName
+                            methodName,
+                            path
                         )
+                    }
+                }
+
+                is KSClassDeclaration -> {
+
+                    val pkg = symbol.containingFile?.packageName?.asString() ?: continue
+                    val className = symbol.simpleName.asString()
+                    val classType = ClassName(pkg, className)
+                    symbol.getAllProperties().forEach {
+                        val methodName = it.simpleName.asString()
+                        val pkg = it.containingFile?.packageName?.asString()
+                        if (pkg != null) {
+                            funSpecBuilder.addStatement(
+                                "LoggedOutputManager.registerField(%S, %T::%L, %S)",
+                                key,
+                                classType,
+                                methodName,
+                                path
+                            )
+                        }
                     }
                 }
             }
@@ -121,6 +157,28 @@ class LoggedOutputProcessor(
         logger.info("LoggedOutputProcessor finished generating LoggedRegistry.kt")
 
         return emptyList()
+    }
+}
+
+fun generateEmptyFile(codeGenerator: CodeGenerator, resolver: Resolver) {
+    try {
+        val pkg = "frc.robot.lib.logged_output.generated"
+        val name = "LoggedRegistry"
+        val file = FileSpec.builder(pkg, name)
+            .addImport("frc.robot.lib.logged_output", "LoggedOutputManager")
+            .addFunction(
+                FunSpec.builder("registerAllLoggedOutputs")
+                    .addKdoc("Auto-generated stub. Safe to call even if no @LoggedOutput symbols were found.\n")
+                    .addStatement("// [LoggedOutputManager] registers all LoggedOutput fields and methods")
+                    .build()
+            )
+            .build()
+        val deps = Dependencies(
+            aggregating = true,
+            *resolver.getAllFiles().toList().toTypedArray()
+        )
+        file.writeTo(codeGenerator, deps)
+    } catch (e: FileAlreadyExistsException) {
     }
 }
 
