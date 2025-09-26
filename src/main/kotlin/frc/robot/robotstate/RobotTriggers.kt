@@ -11,14 +11,14 @@ import frc.robot.roller
 import frc.robot.turret
 import org.team5987.annotation.LoggedOutput
 
-@LoggedOutput(COMMAND_NAME_PREFIX)
+@LoggedOutput(path = COMMAND_NAME_PREFIX)
 val isInDeadZone = Trigger {
     val driveTranslation = drive.pose.translation
     !OUTER_SHOOTING_AREA.contains(driveTranslation) ||
         INNER_SHOOTING_AREA.contains(driveTranslation)
 }
 
-@LoggedOutput(COMMAND_NAME_PREFIX)
+@LoggedOutput(path = COMMAND_NAME_PREFIX)
 val atShootingRotation =
     turret.isAtSetpoint.and {
         drive.pose.rotation.measure.isNear(
