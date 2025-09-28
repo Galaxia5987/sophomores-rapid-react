@@ -93,6 +93,11 @@ public class Module {
         io.setTurnOpenLoop(0.0);
     }
 
+    public void runTurnCharacterization(double output) {
+        io.setDriveOpenLoop(0.0);
+        io.setTurnOpenLoop(output);
+    }
+
     /** Returns the current turn angle of the module. */
     public Rotation2d getAngle() {
         return inputs.turnPosition;

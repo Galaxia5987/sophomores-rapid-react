@@ -45,6 +45,7 @@ import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.ConstantsKt;
@@ -129,6 +130,7 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer {
     private final GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
     private final Module[] modules = new Module[4]; // FL, FR, BL, BR
     private final SysIdRoutine sysId;
+    private final SysIdRoutine turnSysId;
     private final Alert gyroDisconnectedAlert =
             new Alert("Disconnected gyro, using kinematics as fallback.", AlertType.kError);
 
@@ -214,6 +216,19 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer {
                                         Logger.recordOutput("Drive/SysIdState", state.toString())),
                         new SysIdRoutine.Mechanism(
                                 (voltage) -> runCharacterization(voltage.in(Volts)), null, this));
+        turnSysId =
+                new SysIdRoutine(
+                        new SysIdRoutine.Config(
+                                null,
+                                null,
+                                null,
+                                (state) ->
+                                        Logger.recordOutput(
+                                                "Drive/TurnSysIdState", state.toString())),
+                        new SysIdRoutine.Mechanism(
+                                (voltage) -> runTurnCharacterization(voltage.in(Volts)),
+                                null,
+                                this));
     }
 
     @Override
@@ -362,6 +377,10 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer {
         return states;
     }
 
+    public void resetGyro(Rotation2d offset) {
+        gyroIO.reset();
+    }
+
     /** Returns the module positions (turn angles and drive positions) for all of the modules. */
     private SwerveModulePosition[] getModulePositions() {
         SwerveModulePosition[] states = new SwerveModulePosition[4];
@@ -369,6 +388,37 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer {
             states[i] = modules[i].getPosition();
         }
         return states;
+    }
+
+    /** NOTE: DO NOT USE WITH TorqueCurrentFOC */
+    public void runTurnCharacterization(double output) {
+        for (int i = 0; i < 4; i++) {
+            modules[i].runTurnCharacterization(output);
+        }
+    }
+
+    /**
+     * Returns a command to run a quasistatic test in the specified direction on the turn modules.
+     */
+    public Command turnSysIdQuasistatic(SysIdRoutine.Direction direction) {
+        return run(() -> runTurnCharacterization(0.0))
+                .withTimeout(1.0)
+                .andThen(turnSysId.quasistatic(direction));
+    }
+
+    /** Returns a command to run a dynamic test in the specified direction on the turn modules. */
+    public Command turnSysIdDynamic(SysIdRoutine.Direction direction) {
+        return run(() -> runTurnCharacterization(0.0))
+                .withTimeout(1.0)
+                .andThen(turnSysId.dynamic(direction));
+    }
+
+    public Command runAllTurnSysID() {
+        return Commands.sequence(
+                turnSysIdQuasistatic(SysIdRoutine.Direction.kForward),
+                turnSysIdQuasistatic(SysIdRoutine.Direction.kReverse),
+                turnSysIdDynamic(SysIdRoutine.Direction.kForward),
+                turnSysIdDynamic(SysIdRoutine.Direction.kReverse));
     }
 
     /** Returns the measured chassis speeds of the robot. */

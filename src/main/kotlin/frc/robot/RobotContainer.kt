@@ -5,6 +5,7 @@ import com.pathplanner.lib.auto.NamedCommands
 import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.wpilibj2.command.Command
+import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine
 import frc.robot.autonomous.paths.deploy.pathplanner.AC1SRP
@@ -63,7 +64,7 @@ object RobotContainer {
             DriveCommands.joystickDrive(
                 { driverController.leftX },
                 { -driverController.leftY },
-                { -driverController.leftY * 0.8 }
+                { -driverController.rightX * 0.8 }
             )
         turret.defaultCommand = turret.setAngle { turretAngleToHub }
         hood.defaultCommand =
@@ -74,26 +75,20 @@ object RobotContainer {
     }
 
     private fun configureButtonBindings() {
-
-        // Switch to X pattern when X button is pressed
+// reset swerve
+        driverController
+            .create()
+            .onTrue(
+                    drive.runOnce{
+                        drive.resetGyro(
+                            Rotation2d.kZero
+                        )
+                    }.ignoringDisable(true),
+                )
 
         driverController.circle().onTrue(setIntakeing())
         driverController.square().onTrue(wrist.setAngle(WristAngles.UP.angle))
         driverController.cross().onTrue(wrist.setAngle(WristAngles.DOWN.angle))
-        // Reset gyro / odometry
-        val resetOdometry =
-            if (CURRENT_MODE == Mode.SIM)
-                Runnable {
-                    drive.resetOdometry(
-                        driveSimulation!!.simulatedDriveTrainPose
-                    )
-                }
-            else
-                Runnable {
-                    drive.resetOdometry(
-                        Pose2d(drive.pose.translation, Rotation2d())
-                    )
-                }
     }
 
     fun getAutonomousCommand(): Command = autoChooser.get()
@@ -120,6 +115,7 @@ object RobotContainer {
             "Drive SysId (Quasistatic Reverse)",
             drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse)
         )
+        autoChooser.addOption("turnSysId", drive.runAllTurnSysID())
         autoChooser.addOption(
             "Drive SysId (Dynamic Forward)",
             drive.sysIdDynamic(SysIdRoutine.Direction.kForward)
@@ -128,6 +124,12 @@ object RobotContainer {
             "Drive SysId (Dynamic Reverse)",
             drive.sysIdDynamic(SysIdRoutine.Direction.kReverse)
         )
+
+        autoChooser.addOption(
+            "swerveFFCharacterization",
+            DriveCommands.feedforwardCharacterization()
+        )
+
         autoChooser.addDefaultOption("BRP2", BRP2())
         autoChooser.addOption("AC1SRP", AC1SRP())
         autoChooser.addOption("CC2C3", CC2C3())
