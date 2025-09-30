@@ -20,18 +20,18 @@ public class TunerConstants {
 
     // The steer motor uses any SwerveModule.SteerRequestType control request with the
     // output type specified by SwerveModuleConstants.SteerMotorClosedLoopOutput
-    private static final Slot0Configs steerGains =
+    public static final Slot0Configs steerGains =
             new Slot0Configs()
-                    .withKP(30.0)
+                    .withKP(22.8)
                     .withKI(0.0)
-                    .withKD(2.055)
-                    .withKS(0.24137)
-                    .withKV(0.30417)
-                    .withKA(0.042127)
+                    .withKD(1.65)
+                    .withKS(0)
+                    .withKV(0.3006)
+                    .withKA(0.068)
                     .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign);
     // When using closed-loop control, the drive motor uses the control
     // output type specified by SwerveModuleConstants.DriveMotorClosedLoopOutput
-    private static final Slot0Configs driveGains =
+    public static final Slot0Configs driveGains =
             new Slot0Configs().withKP(1.2).withKI(0).withKD(0).withKS(0.21265).withKV(0.89309);
 
     // The closed-loop output type to use for the steer motors;
@@ -54,7 +54,7 @@ public class TunerConstants {
 
     // The stator current at which the wheels start to slip;
     // This needs to be tuned to your individual robot
-    private static final Current kSlipCurrent = Amps.of(120.0);
+    private static final Current kSlipCurrent = Amps.of(80);
 
     // Initial configs for the drive and steer motors and the azimuth encoder; these cannot be null.
     // Some configs will be overwritten; check the `with*InitialConfigs()` API documentation.
@@ -138,11 +138,8 @@ public class TunerConstants {
                             .withSteerFrictionVoltage(kSteerFrictionVoltage)
                             .withDriveFrictionVoltage(kDriveFrictionVoltage);
 
-    //private static final double[] absoluteEncoderOffsets = new double[]{0.786932144185334, 2.1659808724945253, -2.992796517164886, 1.736466251886546};
-//    private static final double[] absoluteEncoderOffsets = new double[]{-2.270291566070749,-0.8666991451553873,0.22856313739496054,-1.397456497763819};
     private static final double[] absoluteEncoderOffsets = new double[]{-2.3239808936467465,-0.8958447801252144,0.22856313739496054,-1.3913205746122765};
 
-//    private static final double[] absoluteEncoderOffsets = new double[]{-2.3439226438892597,-0.9602719732164113,0.15339807878856412,-1.4296700943094176};
 
     // Front Left
     private static final int kFrontLeftDriveMotorId = 2;

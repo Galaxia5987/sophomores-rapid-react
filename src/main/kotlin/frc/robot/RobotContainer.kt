@@ -77,7 +77,7 @@ object RobotContainer {
     private fun configureButtonBindings() {
 // reset swerve
         driverController
-            .create()
+            .options()
             .onTrue(
                     drive.runOnce{
                         drive.resetGyro(

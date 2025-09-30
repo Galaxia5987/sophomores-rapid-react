@@ -50,6 +50,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.ConstantsKt;
 import frc.robot.Mode;
+import frc.robot.lib.Gains;
 import frc.robot.lib.LocalADStarAK;
 import frc.robot.subsystems.drive.ModuleIOs.Module;
 import frc.robot.subsystems.drive.ModuleIOs.ModuleIO;
@@ -64,6 +65,7 @@ import org.ironmaple.simulation.drivesims.configs.DriveTrainSimulationConfig;
 import org.ironmaple.simulation.drivesims.configs.SwerveModuleSimulationConfig;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
 public class Drive extends SubsystemBase implements Vision.VisionConsumer {
     // TunerConstants doesn't include these constants, so they are declared locally
@@ -144,6 +146,24 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer {
                 new SwerveModulePosition(),
                 new SwerveModulePosition()
             };
+
+    private final LoggedNetworkNumber loggedDriveKs = new LoggedNetworkNumber("/Tuning/Drive/Drive/kS", TunerConstants.driveGains.kS);
+    private final LoggedNetworkNumber loggedDriveKv = new LoggedNetworkNumber("/Tuning/Drive/Drive/kV", TunerConstants.driveGains.kV);
+    private final LoggedNetworkNumber loggedDriveKa = new LoggedNetworkNumber("/Tuning/Drive/Drive/kA", TunerConstants.driveGains.kA);
+    private final LoggedNetworkNumber loggedDriveKp = new LoggedNetworkNumber("/Tuning/Drive/Drive/kP", TunerConstants.driveGains.kP);
+    private final LoggedNetworkNumber loggedDriveKi = new LoggedNetworkNumber("/Tuning/Drive/Drive/kI", TunerConstants.driveGains.kI);
+    private final LoggedNetworkNumber loggedDriveKd = new LoggedNetworkNumber("/Tuning/Drive/Drive/kD", TunerConstants.driveGains.kD);
+
+    private final LoggedNetworkNumber loggedTurnKs = new LoggedNetworkNumber("/Tuning/Drive/Turn/kS", TunerConstants.steerGains.kS);
+    private final LoggedNetworkNumber loggedTurnKv = new LoggedNetworkNumber("/Tuning/Drive/Turn/kV", TunerConstants.steerGains.kV);
+    private final LoggedNetworkNumber loggedTurnKa = new LoggedNetworkNumber("/Tuning/Drive/Turn/kA", TunerConstants.steerGains.kA);
+    private final LoggedNetworkNumber loggedTurnKp = new LoggedNetworkNumber("/Tuning/Drive/Turn/kP", TunerConstants.steerGains.kP);
+    private final LoggedNetworkNumber loggedTurnKi = new LoggedNetworkNumber("/Tuning/Drive/Turn/kI", TunerConstants.steerGains.kI);
+    private final LoggedNetworkNumber loggedTurnKd = new LoggedNetworkNumber("/Tuning/Drive/Turn/kD", TunerConstants.steerGains.kD);
+
+    public final Gains driveGains = new Gains();
+    public final Gains turnGains = new Gains();
+
     private final SwerveDrivePoseEstimator poseEstimator =
             new SwerveDrivePoseEstimator(
                     kinematics, rawGyroRotation, lastModulePositions, new Pose2d());
@@ -245,7 +265,11 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer {
         SwerveDriveAngle[3] = Radians.of(modules[3].getWheelRadiusCharacterizationPosition());
         gyroIO.updateInputs(gyroInputs);
         Logger.processInputs("Drive/Gyro", gyroInputs);
+
+        updateGainsObject();
+
         for (var module : modules) {
+            module.updateGains(turnGains, driveGains);
             module.periodic();
         }
         odometryLock.unlock();
@@ -298,6 +322,23 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer {
         // Update gyro alert
         gyroDisconnectedAlert.set(
                 !gyroInputs.connected && ConstantsKt.getCURRENT_MODE() != Mode.SIM);
+
+    }
+
+    private void updateGainsObject() {
+        driveGains.setKS(loggedDriveKs.get());
+        driveGains.setKV(loggedDriveKv.get());
+        driveGains.setKA(loggedDriveKa.get());
+        driveGains.setKP(loggedDriveKp.get());
+        driveGains.setKI(loggedDriveKi.get());
+        driveGains.setKD(loggedDriveKd.get());
+
+        turnGains.setKS(loggedTurnKs.get());
+        turnGains.setKV(loggedTurnKv.get());
+        turnGains.setKA(loggedTurnKa.get());
+        turnGains.setKP(loggedTurnKp.get());
+        turnGains.setKI(loggedTurnKi.get());
+        turnGains.setKD(loggedTurnKd.get());
     }
 
     /**

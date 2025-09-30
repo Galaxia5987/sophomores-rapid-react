@@ -18,6 +18,7 @@ import static frc.robot.lib.PhoenixUtil.tryUntilOk;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
+import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.PositionTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.PositionVoltage;
@@ -40,9 +41,12 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
+import frc.robot.lib.Gains;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.PhoenixOdometryThread;
 import frc.robot.subsystems.drive.TunerConstants;
+import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
+
 import java.util.Queue;
 
 /**
@@ -190,6 +194,11 @@ public class ModuleIOTalonFX implements ModuleIO {
                 turnAppliedVolts,
                 turnCurrent);
         ParentDevice.optimizeBusUtilizationForAll(driveTalon, turnTalon);
+    }
+    @Override
+    public void updateGains(Gains turnGains, Gains driveGains){
+        turnTalon.getConfigurator().apply(turnGains.toSlotConfig());
+        driveTalon.getConfigurator().apply(driveGains.toSlotConfig());
     }
 
     @Override
