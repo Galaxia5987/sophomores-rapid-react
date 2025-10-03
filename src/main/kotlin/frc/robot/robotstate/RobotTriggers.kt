@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.applyLeds
 import frc.robot.drive
 import frc.robot.hopper
+import frc.robot.lib.extensions.*
 import frc.robot.lib.onTrue
 import frc.robot.robotRelativeBallPoses
 import frc.robot.roller
@@ -36,24 +37,21 @@ private val ballsEmpty = hasFrontBall.or(hasBackBall).negate()
 fun bindRobotCommands() {
     isShooting.apply {
         and(ballsEmpty).onTrue(setIntaking(), stopShooting())
-        and(isInDeadZone.negate())
-            .and(atShootingRotation)
-            .onTrue(startShooting())
-        and((isInDeadZone).or(atShootingRotation.negate()))
+        and(!isInDeadZone, atShootingRotation).onTrue(startShooting())
+        and((isInDeadZone).or(!atShootingRotation))
             .onTrue(driveToShootingPoint())
     }
     isIntaking.apply {
-        and(hasFrontBall)
-            .and(hasBackBall)
+        and(hasFrontBall, hasBackBall)
             .onTrue(roller.stop(), hopper.stop(), setShooting())
-        and(hasBackBall).and(hasFrontBall.negate()).apply {
+        and(hasBackBall, !hasFrontBall).apply {
             onTrue(stopIntaking())
             and(robotRelativeBallPoses::isNotEmpty).apply {
                 onTrue(roller.intake())
                 and(globalBallPoses::isNotEmpty).onTrue(alignToBall())
             }
         }
-        and(ballsEmpty).and(robotRelativeBallPoses::isNotEmpty).apply {
+        and(ballsEmpty, robotRelativeBallPoses::isNotEmpty).apply {
             onTrue(roller.intake(), hopper.start())
             and(globalBallPoses::isNotEmpty).onTrue(alignToBall())
         }
