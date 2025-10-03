@@ -67,7 +67,7 @@ var thetaController =
         .apply { enableContinuousInput(-Math.PI, Math.PI) }
 
 @LoggedOutput(path = LOGGING_PREFIX)
-var atGoal =
+var atGoal: Trigger =
     Trigger(xController::atGoal)
         .and(yController::atGoal)
         .and(thetaController::atGoal)
