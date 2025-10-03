@@ -121,7 +121,7 @@ private fun profiledAlignToPose(
                     )
                 })
                 .until(endTrigger.debounce(atGoalDebounce[sec]))
-                .andThen(runOnce({ drive.runVelocity(ChassisSpeeds()) }))
+                .andThen(DriveCommands.stop())
         )
         .withName("Drive/profiledAlignToPose")
 
