@@ -11,7 +11,6 @@ import org.team5987.annotation.LoggedOutput
 
 private const val LOGGING_PREFIX = "AutoAlignment"
 
-
 private val xGains = LoggedNetworkGains("xGains", 4.0)
 private val yGains =
     LoggedNetworkGains(
@@ -39,7 +38,7 @@ private val rotationalLimits
             rotationalMaxAcceleration.get()
         )
 
-@LoggedOutput("X controller",LOGGING_PREFIX)
+@LoggedOutput("X controller", LOGGING_PREFIX)
 var xController =
     ProfiledPIDController(
         xGains.kP.get(),
@@ -48,7 +47,7 @@ var xController =
         linearLimits
     )
 
-@LoggedOutput("Y controller",LOGGING_PREFIX)
+@LoggedOutput("Y controller", LOGGING_PREFIX)
 var yController =
     ProfiledPIDController(
         yGains.kP.get(),
@@ -57,14 +56,14 @@ var yController =
         linearLimits
     )
 
-@LoggedOutput("ϴ controller",LOGGING_PREFIX)
+@LoggedOutput("ϴ controller", LOGGING_PREFIX)
 var thetaController =
     ProfiledPIDController(
-        thetaGains.kP.get(),
-        thetaGains.kI.get(),
-        thetaGains.kD.get(),
-        rotationalLimits
-    )
+            thetaGains.kP.get(),
+            thetaGains.kI.get(),
+            thetaGains.kD.get(),
+            rotationalLimits
+        )
         .apply { enableContinuousInput(-Math.PI, Math.PI) }
 
 @LoggedOutput(path = LOGGING_PREFIX)
@@ -75,10 +74,10 @@ var atGoal =
 
 fun updateProfiledPIDGains() {
     mapOf(
-        xController to xGains,
-        yController to yGains,
-        thetaController to thetaGains
-    )
+            xController to xGains,
+            yController to yGains,
+            thetaController to thetaGains
+        )
         .forEach { (controller, gains) ->
             controller.setPID(gains.kP.get(), gains.kI.get(), gains.kD.get())
         }
@@ -90,7 +89,6 @@ fun setGoal(desiredPose: Pose2d) {
     yController.setGoal(desiredPose.y)
     thetaController.setGoal(desiredPose.rotation.radians)
 }
-
 
 fun resetProfiledPID(botPose: Pose2d, botSpeeds: ChassisSpeeds) {
     xController.reset(botPose.x, botSpeeds.vxMetersPerSecond)
