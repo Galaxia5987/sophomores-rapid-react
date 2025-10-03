@@ -1,10 +1,12 @@
 package frc.robot.lib.logged_output
 
+import edu.wpi.first.math.controller.ProfiledPIDController
 import edu.wpi.first.units.Measure
 import edu.wpi.first.util.WPISerializable
 import edu.wpi.first.util.struct.StructSerializable
 import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj2.command.SubsystemBase
+import frc.robot.lib.extensions.log
 import frc.robot.lib.extensions.toPrimitiveTypeJava
 import frc.robot.lib.ifNotNull
 import java.util.function.*
@@ -128,6 +130,13 @@ object LoggedOutputManager : SubsystemBase() {
                             Logger.recordOutput(key, it as Record)
                         }
                     }
+                type == ProfiledPIDController::class.java -> {
+                    addRunnable {
+                        value().ifNotNull {
+                            (it as ProfiledPIDController).log( key)
+                        }
+                    }
+                }
                 BooleanSupplier::class.java.isAssignableFrom(type) ->
                     addRunnable {
                         value().ifNotNull {
