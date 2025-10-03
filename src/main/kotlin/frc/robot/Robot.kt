@@ -16,7 +16,9 @@ import frc.robot.Mode.REPLAY
 import frc.robot.Mode.SIM
 import frc.robot.lib.extensions.enableAutoLogOutputFor
 import frc.robot.robotstate.robotCommandsLogger
+import frc.robot.subsystems.drive.Drive
 import org.ironmaple.simulation.SimulatedArena
+import org.littletonrobotics.junction.AutoLogOutputManager
 import org.littletonrobotics.junction.LogFileUtil
 import org.littletonrobotics.junction.LoggedRobot
 import org.littletonrobotics.junction.Logger
@@ -34,7 +36,6 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter
  */
 object Robot : LoggedRobot() {
     private lateinit var autonomousCommand: Command
-
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
@@ -46,6 +47,9 @@ object Robot : LoggedRobot() {
             tResourceType.kResourceType_Language,
             tInstances.kLanguage_Kotlin
         )
+        arrayOf("frc.robot.subsystems.vision", "frc.robot.subsystems.drive").forEach {
+            AutoLogOutputManager.addPackage(it)
+        }
 
         // Initialize logger
         listOf(
