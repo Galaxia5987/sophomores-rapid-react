@@ -29,7 +29,7 @@ import frc.robot.lib.shooting.ShotData
 import frc.robot.lib.shooting.calculateShot
 import frc.robot.robotRelativeBallPoses
 import frc.robot.roller
-import frc.robot.subsystems.drive.alignToPose
+import frc.robot.subsystems.drive.align
 import frc.robot.subsystems.shooter.flywheel.FLYWHEEL_DIAMETER
 import frc.robot.subsystems.drive.profiledAlign
 import frc.robot.subsystems.shooter.flywheel.SHOOTER_VELOCITY_BY_DISTANCE
@@ -54,20 +54,21 @@ val compensatedShot: ShotData
         val shot = calculateShot(drive.pose, robotSpeeds, shooterExitVelocity)
 
         mapOf(
-                "compensatedShot/compensatedTarget" to
+            "compensatedShot/compensatedTarget" to
                     Pose2d(shot.compensatedTarget, Rotation2d()),
-                "regularShot/target" to Pose2d(HUB_LOCATION, Rotation2d()),
-                "compensatedShot/compensatedDistance" to
+            "regularShot/target" to Pose2d(HUB_LOCATION, Rotation2d()),
+            "compensatedShot/compensatedDistance" to
                     shot.compensatedDistance,
-                "regularShot/distance" to robotDistanceFromHub,
-                "compensatedShot/turretAngle" to shot.turretAngle.measure,
-                "regularShot/turretAngle" to angleFromRobotHub,
-                "shooterExitVelocity" to shooterExitVelocity
-            )
+            "regularShot/distance" to robotDistanceFromHub,
+            "compensatedShot/turretAngle" to shot.turretAngle.measure,
+            "regularShot/turretAngle" to angleFromRobotHub,
+            "shooterExitVelocity" to shooterExitVelocity
+        )
             .log("onMoveShoot")
 
         return shot
     }
+
 @LoggedOutput(path = COMMAND_NAME_PREFIX)
 
 val robotDistanceFromHub
@@ -98,28 +99,28 @@ fun driveToShootingPoint(): Command {
     val setpoint =
         if (
             INNER_SHOOTING_AREA.getDistance(robotTranslation) <
-                OUTER_SHOOTING_AREA.getDistance(robotTranslation)
+            OUTER_SHOOTING_AREA.getDistance(robotTranslation)
         )
             INNER_SHOOTING_AREA.nearest(robotTranslation)
         else OUTER_SHOOTING_AREA.nearest(robotTranslation)
-    return profiledAlign(getPose2d(setpoint, swerveCompensationAngle))
+    return align(getPose2d(setpoint, swerveCompensationAngle))
         .named("Drive")
 }
 
 fun startShooting() =
     sequence(
-            drive.lock(),
-            flywheel.setVelocity {
-                FLYWHEEL_VELOCITY_KEY.value = robotDistanceFromHub[m]
-                SHOOTER_VELOCITY_BY_DISTANCE.getInterpolated(
-                        FLYWHEEL_VELOCITY_KEY
-                    )
-                    .value
-                    .rps
-            },
-            waitUntil(flywheel.isAtSetVelocity),
-            parallel(hopper.start(), roller.intake())
-        )
+        drive.lock(),
+        flywheel.setVelocity {
+            FLYWHEEL_VELOCITY_KEY.value = robotDistanceFromHub[m]
+            SHOOTER_VELOCITY_BY_DISTANCE.getInterpolated(
+                FLYWHEEL_VELOCITY_KEY
+            )
+                .value
+                .rps
+        },
+        waitUntil(flywheel.isAtSetVelocity),
+        parallel(hopper.start(), roller.intake())
+    )
         .named(COMMAND_NAME_PREFIX)
 
 fun stopShooting() =
