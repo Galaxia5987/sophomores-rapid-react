@@ -57,7 +57,7 @@ val compensatedShot: ShotData
                 "regularShot/turretAngle" to angleFromRobotHub,
                 "shooterExitVelocity" to shooterExitVelocity
             )
-            .forEach { it.log("onMoveShoot", it.key) }
+            .log("onMoveShoot")
 
         return shot
     }
