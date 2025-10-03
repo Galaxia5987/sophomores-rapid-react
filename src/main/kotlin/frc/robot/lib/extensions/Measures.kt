@@ -96,6 +96,7 @@ val mps_ps
     get() = Units.MetersPerSecondPerSecond
 val deg_ps_ps
     get() = Units.DegreesPerSecondPerSecond
+
 fun LinearVelocity.toAngular(
     diameter: Distance,
     gearRatio: Double,
