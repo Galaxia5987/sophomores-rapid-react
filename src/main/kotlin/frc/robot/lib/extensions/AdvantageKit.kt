@@ -3,6 +3,7 @@ package frc.robot.lib.extensions
 import edu.wpi.first.math.controller.HolonomicDriveController
 import edu.wpi.first.math.controller.PIDController
 import edu.wpi.first.math.controller.ProfiledPIDController
+import edu.wpi.first.math.geometry.*
 import edu.wpi.first.units.Measure
 import edu.wpi.first.units.MutableMeasure
 import edu.wpi.first.units.Unit as WPIUnit
@@ -140,17 +141,15 @@ fun Map<String, Any>.log(loggingPath: String = "") {
 }
 
 fun PIDController.log(loggingName: String) {
-    val loggingPath = "Alignment/Controllers/$loggingName"
     mapOf(
             "setpoint" to setpoint,
             "error" to error,
             "atSetpoint" to atSetpoint()
         )
-        .log(loggingPath)
+        .log(loggingName)
 }
 
 fun ProfiledPIDController.log(loggingName: String) {
-    val loggingPath = "Alignment/Controllers/$loggingName"
 
     mapOf(
             "goal" to goal.position,
@@ -166,7 +165,7 @@ fun ProfiledPIDController.log(loggingName: String) {
             "atGoal" to atSetpoint(),
             "atSetpoint" to atGoal()
         )
-        .log(loggingPath)
+        .log(loggingName)
 }
 
 fun HolonomicDriveController.log() {
