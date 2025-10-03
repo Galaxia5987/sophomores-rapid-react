@@ -87,6 +87,9 @@ val kg2m
 val rps
     get() = Units.RotationsPerSecond
 
+val mps
+    get() = Units.MetersPerSecond
+
 fun LinearVelocity.toAngular(
     diameter: Distance,
     gearRatio: Double,
@@ -216,4 +219,7 @@ operator fun MomentOfInertia.get(unit: MomentOfInertiaUnit): Double =
     this.`in`(unit)
 
 operator fun AngularVelocity.get(unit: AngularVelocityUnit): Double =
+    this.`in`(unit)
+
+operator fun LinearVelocity.get(unit: LinearVelocityUnit): Double =
     this.`in`(unit)
