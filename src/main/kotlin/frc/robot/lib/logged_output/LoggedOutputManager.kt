@@ -133,7 +133,7 @@ object LoggedOutputManager : SubsystemBase() {
                 type == ProfiledPIDController::class.java -> {
                     addRunnable {
                         value().ifNotNull {
-                            (it as ProfiledPIDController).log( key)
+                            (it as ProfiledPIDController).log(key)
                         }
                     }
                 }
