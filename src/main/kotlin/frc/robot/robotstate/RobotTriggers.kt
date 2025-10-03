@@ -5,17 +5,20 @@ import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.applyLeds
 import frc.robot.drive
 import frc.robot.hopper
-import frc.robot.lib.extensions.*
+import frc.robot.lib.onTrue
+import frc.robot.robotRelativeBallPoses
 import frc.robot.roller
 import frc.robot.turret
-import org.littletonrobotics.junction.Logger.recordOutput
+import org.team5987.annotation.LoggedOutput
 
-val isShooting = Trigger { state == RobotState.SHOOTING }
+@LoggedOutput(path = COMMAND_NAME_PREFIX)
 val isInDeadZone = Trigger {
     val driveTranslation = drive.pose.translation
     !OUTER_SHOOTING_AREA.contains(driveTranslation) ||
         INNER_SHOOTING_AREA.contains(driveTranslation)
 }
+
+@LoggedOutput(path = COMMAND_NAME_PREFIX)
 val atShootingRotation =
     turret.isAtSetpoint.and {
         drive.pose.rotation.measure.isNear(
@@ -24,37 +27,36 @@ val atShootingRotation =
         )
     }
 
+val isShooting = Trigger { state == RobotState.SHOOTING }
 val isIntaking = Trigger { state == RobotState.INTAKING }
 private val hasFrontBall = roller.hasBall
 val hasBackBall = hopper.hasBall
 private val ballsEmpty = hasFrontBall.or(hasBackBall).negate()
 
-fun robotCommandsLogger() {
-    recordOutput("$COMMAND_NAME_PREFIX/RobotState", state)
-    recordOutput(
-        "$COMMAND_NAME_PREFIX/RobotDistanceFromHub",
-        robotDistanceFromHub
-    )
-    recordOutput("$COMMAND_NAME_PREFIX/is in dead zone", isInDeadZone)
-    recordOutput(
-        "$COMMAND_NAME_PREFIX/Turret rotation to Hub",
-        turretAngleToHub
-    )
-    recordOutput("$COMMAND_NAME_PREFIX/atShootingRotation", atShootingRotation)
-}
-
 fun bindRobotCommands() {
     isShooting.apply {
-        and(ballsEmpty).onTrue(setIntakeing(), stopShooting())
-        and(!isInDeadZone, atShootingRotation).onTrue(startShooting())
-        and((isInDeadZone).or(!atShootingRotation))
+        and(ballsEmpty).onTrue(setIntaking(), stopShooting())
+        and(isInDeadZone.negate())
+            .and(atShootingRotation)
+            .onTrue(startShooting())
+        and((isInDeadZone).or(atShootingRotation.negate()))
             .onTrue(driveToShootingPoint())
     }
     isIntaking.apply {
-        and(ballsEmpty).onTrue(startIntaking())
-        and(hasFrontBall, hasBackBall)
+        and(hasFrontBall)
+            .and(hasBackBall)
             .onTrue(roller.stop(), hopper.stop(), setShooting())
-        and(hasBackBall, !hasFrontBall).onTrue(hopper.stop())
+        and(hasBackBall).and(hasFrontBall.negate()).apply {
+            onTrue(stopIntaking())
+            and(robotRelativeBallPoses::isNotEmpty).apply {
+                onTrue(roller.intake())
+                and(globalBallPoses::isNotEmpty).onTrue(alignToBall())
+            }
+        }
+        and(ballsEmpty).and(robotRelativeBallPoses::isNotEmpty).apply {
+            onTrue(roller.intake(), hopper.start())
+            and(globalBallPoses::isNotEmpty).onTrue(alignToBall())
+        }
     }
     applyLeds()
 }
@@ -64,4 +66,4 @@ private fun setRobotState(newState: RobotState) =
 
 fun setShooting() = setRobotState(RobotState.SHOOTING)
 
-fun setIntakeing() = setRobotState(RobotState.INTAKING)
+fun setIntaking() = setRobotState(RobotState.INTAKING)
