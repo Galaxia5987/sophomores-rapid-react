@@ -6,11 +6,10 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.lib.LoggedNetworkGains
-import frc.robot.lib.extensions.get
 import org.littletonrobotics.junction.networktables.LoggedNetworkNumber
 import org.team5987.annotation.LoggedOutput
 
-const val COMMAND_NAME_PREFIX = "AutoAlignment"
+private const val LOGGING_PREFIX = "AutoAlignment"
 
 private val xGains = LoggedNetworkGains("xGains", 4.0)
 private val yGains =
@@ -20,14 +19,14 @@ private val yGains =
 
 private val thetaGains = LoggedNetworkGains("thetaGains", 6.0)
 private val linearMaxVelocity =
-    LoggedNetworkNumber("$COMMAND_NAME_PREFIX/linearMaxVelocity", 4.69)
+    LoggedNetworkNumber("$LOGGING_PREFIX/linearMaxVelocity", 4.69)
 private val linearMaxAcceleration =
-    LoggedNetworkNumber("$COMMAND_NAME_PREFIX/linearMaxAcceleration", 2.8)
+    LoggedNetworkNumber("$LOGGING_PREFIX/linearMaxAcceleration", 2.8)
 
 private var rotationalMaxVelocity =
-    LoggedNetworkNumber("$COMMAND_NAME_PREFIX/rotationMaxVelocity", 7.0)
+    LoggedNetworkNumber("$LOGGING_PREFIX/rotationMaxVelocity", 7.0)
 private var rotationalMaxAcceleration =
-    LoggedNetworkNumber("$COMMAND_NAME_PREFIX/rotationMaxAcceleration", 360.0)
+    LoggedNetworkNumber("$LOGGING_PREFIX/rotationMaxAcceleration", 360.0)
 
 private val linearLimits
     get() = Constraints(linearMaxVelocity.get(), linearMaxAcceleration.get())
@@ -39,32 +38,39 @@ private val rotationalLimits
             rotationalMaxAcceleration.get()
         )
 
-val xController
-    get() =
-        ProfiledPIDController(
-            xGains.kP.get(),
-            xGains.kI.get(),
-            xGains.kD.get(),
-            linearLimits
-        )
-val yController
-    get() =
-        ProfiledPIDController(
-            yGains.kP.get(),
-            yGains.kI.get(),
-            yGains.kD.get(),
-            linearLimits
-        )
+@LoggedOutput("X controller", LOGGING_PREFIX)
+var xController =
+    ProfiledPIDController(
+        xGains.kP.get(),
+        xGains.kI.get(),
+        xGains.kD.get(),
+        linearLimits
+    )
 
-val thetaController
-    get() =
-        ProfiledPIDController(
-                thetaGains.kP.get(),
-                thetaGains.kI.get(),
-                thetaGains.kD.get(),
-                rotationalLimits
-            )
-            .apply { enableContinuousInput(-Math.PI, Math.PI) }
+@LoggedOutput("Y controller", LOGGING_PREFIX)
+var yController =
+    ProfiledPIDController(
+        yGains.kP.get(),
+        yGains.kI.get(),
+        yGains.kD.get(),
+        linearLimits
+    )
+
+@LoggedOutput("ϴ controller", LOGGING_PREFIX)
+var thetaController =
+    ProfiledPIDController(
+            thetaGains.kP.get(),
+            thetaGains.kI.get(),
+            thetaGains.kD.get(),
+            rotationalLimits
+        )
+        .apply { enableContinuousInput(-Math.PI, Math.PI) }
+
+@LoggedOutput(path = LOGGING_PREFIX)
+var atGoal: Trigger =
+    Trigger(xController::atGoal)
+        .and(yController::atGoal)
+        .and(thetaController::atGoal)
 
 fun updateProfiledPIDGains() {
     mapOf(
@@ -83,11 +89,6 @@ fun setGoal(desiredPose: Pose2d) {
     yController.setGoal(desiredPose.y)
     thetaController.setGoal(desiredPose.rotation.radians)
 }
-
-var atGoal =
-    Trigger(xController::atGoal)
-        .and(yController::atGoal)
-        .and(thetaController::atGoal)
 
 fun resetProfiledPID(botPose: Pose2d, botSpeeds: ChassisSpeeds) {
     xController.reset(botPose.x, botSpeeds.vxMetersPerSecond)
@@ -108,23 +109,6 @@ fun setTolerance(pose2d: Pose2d) {
  * Returns field relative chassis speeds to the selected goal.
  * @botPose the current pose of the robot
  */
-@LoggedOutput
-object AutoAlignment {
-    var xError = xController.positionError
-    var yError = yController.positionError
-    var thetaError = thetaController.positionError
-    var xSetpoint = xController.setpoint.position
-    var ySetpoint = yController.setpoint.position
-    var thetaSetpoint = thetaController.setpoint.position
-    var xGoal = xController.goal.position
-    var yGoal = yController.goal.position
-    var thetaGoal = thetaController.goal.position
-    var atGoalSupplier = atGoal.asBoolean
-    var xAtSetpoint = xController.atSetpoint()
-    var yAtSetpoint = yController.atSetpoint()
-    var thetaAtSetpoint = thetaController.atSetpoint()
-}
-
 fun getSpeedSetpoint(botPose: Pose2d): () -> ChassisSpeeds = {
     ChassisSpeeds(
         xController.calculate(botPose.x),
