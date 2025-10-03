@@ -11,13 +11,13 @@ import org.team5987.annotation.LoggedOutput
 
 private const val LOGGING_PREFIX = "AutoAlignment"
 
-private val xGains = LoggedNetworkGains("xGains", 4.0)
+private val xGains = LoggedNetworkGains("x Gains", 4.0)
 private val yGains =
     LoggedNetworkGains(
-        "yGains",
+        "y Gains",
     )
 
-private val thetaGains = LoggedNetworkGains("thetaGains", 6.0)
+private val thetaGains = LoggedNetworkGains("ϴ Gains", 6.0)
 private val linearMaxVelocity =
     LoggedNetworkNumber("$LOGGING_PREFIX/linearMaxVelocity", 4.69)
 private val linearMaxAcceleration =
