@@ -7,17 +7,19 @@ import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine
-import frc.robot.lib.extensions.deg
+import frc.robot.autonomous.paths.deploy.pathplanner.AC1SRP
+import frc.robot.autonomous.paths.deploy.pathplanner.BRP2
+import frc.robot.autonomous.paths.deploy.pathplanner.CC2C3
 import frc.robot.lib.extensions.enableAutoLogOutputFor
 import frc.robot.lib.extensions.get
 import frc.robot.lib.extensions.m
 import frc.robot.lib.math.interpolation.InterpolatingDouble
 import frc.robot.robotstate.bindRobotCommands
+import frc.robot.robotstate.hoodDefaultCommand
 import frc.robot.robotstate.robotDistanceFromHub
 import frc.robot.robotstate.setIntaking
 import frc.robot.robotstate.turretAngleToHub
 import frc.robot.subsystems.drive.DriveCommands
-import frc.robot.subsystems.shooter.hood.HOOD_ANGLE_BY_DISTANCE
 import frc.robot.subsystems.wrist.WristAngles
 import org.ironmaple.simulation.SimulatedArena
 import org.littletonrobotics.junction.AutoLogOutput
@@ -62,11 +64,7 @@ object RobotContainer {
                 { -driverController.rightX * 0.8 }
             )
         turret.defaultCommand = turret.setAngle { turretAngleToHub }
-        hood.defaultCommand =
-            hood.setAngle {
-                hoodAngle.value = robotDistanceFromHub[m]
-                HOOD_ANGLE_BY_DISTANCE.getInterpolated(hoodAngle).value.deg
-            }
+        hood.defaultCommand = hoodDefaultCommand()
     }
 
     private fun configureButtonBindings() {
@@ -124,6 +122,9 @@ object RobotContainer {
             "Drive SysId (Dynamic Reverse)",
             drive.sysIdDynamic(SysIdRoutine.Direction.kReverse)
         )
+        autoChooser.addDefaultOption("BRP2", BRP2())
+        autoChooser.addOption("AC1SRP", AC1SRP())
+        autoChooser.addOption("CC2C3", CC2C3())
     }
 
     fun resetSimulationField() {

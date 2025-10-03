@@ -90,7 +90,7 @@ val rollerPose
 val turretTranslation
     get() = getTranslation3d(z = 0.41)
 val turretRotation
-    get() = getRotation3d(yaw = turret.input.position)
+    get() = getRotation3d(yaw = turret.inputs.position)
 val turretPose
     get() =
         getPose3d(turretTranslation, turretRotation) +
