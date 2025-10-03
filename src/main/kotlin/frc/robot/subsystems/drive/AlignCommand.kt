@@ -129,7 +129,6 @@ private fun profiledAlignToPose(
 
 fun align(pose: Pose2d) = drive.defer { alignToPose(pose) }
 
-fun profiledAlign(pose: Pose2d) =
-    drive.defer {
+fun profiledAlign(pose: Pose2d) = drive.defer {
         profiledAlignToPose(pose, endTrigger = isShooting.negate().or(atGoal))
     }
