@@ -9,9 +9,7 @@ import java.util.function.BooleanSupplier
 operator fun Trigger.not() = this.negate()
 
 operator fun Trigger.get(seconds: Time) =
-    this.debounce(
-        seconds.`in`(Units.Seconds)
-    )
+    this.debounce(seconds.`in`(Units.Seconds))
 
 fun Trigger.debounce(seconds: Time) = this[seconds]
 
