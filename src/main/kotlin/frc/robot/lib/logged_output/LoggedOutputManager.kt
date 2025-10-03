@@ -62,7 +62,7 @@ object LoggedOutputManager : SubsystemBase() {
 
     // Taken from advantageKit's `AutoLogOutputManager`,
     // https://github.com/rakrakon/AdvantageKit/blob/main/akit/src/main/java/org/littletonrobotics/junction/AutoLogOutputManager.java
-    fun addRunnable(action: () -> Unit) {
+    private fun addRunnable(action: () -> Unit) {
         callbacks.add(Runnable(action))
     }
 
