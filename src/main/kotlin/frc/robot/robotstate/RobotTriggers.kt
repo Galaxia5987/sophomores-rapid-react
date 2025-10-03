@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.applyLeds
 import frc.robot.drive
 import frc.robot.hopper
-import frc.robot.lib.extensions.onTrue
+import frc.robot.lib.extensions.*
 import frc.robot.roller
 import frc.robot.turret
 import org.littletonrobotics.junction.Logger.recordOutput
@@ -46,18 +46,15 @@ fun robotCommandsLogger() {
 fun bindRobotCommands() {
     isShooting.apply {
         and(ballsEmpty).onTrue(setIntakeing(), stopShooting())
-        and(isInDeadZone.negate())
-            .and(atShootingRotation)
-            .onTrue(startShooting())
-        and((isInDeadZone).or(atShootingRotation.negate()))
+        and(!isInDeadZone, atShootingRotation).onTrue(startShooting())
+        and((isInDeadZone).or(!atShootingRotation))
             .onTrue(driveToShootingPoint())
     }
     isIntaking.apply {
         and(ballsEmpty).onTrue(startIntaking())
-        and(hasFrontBall)
-            .and(hasBackBall)
+        and(hasFrontBall, hasBackBall)
             .onTrue(roller.stop(), hopper.stop(), setShooting())
-        and(hasBackBall).and(hasFrontBall.negate()).onTrue(hopper.stop())
+        and(hasBackBall, !hasFrontBall).onTrue(hopper.stop())
     }
     applyLeds()
 }
