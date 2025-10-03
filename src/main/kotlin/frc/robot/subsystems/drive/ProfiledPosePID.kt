@@ -6,12 +6,10 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.lib.LoggedNetworkGains
-import frc.robot.lib.logged_output.LoggedOutputManager
-import org.littletonrobotics.junction.Logger.recordOutput
 import org.littletonrobotics.junction.networktables.LoggedNetworkNumber
 import org.team5987.annotation.LoggedOutput
 
-const val COMMAND_NAME_PREFIX = "AutoAlignment"
+private const val LOGGING_PREFIX = "AutoAlignment"
 
 private val xGains = LoggedNetworkGains("xGains", 4.0)
 private val yGains =
@@ -21,14 +19,14 @@ private val yGains =
 
 private val thetaGains = LoggedNetworkGains("thetaGains", 6.0)
 private val linearMaxVelocity =
-    LoggedNetworkNumber("$COMMAND_NAME_PREFIX/linearMaxVelocity", 4.69)
+    LoggedNetworkNumber("$LOGGING_PREFIX/linearMaxVelocity", 4.69)
 private val linearMaxAcceleration =
-    LoggedNetworkNumber("$COMMAND_NAME_PREFIX/linearMaxAcceleration", 2.8)
+    LoggedNetworkNumber("$LOGGING_PREFIX/linearMaxAcceleration", 2.8)
 
 private var rotationalMaxVelocity =
-    LoggedNetworkNumber("$COMMAND_NAME_PREFIX/rotationMaxVelocity", 7.0)
+    LoggedNetworkNumber("$LOGGING_PREFIX/rotationMaxVelocity", 7.0)
 private var rotationalMaxAcceleration =
-    LoggedNetworkNumber("$COMMAND_NAME_PREFIX/rotationMaxAcceleration", 360.0)
+    LoggedNetworkNumber("$LOGGING_PREFIX/rotationMaxAcceleration", 360.0)
 
 private val linearLimits
     get() = Constraints(linearMaxVelocity.get(), linearMaxAcceleration.get())
@@ -40,6 +38,7 @@ private val rotationalLimits
             rotationalMaxAcceleration.get()
         )
 
+@LoggedOutput("X controller", LOGGING_PREFIX)
 var xController =
     ProfiledPIDController(
         xGains.kP.get(),
@@ -47,6 +46,8 @@ var xController =
         xGains.kD.get(),
         linearLimits
     )
+
+@LoggedOutput("Y controller", LOGGING_PREFIX)
 var yController =
     ProfiledPIDController(
         yGains.kP.get(),
@@ -55,6 +56,7 @@ var yController =
         linearLimits
     )
 
+@LoggedOutput("ϴ controller", LOGGING_PREFIX)
 var thetaController =
     ProfiledPIDController(
             thetaGains.kP.get(),
@@ -63,35 +65,12 @@ var thetaController =
             rotationalLimits
         )
         .apply { enableContinuousInput(-Math.PI, Math.PI) }
-val controllers =
-    mapOf(
-            "x" to { xController },
-            "y" to { yController },
-            "theta" to { thetaController }
-        )
-        .apply {
-            forEach { (name, controller) ->
-                LoggedOutputManager.addRunnable {
-                    val controller = controller.invoke()
-                    recordOutput(
-                        "AutoAlignment/Errors/$name",
-                        controller.positionError
-                    )
-                    recordOutput(
-                        "AutoAlignment/Setpoint/$name",
-                        controller.setpoint.position
-                    )
-                    recordOutput(
-                        "AutoAlignment/Goal/$name",
-                        controller.goal.position
-                    )
-                    recordOutput(
-                        "AutoAlignment/AtSetpoint/$name",
-                        controller.atSetpoint()
-                    )
-                }
-            }
-        }
+
+@LoggedOutput(path = LOGGING_PREFIX)
+var atGoal: Trigger =
+    Trigger(xController::atGoal)
+        .and(yController::atGoal)
+        .and(thetaController::atGoal)
 
 fun updateProfiledPIDGains() {
     mapOf(
@@ -110,12 +89,6 @@ fun setGoal(desiredPose: Pose2d) {
     yController.setGoal(desiredPose.y)
     thetaController.setGoal(desiredPose.rotation.radians)
 }
-
-@LoggedOutput(path = "AutoAlignment")
-var atGoal =
-    Trigger(xController::atGoal)
-        .and(yController::atGoal)
-        .and(thetaController::atGoal)
 
 fun resetProfiledPID(botPose: Pose2d, botSpeeds: ChassisSpeeds) {
     xController.reset(botPose.x, botSpeeds.vxMetersPerSecond)
