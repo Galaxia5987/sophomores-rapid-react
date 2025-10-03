@@ -39,7 +39,7 @@ private val rotationalLimits
             rotationalMaxAcceleration.get()
         )
 
-@LoggedOutput(path = LOGGING_PREFIX)
+@LoggedOutput("X controller",LOGGING_PREFIX)
 var xController =
     ProfiledPIDController(
         xGains.kP.get(),
@@ -48,7 +48,7 @@ var xController =
         linearLimits
     )
 
-@LoggedOutput(path = LOGGING_PREFIX)
+@LoggedOutput("Y controller",LOGGING_PREFIX)
 var yController =
     ProfiledPIDController(
         yGains.kP.get(),
@@ -57,7 +57,7 @@ var yController =
         linearLimits
     )
 
-@LoggedOutput(path = LOGGING_PREFIX)
+@LoggedOutput("ϴ controller",LOGGING_PREFIX)
 var thetaController =
     ProfiledPIDController(
         thetaGains.kP.get(),
