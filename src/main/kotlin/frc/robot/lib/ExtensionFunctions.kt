@@ -82,7 +82,3 @@ fun CommandXboxController.setRumble(strength: Double) {
 fun CommandXboxController.rumbleCommand(): Command {
     return Commands.startEnd({ this.setRumble(1.0) }, { this.setRumble(0.0) })
 }
-
-fun Trigger.onTrue(vararg commands: Command) {
-    commands.forEach { this.onTrue(it) }
-}
