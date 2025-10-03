@@ -150,8 +150,8 @@ object Robot : LoggedRobot() {
         // Make sure command is compiled beforehand, otherwise there will be a delay.
         autonomousCommand = RobotContainer.getAutonomousCommand()
 
-        // Schedule the autonomous command
-        autonomousCommand.schedule()
+    // Schedule the autonomous command
+       autonomousCommand.schedule()
     }
 
     /** This function is called periodically during autonomous. */
