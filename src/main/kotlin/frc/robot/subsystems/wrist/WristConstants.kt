@@ -33,7 +33,7 @@ val MOTOR_CONFIG =
     }
 
 enum class Angles(val angle: Angle) {
-    CLOSE(0.rot),
+    CLOSED(0.rot),
     OPEN(15.5.rot),
     DEFAULT(2.4.rot)
 }
