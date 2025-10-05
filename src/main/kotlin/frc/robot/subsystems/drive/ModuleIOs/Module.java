@@ -144,7 +144,7 @@ public class Module {
         return Units.radiansToRotations(inputs.driveVelocityRadPerSec);
     }
 
-    public void updateGains(Gains turnGains, Gains driveGains){
+    public void updateGains(Gains turnGains, Gains driveGains) {
         io.updateGains(turnGains, driveGains);
     }
 }

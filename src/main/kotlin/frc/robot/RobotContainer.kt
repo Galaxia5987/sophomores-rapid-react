@@ -5,7 +5,6 @@ import com.pathplanner.lib.auto.NamedCommands
 import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.wpilibj2.command.Command
-import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine
 import frc.robot.autonomous.paths.deploy.pathplanner.AC1SRP
@@ -75,16 +74,14 @@ object RobotContainer {
     }
 
     private fun configureButtonBindings() {
-// reset swerve
+        // reset swerve
         driverController
             .options()
             .onTrue(
-                    drive.runOnce{
-                        drive.resetGyro(
-                            Rotation2d.kZero
-                        )
-                    }.ignoringDisable(true),
-                )
+                drive
+                    .runOnce { drive.resetGyro(Rotation2d.kZero) }
+                    .ignoringDisable(true),
+            )
 
         driverController.circle().onTrue(setIntakeing())
         driverController.square().onTrue(wrist.setAngle(WristAngles.UP.angle))

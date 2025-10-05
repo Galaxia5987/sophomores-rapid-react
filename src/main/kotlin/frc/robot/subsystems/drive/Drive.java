@@ -39,6 +39,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
@@ -147,19 +148,43 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer {
                 new SwerveModulePosition()
             };
 
-    private final LoggedNetworkNumber loggedDriveKs = new LoggedNetworkNumber("/Tuning/Drive/Drive/kS", TunerConstants.driveGains.kS);
-    private final LoggedNetworkNumber loggedDriveKv = new LoggedNetworkNumber("/Tuning/Drive/Drive/kV", TunerConstants.driveGains.kV);
-    private final LoggedNetworkNumber loggedDriveKa = new LoggedNetworkNumber("/Tuning/Drive/Drive/kA", TunerConstants.driveGains.kA);
-    private final LoggedNetworkNumber loggedDriveKp = new LoggedNetworkNumber("/Tuning/Drive/Drive/kP", TunerConstants.driveGains.kP);
-    private final LoggedNetworkNumber loggedDriveKi = new LoggedNetworkNumber("/Tuning/Drive/Drive/kI", TunerConstants.driveGains.kI);
-    private final LoggedNetworkNumber loggedDriveKd = new LoggedNetworkNumber("/Tuning/Drive/Drive/kD", TunerConstants.driveGains.kD);
+    private final LoggedNetworkNumber loggedDriveKs =
+            new LoggedNetworkNumber("/Tuning/Drive/Drive/kS", TunerConstants.driveGains.kS);
+    private final LoggedNetworkNumber loggedDriveKv =
+            new LoggedNetworkNumber("/Tuning/Drive/Drive/kV", TunerConstants.driveGains.kV);
+    private final LoggedNetworkNumber loggedDriveKa =
+            new LoggedNetworkNumber("/Tuning/Drive/Drive/kA", TunerConstants.driveGains.kA);
+    private final LoggedNetworkNumber loggedDriveKp =
+            new LoggedNetworkNumber("/Tuning/Drive/Drive/kP", TunerConstants.driveGains.kP);
+    private final LoggedNetworkNumber loggedDriveKi =
+            new LoggedNetworkNumber("/Tuning/Drive/Drive/kI", TunerConstants.driveGains.kI);
+    private final LoggedNetworkNumber loggedDriveKd =
+            new LoggedNetworkNumber("/Tuning/Drive/Drive/kD", TunerConstants.driveGains.kD);
 
-    private final LoggedNetworkNumber loggedTurnKs = new LoggedNetworkNumber("/Tuning/Drive/Turn/kS", TunerConstants.steerGains.kS);
-    private final LoggedNetworkNumber loggedTurnKv = new LoggedNetworkNumber("/Tuning/Drive/Turn/kV", TunerConstants.steerGains.kV);
-    private final LoggedNetworkNumber loggedTurnKa = new LoggedNetworkNumber("/Tuning/Drive/Turn/kA", TunerConstants.steerGains.kA);
-    private final LoggedNetworkNumber loggedTurnKp = new LoggedNetworkNumber("/Tuning/Drive/Turn/kP", TunerConstants.steerGains.kP);
-    private final LoggedNetworkNumber loggedTurnKi = new LoggedNetworkNumber("/Tuning/Drive/Turn/kI", TunerConstants.steerGains.kI);
-    private final LoggedNetworkNumber loggedTurnKd = new LoggedNetworkNumber("/Tuning/Drive/Turn/kD", TunerConstants.steerGains.kD);
+    private final LoggedNetworkNumber loggedTurnKs =
+            new LoggedNetworkNumber("/Tuning/Drive/Turn/kS", TunerConstants.steerGains.kS);
+    private final LoggedNetworkNumber loggedTurnKv =
+            new LoggedNetworkNumber("/Tuning/Drive/Turn/kV", TunerConstants.steerGains.kV);
+    private final LoggedNetworkNumber loggedTurnKa =
+            new LoggedNetworkNumber("/Tuning/Drive/Turn/kA", TunerConstants.steerGains.kA);
+    private final LoggedNetworkNumber loggedTurnKp =
+            new LoggedNetworkNumber("/Tuning/Drive/Turn/kP", TunerConstants.steerGains.kP);
+    private final LoggedNetworkNumber loggedTurnKi =
+            new LoggedNetworkNumber("/Tuning/Drive/Turn/kI", TunerConstants.steerGains.kI);
+    private final LoggedNetworkNumber loggedTurnKd =
+            new LoggedNetworkNumber("/Tuning/Drive/Turn/kD", TunerConstants.steerGains.kD);
+    private final LoggedNetworkNumber loggedTurnMotionMagicCruiseVelocity =
+            new LoggedNetworkNumber(
+                    "/Tuning/Drive/Turn/MotionMagic/cruiseVelocity",
+                    TunerConstants.motionMagicSteerGains.MotionMagicCruiseVelocity);
+    private final LoggedNetworkNumber loggedTurnMotionMagicAcceleration =
+            new LoggedNetworkNumber(
+                    "/Tuning/Drive/Turn/MotionMagic/acceleration",
+                    TunerConstants.motionMagicSteerGains.MotionMagicAcceleration);
+    private final LoggedNetworkNumber loggedTurnMotionMagicJerk =
+            new LoggedNetworkNumber(
+                    "/Tuning/Drive/Turn/MotionMagic/jerk",
+                    TunerConstants.motionMagicSteerGains.MotionMagicJerk);
 
     public final Gains driveGains = new Gains();
     public final Gains turnGains = new Gains();
@@ -322,7 +347,6 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer {
         // Update gyro alert
         gyroDisconnectedAlert.set(
                 !gyroInputs.connected && ConstantsKt.getCURRENT_MODE() != Mode.SIM);
-
     }
 
     private void updateGainsObject() {
@@ -339,6 +363,17 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer {
         turnGains.setKP(loggedTurnKp.get());
         turnGains.setKI(loggedTurnKi.get());
         turnGains.setKD(loggedTurnKd.get());
+
+        turnGains
+                .getMotionMagicGains()
+                .setCruiseVelocity(
+                        Units.RotationsPerSecond.of(loggedTurnMotionMagicCruiseVelocity.get()));
+        turnGains
+                .getMotionMagicGains()
+                .setAcceleration(
+                        Units.RotationsPerSecond.per(Second)
+                                .of(loggedTurnMotionMagicAcceleration.get()));
+        turnGains.getMotionMagicGains().setJerk(loggedTurnMotionMagicJerk.get());
     }
 
     /**

@@ -22,13 +22,23 @@ public class TunerConstants {
     // output type specified by SwerveModuleConstants.SteerMotorClosedLoopOutput
     public static final Slot0Configs steerGains =
             new Slot0Configs()
-                    .withKP(120).withKI(0).withKD(0.5)
-                    .withKS(0.1).withKV(1.5).withKA(0)
+                    .withKP(200)
+                    .withKI(0)
+                    .withKD(0.5)
+                    .withKS(0.1)
+                    .withKV(1.5)
+                    .withKA(0)
                     .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign);
+
+    public static final MotionMagicConfigs motionMagicSteerGains =
+            new MotionMagicConfigs()
+                    .withMotionMagicCruiseVelocity(80)
+                    .withMotionMagicAcceleration(160)
+                    .withMotionMagicJerk(1600);
     // When using closed-loop control, the drive motor uses the control
     // output type specified by SwerveModuleConstants.DriveMotorClosedLoopOutput
     public static final Slot0Configs driveGains =
-            new Slot0Configs().withKP(1.2).withKI(0).withKD(0).withKS(0.21265).withKV(0.89309);
+            new Slot0Configs().withKP(1.4).withKI(0).withKD(0).withKS(0.21265).withKV(0.89309);
 
     // The closed-loop output type to use for the steer motors;
     // This affects the PID/FF gains for the steer motors
@@ -78,7 +88,7 @@ public class TunerConstants {
 
     // Theoretical free speed (m/s) at 12 V applied output;
     // This needs to be tuned to your individual robot
-    public static final LinearVelocity kSpeedAt12Volts = MetersPerSecond.of(4.69);
+    public static final LinearVelocity kSpeedAt12Volts = MetersPerSecond.of(4.35);
 
     // Every 1 rotation of the azimuth results in kCoupleRatio drive motor turns;
     // This may need to be tuned to your individual robot
@@ -134,8 +144,10 @@ public class TunerConstants {
                             .withSteerFrictionVoltage(kSteerFrictionVoltage)
                             .withDriveFrictionVoltage(kDriveFrictionVoltage);
 
-    private static final double[] absoluteEncoderOffsets = new double[]{-2.3239808936467465,-0.8958447801252144,0.22856313739496054,-1.3913205746122765};
-
+    private static final double[] absoluteEncoderOffsets =
+            new double[] {
+                -2.3239808936467465, -0.8958447801252144, 0.22856313739496054, -1.3913205746122765
+            };
 
     // Front Left
     private static final int kFrontLeftDriveMotorId = 2;
@@ -147,7 +159,6 @@ public class TunerConstants {
 
     private static final Distance kFrontLeftXPos = Millimeters.of(247.485);
     private static final Distance kFrontLeftYPos = Millimeters.of(247.485);
-
 
     // Front Right
     private static final int kFrontRightDriveMotorId = 4;
