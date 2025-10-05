@@ -36,8 +36,8 @@ data class Gains(
 }
 
 data class MotionMagicGains(
-    var cruiseVelocity: AngularVelocity = 0.0.rps,
-    var acceleration: AngularAcceleration = 0.0.rps_squared,
+    var cruiseVelocity: AngularVelocity = 0.rps,
+    var acceleration: AngularAcceleration = 0.rps_squared,
     var jerk: Double = 0.0
 ) {
     fun toMotionMagicConfig() =
