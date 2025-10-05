@@ -61,7 +61,7 @@ class UniversalTalonFX(
      */
     fun setControl(control: ControlRequest) = motorIO.setRequest(control)
 
-    fun reset(angle: Angle = 0.0.deg) = motorIO.resetInternalEncoder(angle)
+    fun reset(angle: Angle = 0.deg) = motorIO.resetInternalEncoder(angle)
 
     fun updateInputs() = motorIO.updateInputs()
 }
