@@ -11,7 +11,10 @@ import frc.robot.lib.extensions.deg
 import frc.robot.lib.extensions.enableAutoLogOutputFor
 import frc.robot.lib.extensions.get
 import frc.robot.lib.extensions.m
+import frc.robot.lib.extensions.sec
+import frc.robot.lib.extensions.volts
 import frc.robot.lib.math.interpolation.InterpolatingDouble
+import frc.robot.lib.sysid.sysId
 import frc.robot.robotstate.bindRobotCommands
 import frc.robot.robotstate.robotDistanceFromHub
 import frc.robot.robotstate.setIntakeing
@@ -121,6 +124,10 @@ object RobotContainer {
             "Drive SysId (Dynamic Reverse)",
             drive.sysIdDynamic(SysIdRoutine.Direction.kReverse)
         )
+        autoChooser.addOption("Turret SysId", turret.sysId()
+            .withForwardRoutineConfig(1.volts.per(sec), 2.volts, 2.2.sec)
+            .withBackwardRoutineConfig(1.volts.per(sec), 2.volts, 2.2.sec)
+            .command())
     }
 
     fun resetSimulationField() {

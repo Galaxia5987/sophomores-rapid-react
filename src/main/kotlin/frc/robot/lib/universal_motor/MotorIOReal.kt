@@ -39,6 +39,10 @@ class MotorIOReal(
         motor.setPosition(angle)
     }
 
+    override fun applyConfiguration(configuration: TalonFXConfiguration) {
+        motor.configurator.apply(configuration)
+    }
+
     override fun updateInputs() {
         inputs.current = motor.supplyCurrent.value
         inputs.position = motor.position.value

@@ -4,6 +4,7 @@ import com.ctre.phoenix6.configs.CurrentLimitsConfigs
 import com.ctre.phoenix6.configs.FeedbackConfigs
 import com.ctre.phoenix6.configs.MotionMagicConfigs
 import com.ctre.phoenix6.configs.MotorOutputConfigs
+import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs
 import com.ctre.phoenix6.configs.TalonFXConfiguration
 import com.ctre.phoenix6.signals.InvertedValue
 import com.ctre.phoenix6.signals.NeutralModeValue
@@ -25,9 +26,15 @@ val MOTOR_CONFIG: TalonFXConfiguration =
         MotorOutput =
             MotorOutputConfigs().apply {
                 NeutralMode = NeutralModeValue.Brake
-                Inverted = InvertedValue.CounterClockwise_Positive
+                Inverted = InvertedValue.Clockwise_Positive
             }
-        Feedback = FeedbackConfigs().apply { RotorToSensorRatio = 1.0 }
+        SoftwareLimitSwitch = SoftwareLimitSwitchConfigs().apply {
+            ForwardSoftLimitEnable = true
+            ForwardSoftLimitThreshold = 0.6564941406250001
+            ReverseSoftLimitEnable = true
+            ReverseSoftLimitThreshold = 0.005
+        }
+        Feedback = FeedbackConfigs().apply { SensorToMechanismRatio = 56.0 }
         Slot0 = GAINS.toSlotConfig()
         CurrentLimits =
             CurrentLimitsConfigs().apply {
