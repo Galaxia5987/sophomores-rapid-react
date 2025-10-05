@@ -7,6 +7,7 @@ import edu.wpi.first.units.measure.Distance
 import edu.wpi.first.units.measure.MomentOfInertia
 import frc.robot.CURRENT_MODE
 import frc.robot.Mode
+import frc.robot.lib.extensions.deg
 import frc.robot.lib.extensions.kg2m
 import frc.robot.lib.extensions.m
 
@@ -60,7 +61,7 @@ class UniversalTalonFX(
      */
     fun setControl(control: ControlRequest) = motorIO.setRequest(control)
 
-    fun reset(angle: Angle) = motorIO.resetInternalEncoder(angle)
+    fun reset(angle: Angle = 0.0.deg) = motorIO.resetInternalEncoder(angle)
 
     fun updateInputs() = motorIO.updateInputs()
 }
