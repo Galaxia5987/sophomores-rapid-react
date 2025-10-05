@@ -73,6 +73,9 @@ object RobotContainer {
         // Switch to X pattern when X button is pressed
 
         driverController.circle().onTrue(setIntakeing())
+        driverController.povUp().onTrue(wrist.open())
+        driverController.povDown().onTrue(wrist.close())
+        driverController.povRight().onTrue(wrist.default())
         // Reset gyro / odometry
         val resetOdometry =
             if (CURRENT_MODE == Mode.SIM)
