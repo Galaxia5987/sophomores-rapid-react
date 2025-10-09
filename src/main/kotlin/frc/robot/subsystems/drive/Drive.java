@@ -41,6 +41,7 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -53,6 +54,7 @@ import frc.robot.ConstantsKt;
 import frc.robot.Mode;
 import frc.robot.lib.Gains;
 import frc.robot.lib.LocalADStarAK;
+import frc.robot.lib.sysid.SysIdable;
 import frc.robot.subsystems.drive.ModuleIOs.Module;
 import frc.robot.subsystems.drive.ModuleIOs.ModuleIO;
 import frc.robot.subsystems.drive.gyroIOs.GyroIO;
@@ -64,11 +66,12 @@ import java.util.function.Consumer;
 import org.ironmaple.simulation.drivesims.COTS;
 import org.ironmaple.simulation.drivesims.configs.DriveTrainSimulationConfig;
 import org.ironmaple.simulation.drivesims.configs.SwerveModuleSimulationConfig;
+import org.jetbrains.annotations.NotNull;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
-public class Drive extends SubsystemBase implements Vision.VisionConsumer {
+public class Drive extends SubsystemBase implements Vision.VisionConsumer, SysIdable {
     // TunerConstants doesn't include these constants, so they are declared locally
     public static final double ODOMETRY_FREQUENCY =
             new CANBus(TunerConstants.DrivetrainConstants.CANBusName).isNetworkFD() ? 250.0 : 100.0;
@@ -133,7 +136,6 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer {
     private final GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
     private final Module[] modules = new Module[4]; // FL, FR, BL, BR
     private final SysIdRoutine sysId;
-    private final SysIdRoutine turnSysId;
     private final Alert gyroDisconnectedAlert =
             new Alert("Disconnected gyro, using kinematics as fallback.", AlertType.kError);
 
@@ -261,19 +263,6 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer {
                                         Logger.recordOutput("Drive/SysIdState", state.toString())),
                         new SysIdRoutine.Mechanism(
                                 (voltage) -> runCharacterization(voltage.in(Volts)), null, this));
-        turnSysId =
-                new SysIdRoutine(
-                        new SysIdRoutine.Config(
-                                null,
-                                null,
-                                null,
-                                (state) ->
-                                        Logger.recordOutput(
-                                                "Drive/TurnSysIdState", state.toString())),
-                        new SysIdRoutine.Mechanism(
-                                (voltage) -> runTurnCharacterization(voltage.in(Volts)),
-                                null,
-                                this));
     }
 
     @Override
@@ -466,37 +455,6 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer {
         return states;
     }
 
-    /** NOTE: DO NOT USE WITH TorqueCurrentFOC */
-    public void runTurnCharacterization(double output) {
-        for (int i = 0; i < 4; i++) {
-            modules[i].runTurnCharacterization(output);
-        }
-    }
-
-    /**
-     * Returns a command to run a quasistatic test in the specified direction on the turn modules.
-     */
-    public Command turnSysIdQuasistatic(SysIdRoutine.Direction direction) {
-        return run(() -> runTurnCharacterization(0.0))
-                .withTimeout(1.0)
-                .andThen(turnSysId.quasistatic(direction));
-    }
-
-    /** Returns a command to run a dynamic test in the specified direction on the turn modules. */
-    public Command turnSysIdDynamic(SysIdRoutine.Direction direction) {
-        return run(() -> runTurnCharacterization(0.0))
-                .withTimeout(1.0)
-                .andThen(turnSysId.dynamic(direction));
-    }
-
-    public Command runAllTurnSysID() {
-        return Commands.sequence(
-                turnSysIdQuasistatic(SysIdRoutine.Direction.kForward),
-                turnSysIdQuasistatic(SysIdRoutine.Direction.kReverse),
-                turnSysIdDynamic(SysIdRoutine.Direction.kForward),
-                turnSysIdDynamic(SysIdRoutine.Direction.kReverse));
-    }
-
     /** Returns the measured chassis speeds of the robot. */
     @AutoLogOutput(key = "SwerveChassisSpeeds/Measured")
     private ChassisSpeeds getChassisSpeeds() {
@@ -569,5 +527,12 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer {
             new Translation2d(
                     TunerConstants.BackRight.LocationX, TunerConstants.BackRight.LocationY)
         };
+    }
+
+    @Override
+    public void setVoltage(@NotNull Voltage voltage) {
+        for (int i = 0; i < 4; i++) {
+            modules[i].runCharacterization(voltage.in(Volts));
+        }
     }
 }
