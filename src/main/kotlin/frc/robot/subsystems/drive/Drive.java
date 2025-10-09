@@ -457,8 +457,14 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer, SysId
 
     /** Returns the measured chassis speeds of the robot. */
     @AutoLogOutput(key = "SwerveChassisSpeeds/Measured")
-    private ChassisSpeeds getChassisSpeeds() {
+    public ChassisSpeeds getChassisSpeeds() {
         return kinematics.toChassisSpeeds(getModuleStates());
+    }
+
+    @AutoLogOutput(key = "SwerveChassisSpeeds/MeasuredFieldOriented")
+    public ChassisSpeeds getFieldOrientedSpeeds() {
+        return ChassisSpeeds.fromRobotRelativeSpeeds(
+                kinematics.toChassisSpeeds(getModuleStates()), getRotation());
     }
 
     /** Returns the position of each module in radians. */
