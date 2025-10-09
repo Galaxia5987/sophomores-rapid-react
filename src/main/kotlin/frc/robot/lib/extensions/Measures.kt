@@ -88,7 +88,7 @@ val rps
     get() = Units.RotationsPerSecond
 
 val rps_squared
-    get() = Units.RotationsPerSecond / Second
+    get() = Units.RotationsPerSecond.per(sec)
 
 val rad_ps
     get() = Units.RadiansPerSecond
