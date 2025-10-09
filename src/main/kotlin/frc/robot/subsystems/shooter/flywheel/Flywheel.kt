@@ -28,7 +28,7 @@ class Flywheel : SubsystemBase(), SysIdable {
     private var velocitySetpoint = 0.rps
 
     init {
-        auxMotor.setControl(Follower(MAIN_MOTOR_PORT, false))
+        auxMotor.setControl(Follower(MAIN_MOTOR_PORT, true))
     }
 
     val isAtSetVelocity =
