@@ -88,7 +88,7 @@ val rps
     get() = Units.RotationsPerSecond
 
 val rps_squared
-    get() = Units.RotationsPerSecond.per(Units.Second)
+    get() = Units.RotationsPerSecond / Second
 
 fun LinearVelocity.toAngular(
     diameter: Distance,
