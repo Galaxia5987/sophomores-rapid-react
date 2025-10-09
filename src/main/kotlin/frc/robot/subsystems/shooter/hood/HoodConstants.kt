@@ -12,6 +12,7 @@ import frc.robot.lib.Gains
 import frc.robot.lib.extensions.amps
 import frc.robot.lib.extensions.deg
 import frc.robot.lib.extensions.get
+import frc.robot.lib.extensions.rot
 import frc.robot.lib.math.interpolation.InterpolatingDoubleMap
 import frc.robot.lib.shooting.ShootingTableReader
 
@@ -28,9 +29,11 @@ val STATOR_LIMIT = 30.amps
 val SUPPLY_LIMIT: Current = STATOR_LIMIT * 2.0
 val PID_GAINS = Gains(kP = 1.0)
 
+val ENCODER_OFFSET = 0.81.rot
+
 const val ENCODER_ID = 10
 const val ENCODER_TO_MECHANISM_RATIO = 1.0
-const val MOTOR_TO_MECHANISM_RATIO = 1.0
+const val MOTOR_TO_MECHANISM_RATIO = 59.5
 const val MOTOR_TO_SENSOR_RATIO = MOTOR_TO_MECHANISM_RATIO
 
 val MOTOR_CONFIG =
@@ -57,5 +60,5 @@ val ENCODER_CONFIG =
     CANcoderConfiguration().apply {
         MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive
         MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.9
-        MagnetSensor.MagnetOffset = 0.0
+        MagnetSensor.MagnetOffset = -ENCODER_OFFSET[rot]
     }

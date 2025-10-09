@@ -31,7 +31,8 @@ class Hood : SubsystemBase(), SysIdable {
         UniversalTalonFX(
             MOTOR_ID,
             config = MOTOR_CONFIG,
-            gearRatio = MOTOR_TO_MECHANISM_RATIO
+            gearRatio = MOTOR_TO_MECHANISM_RATIO,
+            absoluteEncoderOffset = ENCODER_OFFSET
         )
 
     val inputs
