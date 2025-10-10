@@ -5,6 +5,8 @@ import com.ctre.phoenix6.configs.Slot0Configs
 import edu.wpi.first.units.measure.AngularAcceleration
 import edu.wpi.first.units.measure.AngularVelocity
 import frc.robot.lib.extensions.get
+import frc.robot.lib.extensions.rad_ps
+import frc.robot.lib.extensions.rad_ps_ps
 import frc.robot.lib.extensions.rps
 import frc.robot.lib.extensions.rps_squared
 import kotlin.apply
@@ -39,7 +41,7 @@ data class Gains(
 data class MotionMagicGains(
     var cruiseVelocity: AngularVelocity = 0.rps,
     var acceleration: AngularAcceleration = 0.rps_squared,
-    var jerk: Double = 0.0
+    var jerk: Double = 0.0 // m/s³
 ) {
     fun toMotionMagicConfig() =
         MotionMagicConfigs().apply {
@@ -60,6 +62,9 @@ class LoggedNetworkGains(
     kV: Double = 0.0,
     kA: Double = 0.0,
     kG: Double = 0.0,
+    cruiseVelocity: AngularVelocity = 0.rps,
+    acceleration: AngularAcceleration = 0.rps_squared,
+    jerk: Double = 0.0, // m/s³
     key: String =
         (Throwable().stackTrace[1]?.fileName?.substringBeforeLast('.') + ""),
 ) {
@@ -71,6 +76,17 @@ class LoggedNetworkGains(
     val kV: LoggedNetworkNumber = LoggedNetworkNumber("$path/kV", kV)
     val kA: LoggedNetworkNumber = LoggedNetworkNumber("$path/kA", kA)
     val kG: LoggedNetworkNumber = LoggedNetworkNumber("$path/kG", kG)
+    var jerk: LoggedNetworkNumber? = null
+    var cruiseVelocity: LoggedNetworkNumber? = null
+    var acceleration: LoggedNetworkNumber? = null
+
+    init {
+        if (jerk != 0.0 || cruiseVelocity[rad_ps] != 0.0 || acceleration[rad_ps_ps] != 0.0) {
+            this@LoggedNetworkGains.jerk = LoggedNetworkNumber("$path/jerk", jerk)
+            this@LoggedNetworkGains.cruiseVelocity = LoggedNetworkNumber("$path/cruiseVelocity", cruiseVelocity[rad_ps])
+            this@LoggedNetworkGains.acceleration = LoggedNetworkNumber("$path/acceleration", acceleration[rad_ps_ps])
+        }
+    }
 
     fun toSlotConfig() =
         Slot0Configs().apply {
@@ -81,5 +97,14 @@ class LoggedNetworkGains(
             kS = this@LoggedNetworkGains.kS.get()
             kV = this@LoggedNetworkGains.kV.get()
             kG = this@LoggedNetworkGains.kG.get()
+        }
+
+    fun toMotionMagicConfig() =
+        MotionMagicConfigs().apply {
+            MotionMagicCruiseVelocity =
+                this@LoggedNetworkGains.cruiseVelocity?.get() ?: 0.0
+            MotionMagicAcceleration =
+                this@LoggedNetworkGains.acceleration?.get() ?: 0.0
+            MotionMagicJerk = this@LoggedNetworkGains.jerk?.get() ?: 0.0
         }
 }
