@@ -1,6 +1,7 @@
 package frc.robot.subsystems.shooter.hood
 
 import com.ctre.phoenix6.controls.PositionTorqueCurrentFOC
+import com.ctre.phoenix6.controls.PositionVoltage
 import com.ctre.phoenix6.controls.VoltageOut
 import com.ctre.phoenix6.hardware.CANcoder
 import edu.wpi.first.units.measure.Angle
@@ -38,7 +39,7 @@ class Hood : SubsystemBase(), SysIdable {
     val inputs
         get() = motor.inputs
 
-    private val positionRequest = PositionTorqueCurrentFOC(0.0)
+    private val positionRequest = PositionVoltage(0.0)
     private val voltageRequest = VoltageOut(0.0)
 
     private val encoder = CANcoder(ENCODER_ID)

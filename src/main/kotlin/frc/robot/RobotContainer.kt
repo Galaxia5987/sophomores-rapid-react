@@ -14,7 +14,10 @@ import frc.robot.lib.extensions.deg
 import frc.robot.lib.extensions.enableAutoLogOutputFor
 import frc.robot.lib.extensions.get
 import frc.robot.lib.extensions.m
+import frc.robot.lib.extensions.sec
+import frc.robot.lib.extensions.volts
 import frc.robot.lib.math.interpolation.InterpolatingDouble
+import frc.robot.lib.sysid.sysId
 import frc.robot.robotstate.bindRobotCommands
 import frc.robot.robotstate.robotDistanceFromHub
 import frc.robot.robotstate.setIntakeing
@@ -65,12 +68,12 @@ object RobotContainer {
                 { -driverController.leftY },
                 { -driverController.leftY * 0.8 }
             )
-        turret.defaultCommand = turret.setAngle { turretAngleToHub }
-        hood.defaultCommand =
-            hood.setAngle {
-                hoodAngle.value = robotDistanceFromHub[m]
-                HOOD_ANGLE_BY_DISTANCE.getInterpolated(hoodAngle).value.deg
-            }
+//        turret.defaultCommand = turret.setAngle { turretAngleToHub }
+//        hood.defaultCommand =
+//            hood.setAngle {
+//                hoodAngle.value = robotDistanceFromHub[m]
+//                HOOD_ANGLE_BY_DISTANCE.getInterpolated(hoodAngle).value.deg
+//            }
     }
 
     private fun configureButtonBindings() {
@@ -131,6 +134,10 @@ object RobotContainer {
         autoChooser.addDefaultOption("BRP2", BRP2())
         autoChooser.addOption("AC1SRP", AC1SRP())
         autoChooser.addOption("CC2C3", CC2C3())
+        autoChooser.addOption("hoodSysId", hood.sysId()
+            .withForwardRoutineConfig(1.8.volts.per(sec), 1.volts, 0.75.sec)
+            .withBackwardRoutineConfig(1.volts.per(sec), 0.8.volts, 0.75.sec)
+            .command())
     }
 
     fun resetSimulationField() {
