@@ -21,6 +21,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import frc.robot.lib.Gains;
+import frc.robot.lib.LoggedNetworkGains;
 import org.littletonrobotics.junction.Logger;
 
 public class Module {
@@ -144,7 +145,7 @@ public class Module {
         return Units.radiansToRotations(inputs.driveVelocityRadPerSec);
     }
 
-    public void updateGains(Gains turnGains, Gains driveGains) {
+    public void updateGains(LoggedNetworkGains turnGains, LoggedNetworkGains driveGains) {
         io.updateGains(turnGains, driveGains);
     }
 }

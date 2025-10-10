@@ -54,6 +54,7 @@ import frc.robot.ConstantsKt;
 import frc.robot.Mode;
 import frc.robot.lib.Gains;
 import frc.robot.lib.LocalADStarAK;
+import frc.robot.lib.LoggedNetworkGains;
 import frc.robot.lib.sysid.SysIdable;
 import frc.robot.subsystems.drive.ModuleIOs.Module;
 import frc.robot.subsystems.drive.ModuleIOs.ModuleIO;
@@ -150,46 +151,36 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer, SysId
                 new SwerveModulePosition()
             };
 
-    private final LoggedNetworkNumber loggedDriveKs =
-            new LoggedNetworkNumber("/Tuning/Drive/Drive/kS", TunerConstants.driveGains.kS);
-    private final LoggedNetworkNumber loggedDriveKv =
-            new LoggedNetworkNumber("/Tuning/Drive/Drive/kV", TunerConstants.driveGains.kV);
-    private final LoggedNetworkNumber loggedDriveKa =
-            new LoggedNetworkNumber("/Tuning/Drive/Drive/kA", TunerConstants.driveGains.kA);
-    private final LoggedNetworkNumber loggedDriveKp =
-            new LoggedNetworkNumber("/Tuning/Drive/Drive/kP", TunerConstants.driveGains.kP);
-    private final LoggedNetworkNumber loggedDriveKi =
-            new LoggedNetworkNumber("/Tuning/Drive/Drive/kI", TunerConstants.driveGains.kI);
-    private final LoggedNetworkNumber loggedDriveKd =
-            new LoggedNetworkNumber("/Tuning/Drive/Drive/kD", TunerConstants.driveGains.kD);
+    private final LoggedNetworkGains driveGains = new LoggedNetworkGains(
+            "Drive",
+            TunerConstants.driveGains.kP,
+            TunerConstants.driveGains.kI,
+            TunerConstants.driveGains.kD,
+            TunerConstants.driveGains.kS,
+            TunerConstants.driveGains.kV,
+            TunerConstants.driveGains.kA,
+            TunerConstants.driveGains.kG,
+            RadiansPerSecond.of(TunerConstants.motionMagicSteerGains.MotionMagicCruiseVelocity),
+            RadiansPerSecondPerSecond.of(TunerConstants.motionMagicSteerGains.MotionMagicAcceleration),
+            TunerConstants.motionMagicSteerGains.MotionMagicJerk,
+            "Drive"
+            );
 
-    private final LoggedNetworkNumber loggedTurnKs =
-            new LoggedNetworkNumber("/Tuning/Drive/Turn/kS", TunerConstants.steerGains.kS);
-    private final LoggedNetworkNumber loggedTurnKv =
-            new LoggedNetworkNumber("/Tuning/Drive/Turn/kV", TunerConstants.steerGains.kV);
-    private final LoggedNetworkNumber loggedTurnKa =
-            new LoggedNetworkNumber("/Tuning/Drive/Turn/kA", TunerConstants.steerGains.kA);
-    private final LoggedNetworkNumber loggedTurnKp =
-            new LoggedNetworkNumber("/Tuning/Drive/Turn/kP", TunerConstants.steerGains.kP);
-    private final LoggedNetworkNumber loggedTurnKi =
-            new LoggedNetworkNumber("/Tuning/Drive/Turn/kI", TunerConstants.steerGains.kI);
-    private final LoggedNetworkNumber loggedTurnKd =
-            new LoggedNetworkNumber("/Tuning/Drive/Turn/kD", TunerConstants.steerGains.kD);
-    private final LoggedNetworkNumber loggedTurnMotionMagicCruiseVelocity =
-            new LoggedNetworkNumber(
-                    "/Tuning/Drive/Turn/MotionMagic/cruiseVelocity",
-                    TunerConstants.motionMagicSteerGains.MotionMagicCruiseVelocity);
-    private final LoggedNetworkNumber loggedTurnMotionMagicAcceleration =
-            new LoggedNetworkNumber(
-                    "/Tuning/Drive/Turn/MotionMagic/acceleration",
-                    TunerConstants.motionMagicSteerGains.MotionMagicAcceleration);
-    private final LoggedNetworkNumber loggedTurnMotionMagicJerk =
-            new LoggedNetworkNumber(
-                    "/Tuning/Drive/Turn/MotionMagic/jerk",
-                    TunerConstants.motionMagicSteerGains.MotionMagicJerk);
+    private final LoggedNetworkGains turnGains = new LoggedNetworkGains(
+            "Turn",
+            TunerConstants.driveGains.kP,
+            TunerConstants.driveGains.kI,
+            TunerConstants.driveGains.kD,
+            TunerConstants.driveGains.kS,
+            TunerConstants.driveGains.kV,
+            TunerConstants.driveGains.kA,
+            TunerConstants.driveGains.kG,
+            RadiansPerSecond.of(TunerConstants.motionMagicSteerGains.MotionMagicCruiseVelocity),
+            RadiansPerSecondPerSecond.of(TunerConstants.motionMagicSteerGains.MotionMagicAcceleration),
+            TunerConstants.motionMagicSteerGains.MotionMagicJerk,
+            "Drive"
+            );
 
-    public final Gains driveGains = new Gains();
-    public final Gains turnGains = new Gains();
 
     private final SwerveDrivePoseEstimator poseEstimator =
             new SwerveDrivePoseEstimator(
@@ -280,8 +271,6 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer, SysId
         gyroIO.updateInputs(gyroInputs);
         Logger.processInputs("Drive/Gyro", gyroInputs);
 
-        updateGainsObject();
-
         for (var module : modules) {
             module.updateGains(turnGains, driveGains);
             module.periodic();
@@ -338,32 +327,7 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer, SysId
                 !gyroInputs.connected && ConstantsKt.getCURRENT_MODE() != Mode.SIM);
     }
 
-    private void updateGainsObject() {
-        driveGains.setKS(loggedDriveKs.get());
-        driveGains.setKV(loggedDriveKv.get());
-        driveGains.setKA(loggedDriveKa.get());
-        driveGains.setKP(loggedDriveKp.get());
-        driveGains.setKI(loggedDriveKi.get());
-        driveGains.setKD(loggedDriveKd.get());
 
-        turnGains.setKS(loggedTurnKs.get());
-        turnGains.setKV(loggedTurnKv.get());
-        turnGains.setKA(loggedTurnKa.get());
-        turnGains.setKP(loggedTurnKp.get());
-        turnGains.setKI(loggedTurnKi.get());
-        turnGains.setKD(loggedTurnKd.get());
-
-        turnGains
-                .getMotionMagicGains()
-                .setCruiseVelocity(
-                        Units.RotationsPerSecond.of(loggedTurnMotionMagicCruiseVelocity.get()));
-        turnGains
-                .getMotionMagicGains()
-                .setAcceleration(
-                        Units.RotationsPerSecond.per(Second)
-                                .of(loggedTurnMotionMagicAcceleration.get()));
-        turnGains.getMotionMagicGains().setJerk(loggedTurnMotionMagicJerk.get());
-    }
 
     /**
      * Runs the drive at the desired velocity.
