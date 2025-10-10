@@ -44,11 +44,11 @@ class Wrist : SubsystemBase() {
         motor.setControl(positionRequest.withPosition(angle.angle))
     }
 
-    fun open(): Command = setAngle(Angles.OPEN)
+    fun opening(): Command = setAngle(Angles.OPEN)
 
-    fun close(): Command = setAngle(Angles.CLOSED)
+    fun closing(): Command = setAngle(Angles.CLOSED)
 
-    fun default(): Command = setAngle(Angles.DEFAULT)
+    fun defaulting(): Command = setAngle(Angles.DEFAULT)
 
 
     @AutoLogOutput
