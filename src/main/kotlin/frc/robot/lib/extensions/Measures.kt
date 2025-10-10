@@ -92,6 +92,7 @@ val rps_squared
 
 val rad_ps
     get() = Units.RadiansPerSecond
+val rad_ps_ps get() = Units.RadiansPerSecondPerSecond
 val mps
     get() = Units.MetersPerSecond
 
@@ -195,6 +196,7 @@ val Number.rad_ps: AngularVelocity
     get() = toUnit(Units.RadiansPerSecond::of)
 val Number.radiansPerSecond: AngularVelocity
     get() = toUnit(Units.RadiansPerSecond::of)
+
 // Linear acceleration
 val Number.mps_ps: LinearAcceleration
     get() = toUnit(Units.MetersPerSecondPerSecond::of)
