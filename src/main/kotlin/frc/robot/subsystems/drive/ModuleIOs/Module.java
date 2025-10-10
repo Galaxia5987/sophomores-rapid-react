@@ -20,7 +20,6 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
-import frc.robot.lib.Gains;
 import frc.robot.lib.LoggedNetworkGains;
 import org.littletonrobotics.junction.Logger;
 

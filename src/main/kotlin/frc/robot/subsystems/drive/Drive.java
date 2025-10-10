@@ -13,6 +13,8 @@
 
 package frc.robot.subsystems.drive;
 
+import static edu.wpi.first.units.Units.*;
+
 import com.ctre.phoenix6.CANBus;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.ModuleConfig;
@@ -56,6 +58,9 @@ import frc.robot.subsystems.drive.ModuleIOs.ModuleIO;
 import frc.robot.subsystems.drive.gyroIOs.GyroIO;
 import frc.robot.subsystems.drive.gyroIOs.GyroIOInputsAutoLogged;
 import frc.robot.subsystems.vision.Vision;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.Consumer;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 import org.ironmaple.simulation.drivesims.COTS;
@@ -64,12 +69,6 @@ import org.ironmaple.simulation.drivesims.configs.SwerveModuleSimulationConfig;
 import org.jetbrains.annotations.NotNull;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
-
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-import java.util.function.Consumer;
-
-import static edu.wpi.first.units.Units.*;
 
 public class Drive extends SubsystemBase implements Vision.VisionConsumer, SysIdable {
     // TunerConstants doesn't include these constants, so they are declared locally
@@ -150,36 +149,39 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer, SysId
                 new SwerveModulePosition()
             };
 
-    private final LoggedNetworkGains driveGains = new LoggedNetworkGains(
-            "Drive",
-            TunerConstants.driveGains.kP,
-            TunerConstants.driveGains.kI,
-            TunerConstants.driveGains.kD,
-            TunerConstants.driveGains.kS,
-            TunerConstants.driveGains.kV,
-            TunerConstants.driveGains.kA,
-            TunerConstants.driveGains.kG,
-            RadiansPerSecond.of(TunerConstants.motionMagicSteerGains.MotionMagicCruiseVelocity),
-            RadiansPerSecondPerSecond.of(TunerConstants.motionMagicSteerGains.MotionMagicAcceleration),
-            TunerConstants.motionMagicSteerGains.MotionMagicJerk,
-            "Drive"
-            );
+    private final LoggedNetworkGains driveGains =
+            new LoggedNetworkGains(
+                    "Drive",
+                    TunerConstants.driveGains.kP,
+                    TunerConstants.driveGains.kI,
+                    TunerConstants.driveGains.kD,
+                    TunerConstants.driveGains.kS,
+                    TunerConstants.driveGains.kV,
+                    TunerConstants.driveGains.kA,
+                    TunerConstants.driveGains.kG,
+                    RadiansPerSecond.of(
+                            TunerConstants.motionMagicSteerGains.MotionMagicCruiseVelocity),
+                    RadiansPerSecondPerSecond.of(
+                            TunerConstants.motionMagicSteerGains.MotionMagicAcceleration),
+                    TunerConstants.motionMagicSteerGains.MotionMagicJerk,
+                    "Drive");
 
-    private final LoggedNetworkGains turnGains = new LoggedNetworkGains(
-            "Turn",
-            TunerConstants.driveGains.kP,
-            TunerConstants.driveGains.kI,
-            TunerConstants.driveGains.kD,
-            TunerConstants.driveGains.kS,
-            TunerConstants.driveGains.kV,
-            TunerConstants.driveGains.kA,
-            TunerConstants.driveGains.kG,
-            RadiansPerSecond.of(TunerConstants.motionMagicSteerGains.MotionMagicCruiseVelocity),
-            RadiansPerSecondPerSecond.of(TunerConstants.motionMagicSteerGains.MotionMagicAcceleration),
-            TunerConstants.motionMagicSteerGains.MotionMagicJerk,
-            "Drive"
-            );
-
+    private final LoggedNetworkGains turnGains =
+            new LoggedNetworkGains(
+                    "Turn",
+                    TunerConstants.driveGains.kP,
+                    TunerConstants.driveGains.kI,
+                    TunerConstants.driveGains.kD,
+                    TunerConstants.driveGains.kS,
+                    TunerConstants.driveGains.kV,
+                    TunerConstants.driveGains.kA,
+                    TunerConstants.driveGains.kG,
+                    RadiansPerSecond.of(
+                            TunerConstants.motionMagicSteerGains.MotionMagicCruiseVelocity),
+                    RadiansPerSecondPerSecond.of(
+                            TunerConstants.motionMagicSteerGains.MotionMagicAcceleration),
+                    TunerConstants.motionMagicSteerGains.MotionMagicJerk,
+                    "Drive");
 
     private final SwerveDrivePoseEstimator poseEstimator =
             new SwerveDrivePoseEstimator(
@@ -325,8 +327,6 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer, SysId
         gyroDisconnectedAlert.set(
                 !gyroInputs.connected && ConstantsKt.getCURRENT_MODE() != Mode.SIM);
     }
-
-
 
     /**
      * Runs the drive at the desired velocity.
@@ -504,9 +504,12 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer, SysId
             modules[i].runCharacterization(voltage.in(Volts));
         }
     }
+
     @Override
     public @NotNull Function1<Voltage, Unit> getSetVoltageConsumer() {
-        return (voltage)-> {setVoltage(voltage); return null;
+        return (voltage) -> {
+            setVoltage(voltage);
+            return null;
         };
     }
 }

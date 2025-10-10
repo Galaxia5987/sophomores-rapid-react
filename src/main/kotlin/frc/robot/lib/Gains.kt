@@ -81,10 +81,23 @@ class LoggedNetworkGains(
     var acceleration: LoggedNetworkNumber? = null
 
     init {
-        if (jerk != 0.0 || cruiseVelocity[rad_ps] != 0.0 || acceleration[rad_ps_ps] != 0.0) {
-            this@LoggedNetworkGains.jerk = LoggedNetworkNumber("$path/jerk", jerk)
-            this@LoggedNetworkGains.cruiseVelocity = LoggedNetworkNumber("$path/cruiseVelocity", cruiseVelocity[rad_ps])
-            this@LoggedNetworkGains.acceleration = LoggedNetworkNumber("$path/acceleration", acceleration[rad_ps_ps])
+        if (
+            jerk != 0.0 ||
+                cruiseVelocity[rad_ps] != 0.0 ||
+                acceleration[rad_ps_ps] != 0.0
+        ) {
+            this@LoggedNetworkGains.jerk =
+                LoggedNetworkNumber("$path/jerk", jerk)
+            this@LoggedNetworkGains.cruiseVelocity =
+                LoggedNetworkNumber(
+                    "$path/cruiseVelocity",
+                    cruiseVelocity[rad_ps]
+                )
+            this@LoggedNetworkGains.acceleration =
+                LoggedNetworkNumber(
+                    "$path/acceleration",
+                    acceleration[rad_ps_ps]
+                )
         }
     }
 

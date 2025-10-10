@@ -92,7 +92,8 @@ val rps_squared
 
 val rad_ps
     get() = Units.RadiansPerSecond
-val rad_ps_ps get() = Units.RadiansPerSecondPerSecond
+val rad_ps_ps
+    get() = Units.RadiansPerSecondPerSecond
 val mps
     get() = Units.MetersPerSecond
 
