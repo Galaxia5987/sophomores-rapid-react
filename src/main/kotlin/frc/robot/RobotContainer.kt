@@ -60,8 +60,8 @@ object RobotContainer {
     private fun configureDefaultCommands() {
         drive.defaultCommand =
             DriveCommands.joystickDrive(
+                { driverController.leftY },
                 { driverController.leftX },
-                { -driverController.leftY },
                 { -driverController.rightX * 0.8 }
             )
         turret.defaultCommand = turret.setAngle { turretAngleToHub }
