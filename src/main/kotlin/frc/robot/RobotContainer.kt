@@ -38,7 +38,7 @@ object RobotContainer {
 
     init {
         drive // Ensure Drive is initialized
-        wrist.setAngle(WristAngles.CLOSED)
+        wrist.setAngle(WristAngles.OPEN)
         autoChooser =
             LoggedDashboardChooser(
                 "Auto Choices",
@@ -63,8 +63,8 @@ object RobotContainer {
     private fun configureDefaultCommands() {
         drive.defaultCommand =
             DriveCommands.joystickDrive(
+                { driverController.leftY },
                 { driverController.leftX },
-                { -driverController.leftY },
                 { -driverController.rightX * 0.8 }
             )
         turret.defaultCommand = turret.setAngle { turretAngleToHub }
@@ -72,8 +72,12 @@ object RobotContainer {
     }
 
     private fun configureButtonBindings() {
-
-        // Switch to X pattern when X button is pressed
+        // reset swerve
+        driverController
+            .options()
+            .onTrue(
+                drive.runOnce { drive.resetGyro() }.ignoringDisable(true),
+            )
 
         driverController.circle().onTrue(setIntaking())
         driverController.square().onTrue(wrist.setAngle(WristAngles.OPEN))
@@ -129,6 +133,12 @@ object RobotContainer {
             "Drive SysId (Dynamic Reverse)",
             drive.sysIdDynamic(SysIdRoutine.Direction.kReverse)
         )
+
+        autoChooser.addOption(
+            "swerveFFCharacterization",
+            DriveCommands.feedforwardCharacterization()
+        )
+
         autoChooser.addDefaultOption("BRP2", BRP2())
         autoChooser.addOption("AC1SRP", AC1SRP())
         autoChooser.addOption("CC2C3", CC2C3())

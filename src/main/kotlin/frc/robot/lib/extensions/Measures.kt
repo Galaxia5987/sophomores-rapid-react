@@ -87,8 +87,13 @@ val kg2m
 val rps
     get() = Units.RotationsPerSecond
 
+val rps_squared
+    get() = Units.RotationsPerSecond.per(sec)
+
 val rad_ps
     get() = Units.RadiansPerSecond
+val rad_ps_ps
+    get() = Units.RadiansPerSecondPerSecond
 val mps
     get() = Units.MetersPerSecond
 
@@ -192,6 +197,7 @@ val Number.rad_ps: AngularVelocity
     get() = toUnit(Units.RadiansPerSecond::of)
 val Number.radiansPerSecond: AngularVelocity
     get() = toUnit(Units.RadiansPerSecond::of)
+
 // Linear acceleration
 val Number.mps_ps: LinearAcceleration
     get() = toUnit(Units.MetersPerSecondPerSecond::of)
@@ -199,6 +205,10 @@ val Number.mps_ps: LinearAcceleration
 // Angular acceleration
 val Number.deg_ps_ps: AngularAcceleration
     get() = toUnit(Units.DegreesPerSecondPerSecond::of)
+
+//
+val Number.rps_squared: AngularAcceleration
+    get() = toUnit(Units.RotationsPerSecond::of).per(Units.Second)
 
 // Other
 val Number.sec: Time

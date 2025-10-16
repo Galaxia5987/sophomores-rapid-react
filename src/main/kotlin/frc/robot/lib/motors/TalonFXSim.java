@@ -168,7 +168,6 @@ public class TalonFXSim extends SimMotor {
                 MotionMagicVelocityTorqueCurrentFOC
                 reqMotionMagicVelocityTorqueCurrentFOC)
             setControl(reqMotionMagicVelocityTorqueCurrentFOC);
-        else throw new IllegalArgumentException("Unsupported Control Request!");
     }
 
     public AngularVelocity getVelocity() {
