@@ -12,6 +12,7 @@ import frc.robot.lib.getPose3d
 import frc.robot.lib.getRotation3d
 import frc.robot.lib.getTranslation3d
 import frc.robot.subsystems.drive.Drive
+import frc.robot.subsystems.shooter.hood.Hood
 import org.littletonrobotics.junction.Logger
 
 private val swerveModulePose: Array<Translation2d> =
@@ -99,7 +100,7 @@ val turretPose
 val hoodTranslation
     get() = getTranslation3d(z = 0.083, y = 0.151)
 val hoodRotation
-    get() = getRotation3d(roll = 50.deg + hood.inputs.position)
+    get() = getRotation3d(roll = 50.deg + Hood.inputs.position)
 val hoodPose
     get() = turretPose + Transform3d(hoodTranslation, hoodRotation)
 

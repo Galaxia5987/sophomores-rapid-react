@@ -8,7 +8,12 @@ import frc.robot.hopper
 import frc.robot.lib.extensions.*
 import frc.robot.lib.onTrue
 import frc.robot.robotRelativeBallPoses
-import frc.robot.roller
+import frc.robot.subsystems.roller.Roller
+import frc.robot.subsystems.shooter.flywheel.Flywheel
+import frc.robot.subsystems.shooter.flywheel.STATIC_SHOOT_VELOCITY
+import frc.robot.subsystems.shooter.hood.Hood
+import frc.robot.subsystems.shooter.hood.STATIC_SHOOT_SETPOINT
+import frc.robot.subsystems.shooter.hopper.Hopper
 import frc.robot.turret
 import org.team5987.annotation.LoggedOutput
 
@@ -29,32 +34,45 @@ val atShootingRotation =
     }
 
 val isShooting = Trigger { state == RobotState.SHOOTING }
+val isStaticShooting = Trigger { state == RobotState.STATIC_SHOOTING }
 val isIntaking = Trigger { state == RobotState.INTAKING }
-private val hasFrontBall = roller.hasBall
-val hasBackBall = hopper.hasBall
+private val hasFrontBall = Roller.hasBall
+val hasBackBall = Hopper.hasBall
 private val ballsEmpty = hasFrontBall.or(hasBackBall).negate()
 
 fun bindRobotCommands() {
     isShooting.apply {
-        and(ballsEmpty).onTrue(setIntaking(), stopShooting())
+        and(ballsEmpty.and { !forceShoot })
+            .onTrue(setIntaking(), stopShooting())
         and(!isInDeadZone, atShootingRotation).onTrue(startShooting())
         and((isInDeadZone).or(!atShootingRotation))
             .onTrue(driveToShootingPoint())
     }
     isIntaking.apply {
         and(hasFrontBall, hasBackBall)
-            .onTrue(roller.stop(), hopper.stop(), setShooting())
+            .onTrue(Roller.stop(), Hopper.stop(), setShooting())
         and(hasBackBall, !hasFrontBall).apply {
             onTrue(stopIntaking())
             and(robotRelativeBallPoses::isNotEmpty).apply {
-                onTrue(roller.intake())
-                and(globalBallPoses::isNotEmpty).onTrue(alignToBall())
+                onTrue(Roller.intake())
+                and(globalBallPoses::isNotEmpty)
+                    .and { !forceShoot }
+                    .onTrue(alignToBall(overrideDrive))
             }
         }
         and(ballsEmpty, robotRelativeBallPoses::isNotEmpty).apply {
-            onTrue(roller.intake(), hopper.start())
-            and(globalBallPoses::isNotEmpty).onTrue(alignToBall())
+            onTrue(Roller.intake(), Hopper.start())
+            and(globalBallPoses::isNotEmpty).onTrue(alignToBall(overrideDrive))
         }
+    }
+    isStaticShooting.apply {
+        onTrue(
+            Roller.intake(),
+            Hopper.start(),
+            Hood.setAngle(STATIC_SHOOT_SETPOINT),
+            Flywheel.setVelocity(STATIC_SHOOT_VELOCITY)
+        )
+        onFalse(enableDefaultCommands())
     }
     applyLeds()
 }
@@ -65,3 +83,5 @@ private fun setRobotState(newState: RobotState) =
 fun setShooting() = setRobotState(RobotState.SHOOTING)
 
 fun setIntaking() = setRobotState(RobotState.INTAKING)
+
+fun setStaticShooting() = setRobotState(RobotState.STATIC_SHOOTING)

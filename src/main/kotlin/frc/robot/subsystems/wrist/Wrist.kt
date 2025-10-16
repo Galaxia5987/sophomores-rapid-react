@@ -33,6 +33,11 @@ class Wrist : SubsystemBase() {
             config = MOTOR_CONFIG
         )
 
+    @AutoLogOutput
+    val atSetpoint =
+        Trigger { motor.inputs.position.isNear(setpoint, SETPOINT_TOLERANCE) }
+            .onFalse(setDown())
+
     val inputs = motor.inputs
 
     private val positionRequest = PositionVoltage(0.0)
