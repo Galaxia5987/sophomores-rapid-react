@@ -13,6 +13,12 @@ import frc.robot.autonomous.paths.deploy.pathplanner.CC2C3
 import frc.robot.lib.extensions.enableAutoLogOutputFor
 import frc.robot.lib.extensions.get
 import frc.robot.lib.extensions.m
+import frc.robot.lib.extensions.sec
+import frc.robot.lib.extensions.volts
+import frc.robot.lib.math.interpolation.InterpolatingDouble
+import frc.robot.lib.sysid.sysId
+import frc.robot.lib.extensions.get
+import frc.robot.lib.extensions.m
 import frc.robot.lib.math.interpolation.InterpolatingDouble
 import frc.robot.robotstate.bindRobotCommands
 import frc.robot.robotstate.hoodDefaultCommand
@@ -35,7 +41,7 @@ object RobotContainer {
 
     init {
         drive // Ensure Drive is initialized
-        wrist.setAngle(WristAngles.DOWN.angle)
+        wrist.setAngle(WristAngles.DOWN)
         autoChooser =
             LoggedDashboardChooser(
                 "Auto Choices",
@@ -77,8 +83,11 @@ object RobotContainer {
             )
 
         driverController.circle().onTrue(setIntaking())
-        driverController.square().onTrue(wrist.setAngle(WristAngles.UP.angle))
-        driverController.cross().onTrue(wrist.setAngle(WristAngles.DOWN.angle))
+        driverController.square().onTrue(wrist.setAngle(WristAngles.OPEN))
+        driverController.cross().onTrue(wrist.setAngle(WristAngles.CLOSED))
+        driverController.povUp().onTrue(wrist.open())
+        driverController.povDown().onTrue(wrist.close())
+        driverController.povRight().onTrue(wrist.default())
         // Reset gyro / odometry
         val resetOdometry =
             if (CURRENT_MODE == Mode.SIM)
@@ -119,7 +128,6 @@ object RobotContainer {
             "Drive SysId (Quasistatic Reverse)",
             drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse)
         )
-        //        autoChooser.addOption("turnSysId", drive.runAllTurnSysID())
         autoChooser.addOption(
             "Drive SysId (Dynamic Forward)",
             drive.sysIdDynamic(SysIdRoutine.Direction.kForward)
@@ -137,6 +145,18 @@ object RobotContainer {
         autoChooser.addDefaultOption("BRP2", BRP2())
         autoChooser.addOption("AC1SRP", AC1SRP())
         autoChooser.addOption("CC2C3", CC2C3())
+        autoChooser.addOption(
+            "hoodSysId",
+            hood
+                .sysId()
+                .withForwardRoutineConfig(1.8.volts.per(sec), 1.volts, 0.75.sec)
+                .withBackwardRoutineConfig(
+                    1.volts.per(sec),
+                    0.8.volts,
+                    0.75.sec
+                )
+                .command()
+        )
     }
 
     fun resetSimulationField() {

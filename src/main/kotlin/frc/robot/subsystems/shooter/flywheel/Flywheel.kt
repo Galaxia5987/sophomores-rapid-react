@@ -29,7 +29,7 @@ class Flywheel : SubsystemBase(), SysIdable {
     val velocity
         get() = mainMotor.inputs.velocity
     init {
-        auxMotor.setControl(Follower(MAIN_MOTOR_PORT, false))
+        auxMotor.setControl(Follower(MAIN_MOTOR_PORT, true))
     }
 
     val isAtSetVelocity =
