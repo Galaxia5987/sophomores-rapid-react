@@ -18,7 +18,7 @@ import frc.robot.lib.sysid.SysIdable
 import frc.robot.lib.universal_motor.UniversalTalonFX
 import org.littletonrobotics.junction.Logger
 
-class Flywheel : SubsystemBase(), SysIdable {
+object Flywheel : SubsystemBase(), SysIdable {
     private val mainMotor =
         UniversalTalonFX(MAIN_MOTOR_PORT, config = MOTOR_CONFIG)
     private val auxMotor =

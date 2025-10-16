@@ -25,7 +25,7 @@ private var root = mechanism.getRoot("Hood", 3.0, 2.0)
 private val ligament =
     root.append(LoggedMechanismLigament2d("HoodLigament", 0.25, 90.0))
 
-class Hood : SubsystemBase(), SysIdable {
+object Hood : SubsystemBase(), SysIdable {
 
     private val motor =
         UniversalTalonFX(
