@@ -5,6 +5,7 @@ import edu.wpi.first.units.Measure
 import edu.wpi.first.util.WPISerializable
 import edu.wpi.first.util.struct.StructSerializable
 import edu.wpi.first.wpilibj.DriverStation
+import edu.wpi.first.wpilibj.util.Color
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.lib.extensions.log
 import frc.robot.lib.extensions.toPrimitiveTypeJava
@@ -116,6 +117,14 @@ object LoggedOutputManager : SubsystemBase() {
                                 key,
                                 value() as LoggedMechanism2d?
                             )
+                        }
+                    }
+                type == Color::class.java ->
+                    addRunnable {
+                        value().ifNotNull {
+                            Logger.recordOutput("$key/red",(value() as Color).red*255);
+                            Logger.recordOutput("$key/blue",(value() as Color).blue*255);
+                            Logger.recordOutput("$key/green",(value() as Color).green*255);
                         }
                     }
                 type.isEnum ->

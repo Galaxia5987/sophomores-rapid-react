@@ -1,10 +1,9 @@
 package frc.robot.subsystems.shooter.hopper
 
-import com.ctre.phoenix6.configs.CANrangeConfiguration
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs
-import com.ctre.phoenix6.configs.ProximityParamsConfigs
 import com.ctre.phoenix6.configs.TalonFXConfiguration
 import edu.wpi.first.units.measure.Current
+import edu.wpi.first.wpilibj.util.Color
 import frc.robot.lib.extensions.*
 
 val MOTOR_ID = 4
@@ -28,10 +27,7 @@ val DISTANCE_SENSOR_ID = 12
 
 val DISTANCE_THRESHOLD = 50.mm
 
-val DISTANCE_SENSOR_CONFIG =
-    CANrangeConfiguration().apply {
-        ProximityParams =
-            ProximityParamsConfigs().apply {
-                ProximityThreshold = DISTANCE_THRESHOLD[m]
-            }
-    }
+val RED_COLOR = Color.kRed
+val BLUE_COLOR = Color.kBlue
+val YELLO_COLOR = Color(44,96,114)
+const val SIMILARITY_THRESHOLD = 0.9
