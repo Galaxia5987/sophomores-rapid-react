@@ -403,7 +403,7 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer, SysId
         return states;
     }
 
-    public void resetGyro(Rotation2d offset) {
+    public void resetGyro() {
         gyroIO.reset();
     }
 

@@ -74,7 +74,7 @@ object RobotContainer {
             .options()
             .onTrue(
                 drive
-                    .runOnce { drive.resetGyro(Rotation2d.kZero) }
+                    .runOnce { drive.resetGyro() }
                     .ignoringDisable(true),
             )
 
