@@ -20,7 +20,7 @@ public class TunerConstants {
 
     // The steer motor uses any SwerveModule.SteerRequestType control request with the
     // output type specified by SwerveModuleConstants.SteerMotorClosedLoopOutput
-    public static final Slot0Configs steerGains =
+    public static final Slot0Configs turnGains =
             new Slot0Configs()
                     .withKP(200)
                     .withKI(0)
@@ -127,7 +127,7 @@ public class TunerConstants {
                             .withSteerMotorGearRatio(kSteerGearRatio)
                             .withCouplingGearRatio(kCoupleRatio)
                             .withWheelRadius(kWheelRadius)
-                            .withSteerMotorGains(steerGains)
+                            .withSteerMotorGains(turnGains)
                             .withDriveMotorGains(driveGains)
                             .withSteerMotorClosedLoopOutput(kSteerClosedLoopOutput)
                             .withDriveMotorClosedLoopOutput(kDriveClosedLoopOutput)

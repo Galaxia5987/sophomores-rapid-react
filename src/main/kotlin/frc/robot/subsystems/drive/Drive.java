@@ -167,13 +167,13 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer, SysId
     private final LoggedNetworkGains turnGains =
             new LoggedNetworkGains(
                     "Turn",
-                    TunerConstants.steerGains.kP,
-                    TunerConstants.steerGains.kI,
-                    TunerConstants.steerGains.kD,
-                    TunerConstants.steerGains.kS,
-                    TunerConstants.steerGains.kV,
-                    TunerConstants.steerGains.kA,
-                    TunerConstants.steerGains.kG,
+                    TunerConstants.turnGains.kP,
+                    TunerConstants.turnGains.kI,
+                    TunerConstants.turnGains.kD,
+                    TunerConstants.turnGains.kS,
+                    TunerConstants.turnGains.kV,
+                    TunerConstants.turnGains.kA,
+                    TunerConstants.turnGains.kG,
                     RadiansPerSecond.of(
                             TunerConstants.motionMagicSteerGains.MotionMagicCruiseVelocity),
                     RadiansPerSecondPerSecond.of(
