@@ -41,17 +41,16 @@ class Wrist : SubsystemBase() {
         motor.reset()
     }
 
-    fun setAngle(angle: Angles): Command = runOnce {
+    fun setAngle(angle: WristAngles): Command = runOnce {
         setpoint = angle.angle
         motor.setControl(positionRequest.withPosition(angle.angle))
     }
 
-    fun opening(): Command = setAngle(Angles.OPEN)
+    fun open(): Command = setAngle(WristAngles.OPEN)
 
-    fun closing(): Command = setAngle(Angles.CLOSED)
+    fun close(): Command = setAngle(WristAngles.CLOSED)
 
-    fun defaulting(): Command = setAngle(Angles.DEFAULT)
-
+    fun default(): Command = setAngle(WristAngles.DEFAULT)
 
     @AutoLogOutput
     val atSetpoint = Trigger {

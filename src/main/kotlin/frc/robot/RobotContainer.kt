@@ -38,7 +38,7 @@ object RobotContainer {
 
     init {
         drive // Ensure Drive is initialized
-        wrist.setAngle(WristAngles.DOWN.angle)
+        wrist.setAngle(WristAngles.CLOSED)
         autoChooser =
             LoggedDashboardChooser(
                 "Auto Choices",
@@ -76,8 +76,8 @@ object RobotContainer {
         // Switch to X pattern when X button is pressed
 
         driverController.circle().onTrue(setIntaking())
-        driverController.square().onTrue(wrist.setAngle(WristAngles.UP.angle))
-        driverController.cross().onTrue(wrist.setAngle(WristAngles.DOWN.angle))
+        driverController.square().onTrue(wrist.setAngle(WristAngles.OPEN))
+        driverController.cross().onTrue(wrist.setAngle(WristAngles.CLOSED))
         driverController.povUp().onTrue(wrist.open())
         driverController.povDown().onTrue(wrist.close())
         driverController.povRight().onTrue(wrist.default())

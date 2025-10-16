@@ -6,10 +6,9 @@ import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs
 import com.ctre.phoenix6.configs.TalonFXConfiguration
 import edu.wpi.first.units.measure.Angle
 import frc.robot.lib.extensions.deg
-import frc.robot.lib.extensions.get
 import frc.robot.lib.extensions.rot
 
- val SETPOINT_TOLERANCE = 1.deg
+val SETPOINT_TOLERANCE = 1.deg
 const val MOTOR_PORT = 2
 const val GEAR_RATIO = 1 / 69.82
 
@@ -32,7 +31,7 @@ val MOTOR_CONFIG =
             }
     }
 
-enum class Angles(val angle: Angle) {
+enum class WristAngles(val angle: Angle) {
     CLOSED(0.rot),
     OPEN(15.5.rot),
     DEFAULT(2.4.rot)
