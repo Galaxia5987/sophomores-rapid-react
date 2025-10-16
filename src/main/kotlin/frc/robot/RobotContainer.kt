@@ -13,24 +13,16 @@ import frc.robot.autonomous.paths.deploy.pathplanner.BRP2
 import frc.robot.autonomous.paths.deploy.pathplanner.CC2C3
 import frc.robot.lib.extensions.enableAutoLogOutputFor
 import frc.robot.lib.extensions.get
-import frc.robot.lib.extensions.m
 import frc.robot.lib.extensions.sec
 import frc.robot.lib.extensions.volts
-import frc.robot.lib.math.interpolation.InterpolatingDouble
-import frc.robot.lib.sysid.sysId
 import frc.robot.lib.shooting.toggleCompensation
-import frc.robot.robotstate.bindRobotCommands
-import frc.robot.robotstate.setForceShot
-import frc.robot.robotstate.hoodDefaultCommand
-import frc.robot.robotstate.robotDistanceFromHub
-import frc.robot.robotstate.setIntaking
-import frc.robot.robotstate.setOverrideDrive
-import frc.robot.robotstate.setShooting
-import frc.robot.robotstate.setStaticShooting
-import frc.robot.robotstate.stopForceShot
-import frc.robot.robotstate.stopOverrideDrive
+import frc.robot.lib.sysid.sysId
+import frc.robot.robotstate.*
 import frc.robot.subsystems.drive.DriveCommands
 import frc.robot.subsystems.roller.Roller
+import frc.robot.subsystems.shooter.hood.Hood
+import frc.robot.subsystems.wrist.Wrist
+import frc.robot.subsystems.wrist.WristAngles
 import org.ironmaple.simulation.SimulatedArena
 import org.littletonrobotics.junction.AutoLogOutput
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser
@@ -46,11 +38,8 @@ object RobotContainer {
         StaticSetpoint(1)
     }
 
-    var hoodAngle = InterpolatingDouble(robotDistanceFromHub[m])
-
     init {
         drive // Ensure Drive is initialized
-        wrist.setAngle(WristAngles.OPEN)
         autoChooser =
             LoggedDashboardChooser(
                 "Auto Choices",
@@ -79,6 +68,8 @@ object RobotContainer {
                 { driverController.leftX },
                 { -driverController.rightX * 0.8 }
             )
+
+        Wrist.defaultCommand = Wrist.open()
     }
 
     private fun configureButtonBindings() {
@@ -93,11 +84,15 @@ object RobotContainer {
         driverController.R2().onTrue(Roller.outtake()).onFalse(Roller.stop())
         driverController.square().onTrue(setIntaking())
         driverController.cross().onTrue(setShooting())
+
+        driverController.povDown().onTrue(setIdling())
         driverController.povUp().onTrue(toggleCompensation())
         driverController
             .triangle()
             .onTrue(setForceShot())
             .onFalse(stopForceShot())
+
+        driverController.create().whileTrue(Wrist.reset())
 
         hidController
             .button(HIDInput.DriveOverride.buttonId)
@@ -167,8 +162,7 @@ object RobotContainer {
         autoChooser.addOption("CC2C3", CC2C3())
         autoChooser.addOption(
             "hoodSysId",
-            hood
-                .sysId()
+            Hood.sysId()
                 .withForwardRoutineConfig(1.8.volts.per(sec), 1.volts, 0.75.sec)
                 .withBackwardRoutineConfig(
                     1.volts.per(sec),

@@ -7,10 +7,12 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration
 import edu.wpi.first.units.measure.Angle
 import frc.robot.lib.extensions.deg
 import frc.robot.lib.extensions.rot
+import frc.robot.lib.extensions.volts
 
 val SETPOINT_TOLERANCE = 1.deg
 const val MOTOR_PORT = 2
 const val GEAR_RATIO = 1 / 69.82
+val RESET_VOLTAGE = 2.0.volts
 
 val MOTOR_CONFIG =
     TalonFXConfiguration().apply {

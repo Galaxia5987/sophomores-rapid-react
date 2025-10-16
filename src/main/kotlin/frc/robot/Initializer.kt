@@ -20,7 +20,6 @@ import frc.robot.subsystems.vision.VisionConstants
 import frc.robot.subsystems.vision.VisionConstants.turretOVName
 import frc.robot.subsystems.vision.VisionIOPhotonVision
 import frc.robot.subsystems.vision.VisionIOPhotonVisionSim
-import frc.robot.subsystems.wrist.Wrist
 import org.ironmaple.simulation.SimulatedArena
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation
 
@@ -82,11 +81,11 @@ private val visionIOs =
                                     it.value.translation.rotateAround(
                                         Translation3d(),
                                         getRotation3d(
-                                            yaw = turret.inputs.position
+                                            yaw = Turret.inputs.position
                                         )
                                     ),
                                     getRotation3d(
-                                        yaw = turret.inputs.position,
+                                        yaw = Turret.inputs.position,
                                         pitch = it.value.rotation.measureZ
                                     )
                                 )
@@ -109,6 +108,3 @@ private val visionIOs =
     }.toTypedArray()
 
 val vision = Vision(drive, *visionIOs)
-
-val turret = Turret()
-val wrist = Wrist()

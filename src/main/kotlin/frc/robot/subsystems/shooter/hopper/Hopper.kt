@@ -3,7 +3,6 @@ package frc.robot.subsystems.shooter.hopper
 import com.ctre.phoenix6.controls.VoltageOut
 import com.revrobotics.ColorSensorV3
 import edu.wpi.first.units.measure.Voltage
-import edu.wpi.first.wpilibj.I2C
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import edu.wpi.first.wpilibj2.command.button.Trigger
@@ -18,21 +17,28 @@ object Hopper : SubsystemBase() {
     private val motor: UniversalTalonFX =
         UniversalTalonFX(MOTOR_ID, config = MOTOR_CONFIG)
 
-    private val colorSensor = ColorSensorV3(I2C.Port.kMXP)
+    private val colorSensor = ColorSensorV3(I2C_PORT)
     private val voltageRequest = VoltageOut(0.0)
 
     @LoggedOutput
     val ballColor
         get() = colorSensor.color
+
     @LoggedOutput
-    val isBallRed = Trigger {
-        ballColor.colorSimilarity(RED_COLOR) > SIMILARITY_THRESHOLD
-    }
+    val redConfidence
+        get() = ballColor.colorSimilarity(RED_COLOR)
+
     @LoggedOutput
-    val isBallBlue = Trigger {
-        ballColor.colorSimilarity(BLUE_COLOR) > SIMILARITY_THRESHOLD
-    }
-    @LoggedOutput val hasBall = isBallRed.or(isBallBlue)
+    val blueConfidence
+        get() = ballColor.colorSimilarity(BLUE_COLOR)
+
+    @LoggedOutput
+    val isBallRed = Trigger { redConfidence > SIMILARITY_THRESHOLD }
+
+    @LoggedOutput
+    val isBallBlue = Trigger { blueConfidence > SIMILARITY_THRESHOLD }
+
+    @LoggedOutput val hasBall = isBallBlue.or(isBallRed)
 
     private fun setVoltage(voltage: Voltage): Command = runOnce {
         motor.setControl(voltageRequest.withOutput(voltage))
