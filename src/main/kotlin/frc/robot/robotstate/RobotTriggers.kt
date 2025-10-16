@@ -43,8 +43,8 @@ fun bindRobotCommands() {
     isShooting.apply {
         and(ballsEmpty.and { !forceShoot })
             .onTrue(setIntaking(), stopShooting())
-//        and(!isInDeadZone, atShootingRotation).onTrue(startShooting())
-        and(!isInDeadZone).onTrue(startShooting())
+//        and(!isInDeadZone, atShootingRotation).onTrue(startShooting()) TODO: Uncomment when turret works
+        and(!isInDeadZone).onTrue(startShooting()) // TODO: Remove when turret works
         and((isInDeadZone).or(!atShootingRotation))
             .onTrue(driveToShootingPoint())
     }
