@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.Filesystem
 import frc.robot.lib.Gains
 import frc.robot.lib.extensions.amps
 import frc.robot.lib.extensions.get
+import frc.robot.lib.extensions.mm
 import frc.robot.lib.extensions.rps
 import frc.robot.lib.extensions.sec
 import frc.robot.lib.math.interpolation.InterpolatingDoubleMap
@@ -29,6 +30,7 @@ val SUPPLY_CURRENT_LIMIT = 50.amps
 val GAINS = Gains(kP = 2.0)
 val TOLERANCE = 0.1.rps
 val AT_SET_VELOCITY_DEBOUNCE = 0.2.sec
+val FLYWHEEL_DIAMETER = 101.6.mm
 val MOTOR_CONFIG =
     TalonFXConfiguration().apply {
         MotorOutput =

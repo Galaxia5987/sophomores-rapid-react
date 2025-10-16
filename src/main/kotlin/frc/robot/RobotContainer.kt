@@ -10,20 +10,12 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine
 import frc.robot.autonomous.paths.deploy.pathplanner.AC1SRP
 import frc.robot.autonomous.paths.deploy.pathplanner.BRP2
 import frc.robot.autonomous.paths.deploy.pathplanner.CC2C3
-import frc.robot.lib.extensions.deg
 import frc.robot.lib.extensions.enableAutoLogOutputFor
-import frc.robot.lib.extensions.get
-import frc.robot.lib.extensions.m
-import frc.robot.lib.extensions.sec
-import frc.robot.lib.extensions.volts
-import frc.robot.lib.math.interpolation.InterpolatingDouble
-import frc.robot.lib.sysid.sysId
 import frc.robot.robotstate.bindRobotCommands
-import frc.robot.robotstate.robotDistanceFromHub
-import frc.robot.robotstate.setIntakeing
+import frc.robot.robotstate.hoodDefaultCommand
+import frc.robot.robotstate.setIntaking
 import frc.robot.robotstate.turretAngleToHub
 import frc.robot.subsystems.drive.DriveCommands
-import frc.robot.subsystems.shooter.hood.HOOD_ANGLE_BY_DISTANCE
 import frc.robot.subsystems.wrist.WristAngles
 import org.ironmaple.simulation.SimulatedArena
 import org.littletonrobotics.junction.AutoLogOutput
@@ -66,21 +58,17 @@ object RobotContainer {
             DriveCommands.joystickDrive(
                 { driverController.leftX },
                 { -driverController.leftY },
-                { -driverController.leftY * 0.8 }
+                { -driverController.rightX * 0.8 }
             )
-//        turret.defaultCommand = turret.setAngle { turretAngleToHub }
-//        hood.defaultCommand =
-//            hood.setAngle {
-//                hoodAngle.value = robotDistanceFromHub[m]
-//                HOOD_ANGLE_BY_DISTANCE.getInterpolated(hoodAngle).value.deg
-//            }
+        turret.defaultCommand = turret.setAngle { turretAngleToHub }
+        hood.defaultCommand = hoodDefaultCommand()
     }
 
     private fun configureButtonBindings() {
 
         // Switch to X pattern when X button is pressed
 
-        driverController.circle().onTrue(setIntakeing())
+        driverController.circle().onTrue(setIntaking())
         driverController.square().onTrue(wrist.setAngle(WristAngles.UP.angle))
         driverController.cross().onTrue(wrist.setAngle(WristAngles.DOWN.angle))
         // Reset gyro / odometry
