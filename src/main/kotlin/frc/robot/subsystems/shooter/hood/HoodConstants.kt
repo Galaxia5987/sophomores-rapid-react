@@ -31,7 +31,8 @@ val HOOD_ANGLE_BY_DISTANCE: InterpolatingDoubleMap =
 
 val STATOR_LIMIT = 30.amps
 val SUPPLY_LIMIT: Current = STATOR_LIMIT * 2.0
-val PID_GAINS = Gains(kP = 100.0, kD = 0.1, kS = 0.3, kV = 7.4, kA = 0.02, kG = 0.2)
+val PID_GAINS =
+    Gains(kP = 100.0, kD = 0.1, kS = 0.3, kV = 7.4, kA = 0.02, kG = 0.2)
 
 val ENCODER_OFFSET = 294.1115625.deg
 
@@ -42,10 +43,11 @@ const val MOTOR_TO_SENSOR_RATIO = MOTOR_TO_MECHANISM_RATIO
 
 val MOTOR_CONFIG =
     TalonFXConfiguration().apply {
-        MotorOutput = MotorOutputConfigs().apply {
-            Inverted = InvertedValue.Clockwise_Positive
-            NeutralMode = NeutralModeValue.Brake
-        }
+        MotorOutput =
+            MotorOutputConfigs().apply {
+                Inverted = InvertedValue.Clockwise_Positive
+                NeutralMode = NeutralModeValue.Brake
+            }
         Slot0 = PID_GAINS.toSlotConfig()
         CurrentLimits =
             CurrentLimitsConfigs().apply {
@@ -73,7 +75,8 @@ val MOTOR_CONFIG =
 
 val ENCODER_CONFIG =
     CANcoderConfiguration().apply {
-        MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive
+        MagnetSensor.SensorDirection =
+            SensorDirectionValue.CounterClockwise_Positive
         MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.9
         MagnetSensor.MagnetOffset = ENCODER_OFFSET[rot]
     }
