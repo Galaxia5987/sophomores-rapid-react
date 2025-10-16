@@ -17,9 +17,6 @@ import frc.robot.lib.extensions.sec
 import frc.robot.lib.extensions.volts
 import frc.robot.lib.math.interpolation.InterpolatingDouble
 import frc.robot.lib.sysid.sysId
-import frc.robot.lib.extensions.get
-import frc.robot.lib.extensions.m
-import frc.robot.lib.math.interpolation.InterpolatingDouble
 import frc.robot.robotstate.bindRobotCommands
 import frc.robot.robotstate.hoodDefaultCommand
 import frc.robot.robotstate.robotDistanceFromHub
@@ -41,7 +38,7 @@ object RobotContainer {
 
     init {
         drive // Ensure Drive is initialized
-        wrist.setAngle(WristAngles.DOWN)
+        wrist.setAngle(WristAngles.OPEN)
         autoChooser =
             LoggedDashboardChooser(
                 "Auto Choices",
