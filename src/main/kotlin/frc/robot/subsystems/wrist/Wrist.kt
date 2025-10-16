@@ -33,6 +33,11 @@ class Wrist : SubsystemBase() {
             config = MOTOR_CONFIG
         )
 
+    @AutoLogOutput
+    val atSetpoint =
+        Trigger { motor.inputs.position.isNear(setpoint, SETPOINT_TOLERANCE) }
+            .onFalse(setDown())
+
     val inputs = motor.inputs
 
     private val positionRequest = PositionVoltage(0.0)
@@ -42,12 +47,9 @@ class Wrist : SubsystemBase() {
         motor.setControl(positionRequest.withPosition(angle))
     }
 
-    fun reset() = setAngle(0.0.degrees)
+    fun setDown() = setAngle(WristAngles.DOWN.angle)
 
-    @AutoLogOutput
-    val atSetpoint = Trigger {
-        motor.inputs.position.isNear(setpoint, SETPOINT_TOLERANCE)
-    }
+    fun reset() = setAngle(0.0.degrees)
 
     override fun periodic() {
         motor.updateInputs()

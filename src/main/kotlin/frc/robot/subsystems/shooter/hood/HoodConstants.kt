@@ -19,6 +19,8 @@ const val MOTOR_ID = 3
 
 val SETPOINT_TOLERANCE = 0.5.deg
 
+val STATIC_SHOOT_SETPOINT = 10.deg
+
 val HOOD_ANGLE_BY_DISTANCE: InterpolatingDoubleMap =
     ShootingTableReader.parse(
         Filesystem.getDeployDirectory().path + "/shootData/distanceToAngle.csv"

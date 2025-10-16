@@ -6,41 +6,33 @@ import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.math.kinematics.ChassisSpeeds
 import edu.wpi.first.units.measure.Angle
 import edu.wpi.first.wpilibj2.command.Command
+import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.Commands.parallel
 import edu.wpi.first.wpilibj2.command.Commands.sequence
 import edu.wpi.first.wpilibj2.command.Commands.waitUntil
-import frc.robot.drive
-import frc.robot.flywheel
-import frc.robot.hood
-import frc.robot.hopper
-import frc.robot.lib.extensions.deg
-import frc.robot.lib.extensions.distanceFromPoint
-import frc.robot.lib.extensions.get
-import frc.robot.lib.extensions.log
-import frc.robot.lib.extensions.m
-import frc.robot.lib.extensions.rotationToPoint
-import frc.robot.lib.extensions.rps
-import frc.robot.lib.extensions.toLinear
-import frc.robot.lib.extensions.toTransform
+import frc.robot.*
+import frc.robot.lib.extensions.*
 import frc.robot.lib.getPose2d
 import frc.robot.lib.math.interpolation.InterpolatingDouble
 import frc.robot.lib.named
 import frc.robot.lib.shooting.ShotData
 import frc.robot.lib.shooting.calculateShot
 import frc.robot.robotRelativeBallPoses
-import frc.robot.roller
 import frc.robot.subsystems.drive.align
 import frc.robot.subsystems.drive.profiledAlign
-import frc.robot.subsystems.shooter.flywheel.FLYWHEEL_DIAMETER
-import frc.robot.subsystems.shooter.flywheel.SHOOTER_VELOCITY_BY_DISTANCE
-import frc.robot.subsystems.shooter.flywheel.SLOW_ROTATION
+import frc.robot.subsystems.roller.Roller
+import frc.robot.subsystems.shooter.flywheel.*
 import frc.robot.subsystems.shooter.hood.HOOD_ANGLE_BY_DISTANCE
+import frc.robot.subsystems.shooter.hood.Hood
+import frc.robot.subsystems.shooter.hopper.Hopper
 import frc.robot.subsystems.shooter.turret.MAX_ANGLE
 import frc.robot.subsystems.shooter.turret.MIN_ANGLE
 import kotlin.collections.map
 import org.team5987.annotation.LoggedOutput
 
 var hoodAngle = InterpolatingDouble(robotDistanceFromHub[m])
+var forceShoot = false
+var overrideDrive = false
 
 val compensatedShot: ShotData
     get() {
@@ -50,7 +42,7 @@ val compensatedShot: ShotData
                 drive.rotation
             )
         val shooterExitVelocity =
-            flywheel.velocity.toLinear(FLYWHEEL_DIAMETER, 1.0)
+            Flywheel.velocity.toLinear(FLYWHEEL_DIAMETER, 1.0)
         val shot = calculateShot(drive.pose, robotSpeeds, shooterExitVelocity)
 
         mapOf(
@@ -93,6 +85,14 @@ val globalBallPoses
             .map { it + Pose3d(drive.pose).toTransform() }
             .toTypedArray()
 
+fun setForceShot() = Commands.runOnce({ forceShoot = true })
+
+fun stopForceShot() = Commands.runOnce({ forceShoot = false })
+
+fun setOverrideDrive() = Commands.runOnce({ overrideDrive = true })
+
+fun stopOverrideDrive() = Commands.runOnce({ overrideDrive = false })
+
 fun driveToShootingPoint(): Command {
     val robotTranslation = drive.pose.translation
     val setpoint =
@@ -108,7 +108,7 @@ fun driveToShootingPoint(): Command {
 fun startShooting() =
     sequence(
             drive.lock(),
-            flywheel.setVelocity {
+            Flywheel.setVelocity {
                 FLYWHEEL_VELOCITY_KEY.value = robotDistanceFromHub[m]
                 SHOOTER_VELOCITY_BY_DISTANCE.getInterpolated(
                         FLYWHEEL_VELOCITY_KEY
@@ -116,24 +116,34 @@ fun startShooting() =
                     .value
                     .rps
             },
-            waitUntil(flywheel.isAtSetVelocity),
-            parallel(hopper.start(), roller.intake())
+            waitUntil(Flywheel.isAtSetVelocity),
+            parallel(Hopper.start(), Roller.intake())
         )
         .named(COMMAND_NAME_PREFIX)
 
 fun stopShooting() =
-    parallel(flywheel.setVelocity(SLOW_ROTATION), hopper.stop(), roller.stop())
+    parallel(Flywheel.setVelocity(SLOW_ROTATION), Hopper.stop(), Roller.stop())
         .named(COMMAND_NAME_PREFIX)
 
 fun stopIntaking() =
-    parallel(roller.stop(), hopper.stop()).named(COMMAND_NAME_PREFIX)
+    parallel(Roller.stop(), Hopper.stop()).named(COMMAND_NAME_PREFIX)
 
-fun alignToBall() =
-    profiledAlign(globalBallPoses.firstOrNull()?.toPose2d() ?: drive.pose)
-        .named(COMMAND_NAME_PREFIX)
+fun alignToBall(toRun: Boolean = true): Command {
+    return if (toRun)
+        profiledAlign(globalBallPoses.firstOrNull()?.toPose2d() ?: drive.pose)
+            .named(COMMAND_NAME_PREFIX)
+    else Commands.none()
+}
 
 fun hoodDefaultCommand() =
-    hood.setAngle {
+    Hood.setAngle {
         hoodAngle.value = compensatedShot.compensatedDistance[m]
         HOOD_ANGLE_BY_DISTANCE.getInterpolated(hoodAngle).value.deg
     }
+
+fun enableDefaultCommands(): Command {
+    return Commands.runOnce({
+        turret.defaultCommand = turret.setAngle { turretAngleToHub }
+        Hood.defaultCommand = hoodDefaultCommand()
+    })
+}
