@@ -33,6 +33,8 @@ class Wrist : SubsystemBase() {
             config = MOTOR_CONFIG
         )
 
+    val inputs = motor.inputs
+
     private val positionRequest = PositionVoltage(0.0)
 
     init {

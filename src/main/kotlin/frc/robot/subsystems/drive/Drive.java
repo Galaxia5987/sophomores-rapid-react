@@ -39,6 +39,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -121,6 +122,10 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer {
 
     static final Lock odometryLock = new ReentrantLock();
     private final GyroIO gyroIO;
+    public Angle[] SwerveTurnAngle =
+            new Angle[] {Radians.zero(), Radians.zero(), Radians.zero(), Radians.zero()};
+    public Angle[] SwerveDriveAngle =
+            new Angle[] {Radians.zero(), Radians.zero(), Radians.zero(), Radians.zero()};
     private final GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
     private final Module[] modules = new Module[4]; // FL, FR, BL, BR
     private final SysIdRoutine sysId;
@@ -185,6 +190,7 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer {
                 PP_CONFIG,
                 () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
                 this);
+
         Pathfinding.setPathfinder(new LocalADStarAK());
         PathPlannerLogging.setLogActivePathCallback(
                 (activePath) -> {
@@ -213,6 +219,15 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer {
     @Override
     public void periodic() {
         odometryLock.lock(); // Prevents odometry updates while reading data
+        SwerveTurnAngle[0] = modules[0].getAngle().getMeasure();
+        SwerveTurnAngle[1] = modules[1].getAngle().getMeasure();
+        SwerveTurnAngle[2] = modules[2].getAngle().getMeasure();
+        SwerveTurnAngle[3] = modules[3].getAngle().getMeasure();
+
+        SwerveDriveAngle[0] = Radians.of(modules[0].getWheelRadiusCharacterizationPosition());
+        SwerveDriveAngle[1] = Radians.of(modules[1].getWheelRadiusCharacterizationPosition());
+        SwerveDriveAngle[2] = Radians.of(modules[2].getWheelRadiusCharacterizationPosition());
+        SwerveDriveAngle[3] = Radians.of(modules[3].getWheelRadiusCharacterizationPosition());
         gyroIO.updateInputs(gyroInputs);
         Logger.processInputs("Drive/Gyro", gyroInputs);
         for (var module : modules) {
@@ -358,8 +373,14 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer {
 
     /** Returns the measured chassis speeds of the robot. */
     @AutoLogOutput(key = "SwerveChassisSpeeds/Measured")
-    private ChassisSpeeds getChassisSpeeds() {
+    public ChassisSpeeds getChassisSpeeds() {
         return kinematics.toChassisSpeeds(getModuleStates());
+    }
+
+    @AutoLogOutput(key = "SwerveChassisSpeeds/MeasuredFieldOriented")
+    public ChassisSpeeds getFieldOrientedSpeeds() {
+        return ChassisSpeeds.fromRobotRelativeSpeeds(
+                kinematics.toChassisSpeeds(getModuleStates()), getRotation());
     }
 
     /** Returns the position of each module in radians. */

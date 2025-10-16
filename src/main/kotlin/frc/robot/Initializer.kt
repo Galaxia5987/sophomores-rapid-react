@@ -1,7 +1,12 @@
 package frc.robot
 
 import edu.wpi.first.math.geometry.Pose2d
+import edu.wpi.first.math.geometry.Pose3d
 import edu.wpi.first.math.geometry.Rotation2d
+import edu.wpi.first.math.geometry.Translation3d
+import frc.robot.lib.extensions.toTransform
+import frc.robot.lib.getRotation3d
+import frc.robot.sim.RapidReactArena
 import frc.robot.subsystems.drive.*
 import frc.robot.subsystems.drive.ModuleIOs.ModuleIO
 import frc.robot.subsystems.drive.ModuleIOs.ModuleIOSim
@@ -16,6 +21,7 @@ import frc.robot.subsystems.shooter.hopper.Hopper
 import frc.robot.subsystems.shooter.turret.Turret
 import frc.robot.subsystems.vision.Vision
 import frc.robot.subsystems.vision.VisionConstants
+import frc.robot.subsystems.vision.VisionConstants.turretOVName
 import frc.robot.subsystems.vision.VisionIOPhotonVision
 import frc.robot.subsystems.vision.VisionIOPhotonVisionSim
 import frc.robot.subsystems.wrist.Wrist
@@ -29,6 +35,7 @@ val driveSimulation: SwerveDriveSimulation? =
                 Pose2d(3.0, 3.0, Rotation2d())
             )
             .apply {
+                SimulatedArena.overrideInstance(RapidReactArena())
                 SimulatedArena.getInstance().addDriveTrainSimulation(this)
             }
     else null
@@ -71,13 +78,34 @@ private val visionIOs =
     when (CURRENT_MODE) {
         Mode.REAL ->
             VisionConstants.OVNameToTransform.map {
-                VisionIOPhotonVision(it.key, it.value)
+                if (it.key == turretOVName) {
+                    VisionIOPhotonVision(
+                        it.key,
+                        {
+                            Pose3d(
+                                    it.value.translation.rotateAround(
+                                        Translation3d(),
+                                        getRotation3d(
+                                            yaw = turret.inputs.position
+                                        )
+                                    ),
+                                    getRotation3d(
+                                        yaw = turret.inputs.position,
+                                        pitch = it.value.rotation.measureZ
+                                    )
+                                )
+                                .toTransform()
+                        }
+                    )
+                } else {
+                    VisionIOPhotonVision(it.key) { it.value }
+                }
             }
         Mode.SIM ->
             VisionConstants.OVNameToTransform.map {
                 VisionIOPhotonVisionSim(
                     it.key,
-                    it.value,
+                    { it.value },
                     driveSimulation!!::getSimulatedDriveTrainPose
                 )
             }
