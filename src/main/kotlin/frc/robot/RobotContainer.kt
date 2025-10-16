@@ -73,9 +73,7 @@ object RobotContainer {
         driverController
             .options()
             .onTrue(
-                drive
-                    .runOnce { drive.resetGyro() }
-                    .ignoringDisable(true),
+                drive.runOnce { drive.resetGyro() }.ignoringDisable(true),
             )
 
         driverController.circle().onTrue(setIntaking())
