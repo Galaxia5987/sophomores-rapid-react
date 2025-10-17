@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.drive
 import frc.robot.lib.controllers.TunableHolonomicDriveController
 import frc.robot.lib.extensions.get
+import frc.robot.lib.extensions.log
 import frc.robot.lib.extensions.mps
 import frc.robot.lib.extensions.sec
 import frc.robot.robotstate.isShooting
@@ -67,7 +68,7 @@ val controller =
  * @param holonomicController The holonomic controller to use for the alignment.
  * Defaults to [controller]
  */
-private fun alignToPose(
+fun alignToPose(
     goalPose: Pose2d,
     linearVelocity: LinearVelocity = 0.mps,
     tolerance: Pose2d = TOLERANCE,
@@ -77,23 +78,23 @@ private fun alignToPose(
         Pair(controller, DEFAULT_CONTROLLER_NAME),
 ): Command =
     runOnce({
-            controller.setTolerance(tolerance)
-            Logger.recordOutput(
-                "Alignment/Controllers/CurrentRunningController",
-                holonomicController.second
-            )
-        })
+        controller.setTolerance(tolerance)
+        Logger.recordOutput(
+            "Alignment/Controllers/CurrentRunningController",
+            holonomicController.second
+        )
+    })
         .andThen(
             run({
-                    drive.runVelocity(
-                        holonomicController.first.calculate(
-                            poseSupplier.invoke(),
-                            goalPose,
-                            linearVelocity.`in`(MetersPerSecond),
-                            goalPose.rotation
-                        )
+                drive.runVelocity(
+                    holonomicController.first.calculate(
+                        poseSupplier.invoke(),
+                        goalPose,
+                        linearVelocity.`in`(MetersPerSecond),
+                        goalPose.rotation
                     )
-                })
+                )
+            })
                 .until(
                     Trigger { controller.atReference() }
                         .debounce(atGoalDebounce.`in`(Seconds))
@@ -101,7 +102,7 @@ private fun alignToPose(
         )
         .withName("Drive/AlignToPose")
 
-private fun profiledAlignToPose(
+fun profiledAlignToPose(
     goalPose: Pose2d,
     tolerance: Pose2d = TOLERANCE,
     poseSupplier: () -> Pose2d = { drive.pose },
@@ -109,27 +110,21 @@ private fun profiledAlignToPose(
     endTrigger: Trigger = atGoal
 ): Command =
     runOnce({
-            setTolerance(tolerance)
-            resetProfiledPID(poseSupplier.invoke(), drive.fieldOrientedSpeeds)
-            setGoal(goalPose)
-        })
+        setTolerance(tolerance)
+        resetProfiledPID(poseSupplier.invoke(), drive.fieldOrientedSpeeds)
+        setGoal(goalPose)
+    })
         .andThen(
             run({
-                    drive.runVelocity(
-                        ChassisSpeeds.fromFieldRelativeSpeeds(
-                            getSpeedSetpoint(poseSupplier.invoke()).invoke(),
-                            drive.rotation
-                        )
+                drive.runVelocity(
+                    ChassisSpeeds.fromFieldRelativeSpeeds(
+                        getSpeedSetpoint(poseSupplier.invoke()).invoke(),
+                        drive.rotation
                     )
-                })
+                )
+            })
                 .until(endTrigger.debounce(atGoalDebounce[sec]))
                 .andThen(DriveCommands.stop())
         )
         .withName("Drive/profiledAlignToPose")
 
-fun align(pose: Pose2d) = drive.defer { alignToPose(pose) }
-
-fun profiledAlign(pose: Pose2d) =
-    drive.defer {
-        profiledAlignToPose(pose, endTrigger = isShooting.negate().or(atGoal))
-    }

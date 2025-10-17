@@ -85,6 +85,15 @@ val globalBallPoses
         robotRelativeBallPoses
             .map { it + Pose3d(drive.pose).toTransform() }
             .toTypedArray()
+@LoggedOutput(path = COMMAND_NAME_PREFIX)
+val deadZoneAlignmentSetpoint
+    get() =
+        if (
+            INNER_SHOOTING_AREA.getDistance(drive.pose.translation) <
+            OUTER_SHOOTING_AREA.getDistance(drive.pose.translation)
+        )
+            INNER_SHOOTING_AREA.nearest(drive.pose.translation)
+        else OUTER_SHOOTING_AREA.nearest(drive.pose.translation)
 
 fun setForceShot() = Commands.runOnce({ forceShoot = true })
 
@@ -94,17 +103,9 @@ fun setOverrideDrive() = Commands.runOnce({ overrideDrive = true })
 
 fun stopOverrideDrive() = Commands.runOnce({ overrideDrive = false })
 
-fun driveToShootingPoint(): Command {
-    val robotTranslation = drive.pose.translation
-    val setpoint =
-        if (
-            INNER_SHOOTING_AREA.getDistance(robotTranslation) <
-                OUTER_SHOOTING_AREA.getDistance(robotTranslation)
-        )
-            INNER_SHOOTING_AREA.nearest(robotTranslation)
-        else OUTER_SHOOTING_AREA.nearest(robotTranslation)
-    return align(getPose2d(setpoint, swerveCompensationAngle)).named("Drive")
-}
+fun driveToShootingPoint(): Command =
+    drive.defer { alignToPose(getPose2d(deadZoneAlignmentSetpoint, swerveCompensationAngle)).named("Drive") }
+
 
 fun startShooting() =
     sequence(
@@ -131,8 +132,10 @@ fun stopIntaking() =
 
 fun alignToBall(toRun: Boolean = true): Command {
     return if (toRun)
-        profiledAlign(globalBallPoses.firstOrNull()?.toPose2d() ?: drive.pose)
-            .named(COMMAND_NAME_PREFIX)
+        drive.defer {
+            alignToPose(globalBallPoses.firstOrNull()?.toPose2d() ?: drive.pose)
+                .named(COMMAND_NAME_PREFIX)
+        }
     else Commands.none()
 }
 
