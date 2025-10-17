@@ -12,17 +12,17 @@ import frc.robot.autonomous.paths.deploy.pathplanner.AC1SRP
 import frc.robot.autonomous.paths.deploy.pathplanner.BRP2
 import frc.robot.autonomous.paths.deploy.pathplanner.CC2C3
 import frc.robot.lib.extensions.enableAutoLogOutputFor
+import frc.robot.lib.extensions.get
+import frc.robot.lib.extensions.sec
+import frc.robot.lib.extensions.volts
 import frc.robot.lib.shooting.toggleCompensation
-import frc.robot.robotstate.bindRobotCommands
-import frc.robot.robotstate.setForceShot
-import frc.robot.robotstate.setIntaking
-import frc.robot.robotstate.setOverrideDrive
-import frc.robot.robotstate.setShooting
-import frc.robot.robotstate.setStaticShooting
-import frc.robot.robotstate.stopForceShot
-import frc.robot.robotstate.stopOverrideDrive
+import frc.robot.lib.sysid.sysId
+import frc.robot.robotstate.*
 import frc.robot.subsystems.drive.DriveCommands
 import frc.robot.subsystems.roller.Roller
+import frc.robot.subsystems.shooter.hood.Hood
+import frc.robot.subsystems.wrist.Wrist
+import frc.robot.subsystems.wrist.WristAngles
 import org.ironmaple.simulation.SimulatedArena
 import org.littletonrobotics.junction.AutoLogOutput
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser
@@ -64,25 +64,35 @@ object RobotContainer {
     private fun configureDefaultCommands() {
         drive.defaultCommand =
             DriveCommands.joystickDrive(
+                { driverController.leftY },
                 { driverController.leftX },
-                { -driverController.leftY },
                 { -driverController.rightX * 0.8 }
             )
+
+        Wrist.defaultCommand = Wrist.open()
     }
 
     private fun configureButtonBindings() {
-
-        // Switch to X pattern when X button is pressed
+        // reset swerve
+        driverController
+            .options()
+            .onTrue(
+                drive.runOnce { drive.resetGyro() }.ignoringDisable(true),
+            )
         driverController.circle().onTrue(setIntaking())
         driverController.L2().onTrue(Roller.intake()).onFalse(Roller.stop())
         driverController.R2().onTrue(Roller.outtake()).onFalse(Roller.stop())
         driverController.square().onTrue(setIntaking())
         driverController.cross().onTrue(setShooting())
+
+        driverController.povDown().onTrue(setIdling())
         driverController.povUp().onTrue(toggleCompensation())
         driverController
             .triangle()
             .onTrue(setForceShot())
             .onFalse(stopForceShot())
+
+        driverController.create().whileTrue(Wrist.reset())
 
         hidController
             .button(HIDInput.DriveOverride.buttonId)
@@ -141,9 +151,26 @@ object RobotContainer {
             "Drive SysId (Dynamic Reverse)",
             drive.sysIdDynamic(SysIdRoutine.Direction.kReverse)
         )
+
+        autoChooser.addOption(
+            "swerveFFCharacterization",
+            DriveCommands.feedforwardCharacterization()
+        )
+
         autoChooser.addDefaultOption("BRP2", BRP2())
         autoChooser.addOption("AC1SRP", AC1SRP())
         autoChooser.addOption("CC2C3", CC2C3())
+        autoChooser.addOption(
+            "hoodSysId",
+            Hood.sysId()
+                .withForwardRoutineConfig(1.8.volts.per(sec), 1.volts, 0.75.sec)
+                .withBackwardRoutineConfig(
+                    1.volts.per(sec),
+                    0.8.volts,
+                    0.75.sec
+                )
+                .command()
+        )
     }
 
     fun resetSimulationField() {

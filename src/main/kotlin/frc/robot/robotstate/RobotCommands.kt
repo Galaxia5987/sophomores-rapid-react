@@ -27,6 +27,7 @@ import frc.robot.subsystems.shooter.hood.Hood
 import frc.robot.subsystems.shooter.hopper.Hopper
 import frc.robot.subsystems.shooter.turret.MAX_ANGLE
 import frc.robot.subsystems.shooter.turret.MIN_ANGLE
+import frc.robot.subsystems.shooter.turret.Turret
 import kotlin.collections.map
 import org.team5987.annotation.LoggedOutput
 
@@ -143,7 +144,7 @@ fun hoodDefaultCommand() =
 
 fun enableDefaultCommands(): Command {
     return Commands.runOnce({
-        turret.defaultCommand = turret.setAngle { turretAngleToHub }
+        Turret.defaultCommand = Turret.setAngle { turretAngleToHub }
         Hood.defaultCommand = hoodDefaultCommand()
     })
 }

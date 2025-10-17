@@ -13,6 +13,8 @@ import frc.robot.lib.getRotation3d
 import frc.robot.lib.getTranslation3d
 import frc.robot.subsystems.drive.Drive
 import frc.robot.subsystems.shooter.hood.Hood
+import frc.robot.subsystems.shooter.turret.Turret
+import frc.robot.subsystems.wrist.Wrist
 import org.littletonrobotics.junction.Logger
 
 private val swerveModulePose: Array<Translation2d> =
@@ -77,7 +79,7 @@ private fun getAllSwerveModulePoseDrive(): Array<Pose3d> {
 val wristTranslation
     get() = getTranslation3d(-0.3, 0.0, 0.28)
 val wristRotation
-    get() = getRotation3d(pitch = wrist.inputs.position)
+    get() = getRotation3d(pitch = Wrist.inputs.position)
 val wristPose
     get() = getPose3d(wristTranslation, wristRotation)
 
@@ -91,7 +93,7 @@ val rollerPose
 val turretTranslation
     get() = getTranslation3d(z = 0.41)
 val turretRotation
-    get() = getRotation3d(yaw = turret.inputs.position)
+    get() = getRotation3d(yaw = Turret.inputs.position)
 val turretPose
     get() =
         getPose3d(turretTranslation, turretRotation) +

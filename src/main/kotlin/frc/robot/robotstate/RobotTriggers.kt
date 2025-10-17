@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.applyLeds
 import frc.robot.drive
+import frc.robot.lib.extensions.*
 import frc.robot.lib.onTrue
 import frc.robot.robotRelativeBallPoses
 import frc.robot.subsystems.roller.Roller
@@ -12,7 +13,7 @@ import frc.robot.subsystems.shooter.flywheel.STATIC_SHOOT_VELOCITY
 import frc.robot.subsystems.shooter.hood.Hood
 import frc.robot.subsystems.shooter.hood.STATIC_SHOOT_SETPOINT
 import frc.robot.subsystems.shooter.hopper.Hopper
-import frc.robot.turret
+import frc.robot.subsystems.shooter.turret.Turret
 import org.team5987.annotation.LoggedOutput
 
 @LoggedOutput(path = COMMAND_NAME_PREFIX)
@@ -24,7 +25,7 @@ val isInDeadZone = Trigger {
 
 @LoggedOutput(path = COMMAND_NAME_PREFIX)
 val atShootingRotation =
-    turret.isAtSetpoint.and {
+    Turret.isAtSetpoint.and {
         drive.pose.rotation.measure.isNear(
             swerveCompensationAngle.measure,
             ROTATION_TOLERANCE
@@ -42,17 +43,15 @@ fun bindRobotCommands() {
     isShooting.apply {
         and(ballsEmpty.and { !forceShoot })
             .onTrue(setIntaking(), stopShooting())
-        and(isInDeadZone.negate())
-            .and(atShootingRotation)
-            .onTrue(startShooting())
-        and((isInDeadZone).or(atShootingRotation.negate()))
+//        and(!isInDeadZone, atShootingRotation).onTrue(startShooting()) TODO: Uncomment when turret works
+        and(!isInDeadZone).onTrue(startShooting()) // TODO: Remove when turret works
+        and((isInDeadZone).or(!atShootingRotation))
             .onTrue(driveToShootingPoint())
     }
     isIntaking.apply {
-        and(hasFrontBall)
-            .and(hasBackBall)
+        and(hasFrontBall, hasBackBall)
             .onTrue(Roller.stop(), Hopper.stop(), setShooting())
-        and(hasBackBall).and(hasFrontBall.negate()).apply {
+        and(hasBackBall, !hasFrontBall).apply {
             onTrue(stopIntaking())
             and(robotRelativeBallPoses::isNotEmpty).apply {
                 onTrue(Roller.intake())
@@ -61,7 +60,7 @@ fun bindRobotCommands() {
                     .onTrue(alignToBall(overrideDrive))
             }
         }
-        and(ballsEmpty).and(robotRelativeBallPoses::isNotEmpty).apply {
+        and(ballsEmpty, robotRelativeBallPoses::isNotEmpty).apply {
             onTrue(Roller.intake(), Hopper.start())
             and(globalBallPoses::isNotEmpty).onTrue(alignToBall(overrideDrive))
         }
@@ -85,4 +84,7 @@ fun setShooting() = setRobotState(RobotState.SHOOTING)
 
 fun setIntaking() = setRobotState(RobotState.INTAKING)
 
+fun setIdling() = setRobotState(RobotState.IDLING)
+
 fun setStaticShooting() = setRobotState(RobotState.STATIC_SHOOTING)
+

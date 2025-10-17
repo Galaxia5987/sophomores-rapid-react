@@ -10,10 +10,9 @@ import frc.robot.drive
 import frc.robot.lib.extensions.withRotation
 
 internal fun runPath(name: String, mirror: Boolean = false): Command {
-    val path = PathPlannerPath.fromPathFile(name)
+    val originalPath = PathPlannerPath.fromPathFile(name)
+    val path = if (IS_RED || mirror) originalPath.mirrorPath() else originalPath
     var startPose = path.pathPoses[0]
-    AutoBuilder.followPath(if (mirror) path.mirrorPath() else path)
-
     return Commands.runOnce({
             if (IS_RED) {
                 startPose =

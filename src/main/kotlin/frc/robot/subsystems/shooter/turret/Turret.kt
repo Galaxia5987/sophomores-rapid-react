@@ -18,7 +18,7 @@ private var root = mechanism.getRoot("Turret", 3.0, 2.0)
 private val ligament =
     root.append(LoggedMechanismLigament2d("TurretLigament", 0.25, 90.0))
 
-class Turret : SubsystemBase() {
+object Turret : SubsystemBase() {
     private val motor = UniversalTalonFX(MOTOR_ID, config = MOTOR_CONFIG)
     private val hallEffectSensor = DigitalInput(HALL_EFFECT_SENSOR_PORT)
     private val motionMagicTorque = MotionMagicTorqueCurrentFOC(0.0)
