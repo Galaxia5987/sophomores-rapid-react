@@ -6,6 +6,8 @@ import edu.wpi.first.units.measure.Voltage
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import edu.wpi.first.wpilibj2.command.button.Trigger
+import frc.robot.CURRENT_MODE
+import frc.robot.Mode
 import frc.robot.lib.colorSimilarity
 import frc.robot.lib.extensions.kg2m
 import frc.robot.lib.extensions.kilogramSquareMeters
@@ -14,6 +16,7 @@ import frc.robot.subsystems.shooter.hopper.BLUE_COLOR
 import frc.robot.subsystems.shooter.hopper.RED_COLOR
 import frc.robot.subsystems.shooter.hopper.SIMILARITY_THRESHOLD
 import org.littletonrobotics.junction.Logger
+import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean
 import org.team5987.annotation.LoggedOutput
 
 object Roller : SubsystemBase() {
@@ -48,7 +51,12 @@ object Roller : SubsystemBase() {
     @LoggedOutput
     val isBallBlue = Trigger { blueConfidence > SIMILARITY_THRESHOLD }
 
-    @LoggedOutput val hasBall = isBallBlue.or(isBallRed)
+    val simulatedHasBall = LoggedNetworkBoolean("/Tuning/Roller/hasBall", false)
+
+    @LoggedOutput
+    val hasBall =
+        if (CURRENT_MODE == Mode.REAL) isBallBlue.or(isBallRed)
+        else Trigger { simulatedHasBall.get() }
 
     private fun setVoltage(voltage: Voltage): Command = runOnce {
         motor.setControl(voltageRequest.withOutput(voltage))
