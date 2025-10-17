@@ -35,7 +35,7 @@ import org.team5987.annotation.LoggedOutput
 var hoodAngle = InterpolatingDouble(robotDistanceFromHub[m])
 var forceShoot = false
 var overrideDrive = false
-var ShootOnMove = LoggedNetworkBoolean("ShootOnMove",false)
+var ShootOnMove = LoggedNetworkBoolean("/Tuning/ShootOnMove",false)
 val compensatedShot: ShotData
     get() {
         val robotSpeeds =
