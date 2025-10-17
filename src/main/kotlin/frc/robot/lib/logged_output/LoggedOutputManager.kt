@@ -124,9 +124,18 @@ object LoggedOutputManager : SubsystemBase() {
                 type == Color::class.java ->
                     addRunnable {
                         value().ifNotNull {
-                            recordOutput("$key/red",(value() as Color).red*255);
-                            recordOutput("$key/blue",(value() as Color).blue*255);
-                            recordOutput("$key/green",(value() as Color).green*255);
+                            recordOutput(
+                                "$key/red",
+                                (value() as Color).red * 255
+                            )
+                            recordOutput(
+                                "$key/blue",
+                                (value() as Color).blue * 255
+                            )
+                            recordOutput(
+                                "$key/green",
+                                (value() as Color).green * 255
+                            )
                         }
                     }
                 type.isEnum ->

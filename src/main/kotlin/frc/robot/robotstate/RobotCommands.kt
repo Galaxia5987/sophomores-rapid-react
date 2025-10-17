@@ -13,13 +13,13 @@ import edu.wpi.first.wpilibj2.command.Commands.waitUntil
 import frc.robot.*
 import frc.robot.lib.extensions.*
 import frc.robot.lib.getPose2d
+import frc.robot.lib.getTranslation2d
 import frc.robot.lib.math.interpolation.InterpolatingDouble
 import frc.robot.lib.named
 import frc.robot.lib.shooting.ShotData
 import frc.robot.lib.shooting.calculateShot
 import frc.robot.robotRelativeBallPoses
-import frc.robot.subsystems.drive.align
-import frc.robot.subsystems.drive.profiledAlign
+import frc.robot.subsystems.drive.alignToPose
 import frc.robot.subsystems.roller.Roller
 import frc.robot.subsystems.shooter.flywheel.*
 import frc.robot.subsystems.shooter.hood.HOOD_ANGLE_BY_DISTANCE
@@ -57,7 +57,7 @@ val compensatedShot: ShotData
                 "regularShot/turretAngle" to angleFromRobotHub,
                 "shooterExitVelocity" to shooterExitVelocity
             )
-            .log("onMoveShoot")
+            .log("$COMMAND_NAME_PREFIX/onMoveShoot")
 
         return shot
     }
@@ -85,15 +85,24 @@ val globalBallPoses
         robotRelativeBallPoses
             .map { it + Pose3d(drive.pose).toTransform() }
             .toTypedArray()
+
 @LoggedOutput(path = COMMAND_NAME_PREFIX)
 val deadZoneAlignmentSetpoint
     get() =
         if (
             INNER_SHOOTING_AREA.getDistance(drive.pose.translation) <
-            OUTER_SHOOTING_AREA.getDistance(drive.pose.translation)
+                OUTER_SHOOTING_AREA.getDistance(drive.pose.translation)
         )
             INNER_SHOOTING_AREA.nearest(drive.pose.translation)
         else OUTER_SHOOTING_AREA.nearest(drive.pose.translation)
+
+@LoggedOutput(path = COMMAND_NAME_PREFIX)
+val shootingDirection
+    get() =
+        Pose2d(
+            drive.pose.translation + getTranslation2d(1.0),
+            Turret.inputs.position.toRotation2d() + drive.pose.rotation
+        )
 
 fun setForceShot() = Commands.runOnce({ forceShoot = true })
 
@@ -104,8 +113,12 @@ fun setOverrideDrive() = Commands.runOnce({ overrideDrive = true })
 fun stopOverrideDrive() = Commands.runOnce({ overrideDrive = false })
 
 fun driveToShootingPoint(): Command =
-    drive.defer { alignToPose(getPose2d(deadZoneAlignmentSetpoint, swerveCompensationAngle)).named("Drive") }
-
+    drive.defer {
+        alignToPose(
+                getPose2d(deadZoneAlignmentSetpoint, swerveCompensationAngle)
+            )
+            .named("Drive")
+    }
 
 fun startShooting() =
     sequence(
@@ -144,10 +157,3 @@ fun hoodDefaultCommand() =
         hoodAngle.value = compensatedShot.compensatedDistance[m]
         HOOD_ANGLE_BY_DISTANCE.getInterpolated(hoodAngle).value.deg
     }
-
-fun enableDefaultCommands(): Command {
-    return Commands.runOnce({
-        Turret.defaultCommand = Turret.setAngle { turretAngleToHub }
-        Hood.defaultCommand = hoodDefaultCommand()
-    })
-}
