@@ -43,8 +43,10 @@ fun bindRobotCommands() {
     isShooting.apply {
         and(ballsEmpty.and { !forceShoot })
             .onTrue(setIntaking(), stopShooting())
-//        and(!isInDeadZone, atShootingRotation).onTrue(startShooting()) TODO: Uncomment when turret works
-        and(!isInDeadZone).onTrue(startShooting()) // TODO: Remove when turret works
+        //        and(!isInDeadZone, atShootingRotation).onTrue(startShooting()) TODO: Uncomment
+        // when turret works
+        and(!isInDeadZone)
+            .onTrue(startShooting()) // TODO: Remove when turret works
         and((isInDeadZone).or(!atShootingRotation))
             .onTrue(driveToShootingPoint())
     }
@@ -69,10 +71,9 @@ fun bindRobotCommands() {
         onTrue(
             Roller.intake(),
             Hopper.start(),
-            Hood.setAngle(STATIC_SHOOT_SETPOINT),
-            Flywheel.setVelocity(STATIC_SHOOT_VELOCITY)
+            Hood.setAngle { STATIC_SHOOT_SETPOINT }.until(this),
+            Flywheel.setVelocity { STATIC_SHOOT_VELOCITY }.until(this)
         )
-        onFalse(enableDefaultCommands())
     }
     applyLeds()
 }
@@ -87,4 +88,3 @@ fun setIntaking() = setRobotState(RobotState.INTAKING)
 fun setIdling() = setRobotState(RobotState.IDLING)
 
 fun setStaticShooting() = setRobotState(RobotState.STATIC_SHOOTING)
-
