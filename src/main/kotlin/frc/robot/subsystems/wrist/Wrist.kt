@@ -26,8 +26,7 @@ object Wrist : SubsystemBase() {
     private val ligament =
         root.append(LoggedMechanismLigament2d("WristLigament", 0.25, 90.0))
 
-    @LoggedOutput
-    var setpoint: Angle = 0.degrees
+    @LoggedOutput var setpoint: Angle = 0.degrees
 
     private val motor =
         UniversalTalonFX(
@@ -38,8 +37,9 @@ object Wrist : SubsystemBase() {
         )
 
     @LoggedOutput
-    val atSetpoint =
-        Trigger { motor.inputs.position.isNear(setpoint, SETPOINT_TOLERANCE) }
+    val atSetpoint = Trigger {
+        motor.inputs.position.isNear(setpoint, SETPOINT_TOLERANCE)
+    }
 
     val inputs = motor.inputs
 
@@ -50,13 +50,14 @@ object Wrist : SubsystemBase() {
         motor.reset()
     }
 
-    fun reset(angle: Angle = WristAngles.OPEN.angle): Command = StartEndCommand( {
-        motor.setControl(voltageRequest.withOutput(RESET_VOLTAGE))
-
-    }, {
-        motor.setControl(voltageRequest.withOutput(0.0))
-        motor.reset(angle)
-    })
+    fun reset(angle: Angle = WristAngles.OPEN.angle): Command =
+        StartEndCommand(
+            { motor.setControl(voltageRequest.withOutput(RESET_VOLTAGE)) },
+            {
+                motor.setControl(voltageRequest.withOutput(0.0))
+                motor.reset(angle)
+            }
+        )
 
     fun setAngle(angle: WristAngles): Command = runOnce {
         setpoint = angle.angle

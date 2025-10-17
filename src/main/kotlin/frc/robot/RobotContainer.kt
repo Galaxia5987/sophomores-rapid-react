@@ -21,8 +21,8 @@ import frc.robot.robotstate.*
 import frc.robot.subsystems.drive.DriveCommands
 import frc.robot.subsystems.roller.Roller
 import frc.robot.subsystems.shooter.hood.Hood
+import frc.robot.subsystems.shooter.turret.Turret
 import frc.robot.subsystems.wrist.Wrist
-import frc.robot.subsystems.wrist.WristAngles
 import org.ironmaple.simulation.SimulatedArena
 import org.littletonrobotics.junction.AutoLogOutput
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser
@@ -68,7 +68,8 @@ object RobotContainer {
                 { driverController.leftX },
                 { -driverController.rightX * 0.8 }
             )
-
+        Turret.defaultCommand = Turret.setAngle { turretAngleToHub }
+        Hood.defaultCommand = hoodDefaultCommand()
         Wrist.defaultCommand = Wrist.open()
     }
 
