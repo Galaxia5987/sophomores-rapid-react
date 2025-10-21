@@ -61,9 +61,12 @@ fun bindRobotCommands() {
                     .onTrue(alignToBall(overrideDrive))
             }
         }
-        and(ballsEmpty, robotRelativeBallPoses::isNotEmpty).apply {
+        and(ballsEmpty).apply{
+            and(robotRelativeBallPoses::isNotEmpty).apply {
             onTrue(Roller.intake(), Hopper.start())
             and(globalBallPoses::isNotEmpty).onTrue(alignToBall(overrideDrive))
+            }
+            onTrue(stopIntaking())
         }
     }
     isStaticShooting.apply {
