@@ -46,7 +46,7 @@ fun bindRobotCommands() {
         and(!isInDeadZone, atShootingRotation, { !ShootOnMove.get() })
             .onTrue(startShooting())
         and(!isInDeadZone, { ShootOnMove.get() })
-            .onTrue(startShooting()) // TODO: Remove when turret works
+            .onTrue(startShooting())
         and((isInDeadZone).or(!atShootingRotation))
             .onTrue(driveToShootingPoint())
     }
