@@ -43,8 +43,9 @@ fun bindRobotCommands() {
     isShooting.apply {
         and(ballsEmpty.and { !forceShoot })
             .onTrue(setIntaking(), stopShooting())
-                and(!isInDeadZone, atShootingRotation,{!ShootOnMove.get()}).onTrue(startShooting())
-        and(!isInDeadZone,{ShootOnMove.get()})
+        and(!isInDeadZone, atShootingRotation, { !ShootOnMove.get() })
+            .onTrue(startShooting())
+        and(!isInDeadZone, { ShootOnMove.get() })
             .onTrue(startShooting()) // TODO: Remove when turret works
         and((isInDeadZone).or(!atShootingRotation))
             .onTrue(driveToShootingPoint())
@@ -54,19 +55,22 @@ fun bindRobotCommands() {
             .onTrue(Roller.stop(), Hopper.stop(), setShooting())
         and(hasBackBall, !hasFrontBall).apply {
             onTrue(stopIntaking())
-            and(robotRelativeBallPoses::isNotEmpty).apply {
+            and(robotRelativeBallPoses::isNotEmpty, { intakeByVision }).apply {
                 onTrue(Roller.intake())
                 and(globalBallPoses::isNotEmpty)
                     .and { !forceShoot }
                     .onTrue(alignToBall(overrideDrive))
             }
+            and { !intakeByVision }.onTrue(Roller.intake())
         }
-        and(ballsEmpty).apply{
-            and(robotRelativeBallPoses::isNotEmpty).apply {
-            onTrue(Roller.intake(), Hopper.start())
-            and(globalBallPoses::isNotEmpty).onTrue(alignToBall(overrideDrive))
+        and(ballsEmpty).apply {
+            and(robotRelativeBallPoses::isNotEmpty, { intakeByVision }).apply {
+                onTrue(Roller.intake(), Hopper.start())
+                and(globalBallPoses::isNotEmpty)
+                    .onTrue(alignToBall(overrideDrive))
             }
             onTrue(stopIntaking())
+            and { !intakeByVision }.onTrue(Roller.intake(), Hopper.start())
         }
     }
     isStaticShooting.apply {

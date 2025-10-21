@@ -35,7 +35,8 @@ object RobotContainer {
 
     enum class HIDInput(val buttonId: Int) {
         DriveOverride(0),
-        StaticSetpoint(1)
+        StaticSetpoint(1),
+        IntakeByVision(2)
     }
 
     init {
@@ -103,6 +104,10 @@ object RobotContainer {
             .button(HIDInput.StaticSetpoint.buttonId)
             .whileTrue(setStaticShooting())
             .whileFalse(setShooting())
+        hidController
+            .button(HIDInput.IntakeByVision.buttonId)
+            .whileTrue(setIntakeByVision())
+            .onFalse(stopIntakeByVision())
 
         // Reset gyro / odometry
         val resetOdometry =
