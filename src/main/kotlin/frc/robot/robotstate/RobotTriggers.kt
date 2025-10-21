@@ -57,17 +57,17 @@ fun bindRobotCommands() {
             onTrue(stopIntaking())
             and(robotRelativeBallPoses::isNotEmpty, { intakeByVision }).apply {
                 onTrue(Roller.intake())
-                and(globalBallPoses::isNotEmpty)
-                    .and { !forceShoot }
-                    .onTrue(alignToBall(overrideDrive))
+                and { !forceShoot }.onTrue(alignToBall(overrideDrive))
             }
             and { !intakeByVision }.onTrue(Roller.intake())
         }
         and(ballsEmpty).apply {
             and(robotRelativeBallPoses::isNotEmpty, { intakeByVision }).apply {
-                onTrue(Roller.intake(), Hopper.start())
-                and(globalBallPoses::isNotEmpty)
-                    .onTrue(alignToBall(overrideDrive))
+                onTrue(
+                    Roller.intake(),
+                    Hopper.start(),
+                    alignToBall(overrideDrive)
+                )
             }
             onTrue(stopIntaking())
             and { !intakeByVision }.onTrue(Roller.intake(), Hopper.start())
