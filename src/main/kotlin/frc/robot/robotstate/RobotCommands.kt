@@ -77,9 +77,10 @@ val angleFromRobotHub
 
 val turretAngleToHub: Angle
     get() =
-        if (ShootOnMove.get()) {
-            compensatedShot.turretAngle.measure.coerceIn(MIN_ANGLE, MAX_ANGLE)
-        } else angleFromRobotHub.coerceIn(MIN_ANGLE, MAX_ANGLE)
+        (if (ShootOnMove.get()) {
+                compensatedShot.turretAngle.measure
+            } else angleFromRobotHub)
+            .coerceIn(MIN_ANGLE, MAX_ANGLE)
 
 @LoggedOutput(path = COMMAND_NAME_PREFIX)
 val swerveCompensationAngle
