@@ -96,8 +96,8 @@ val deadZoneAlignmentSetpoint
             INNER_SHOOTING_AREA.getDistance(drive.pose.translation) <
             OUTER_SHOOTING_AREA.getDistance(drive.pose.translation)
         )
-            INNER_SHOOTING_AREA.nearest(drive.pose.translation)
-        else OUTER_SHOOTING_AREA.nearest(drive.pose.translation)
+            INNER_SHOOTING_AREA_ALIGNMENT.nearest(drive.pose.translation)
+        else OUTER_SHOOTING_AREA_ALIGNMENT.nearest(drive.pose.translation)
 
 @LoggedOutput(path = COMMAND_NAME_PREFIX)
 val shootingDirection
@@ -120,8 +120,7 @@ fun driveToShootingPoint(): Command =
         alignToPose(
             getPose2d(deadZoneAlignmentSetpoint, swerveCompensationAngle)
         )
-            .named("Drive")
-    }
+    }.named("Drive")
 
 fun startShooting() =
     sequence(
