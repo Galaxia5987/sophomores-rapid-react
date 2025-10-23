@@ -12,7 +12,6 @@ import frc.robot.autonomous.paths.deploy.pathplanner.AC1SRP
 import frc.robot.autonomous.paths.deploy.pathplanner.BRP2
 import frc.robot.autonomous.paths.deploy.pathplanner.CC2C3
 import frc.robot.lib.extensions.enableAutoLogOutputFor
-import frc.robot.lib.extensions.get
 import frc.robot.lib.extensions.sec
 import frc.robot.lib.extensions.volts
 import frc.robot.lib.shooting.toggleCompensation
@@ -30,10 +29,10 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser
 object RobotContainer {
 
     private val driverController = CommandPS5Controller(0)
-    private val hidController = CommandGenericHID(1)
+    private val SwitchController = CommandGenericHID(1)
     private val autoChooser: LoggedDashboardChooser<Command>
 
-    enum class ToggleInput(val buttonId: Int) {
+    enum class SwitchInput(val buttonId: Int) {
         DisableAutoAlign(0),
         StaticSetpoint(1),
         IntakeByVision(2)
@@ -96,16 +95,16 @@ object RobotContainer {
 
         driverController.create().whileTrue(Wrist.reset())
 
-        toggleController
-            .button(ToggleInput.DisableAutoAlign.buttonId)
+        SwitchController
+            .button(SwitchInput.DisableAutoAlign.buttonId)
             .whileTrue(DisableAutoAlign())
             .whileFalse(EnableAutoAlign())
-        toggleController
-            .button(ToggleInput.StaticSetpoint.buttonId)
+        SwitchController
+            .button(SwitchInput.StaticSetpoint.buttonId)
             .whileTrue(setStaticShooting())
             .whileFalse(setShooting())
-        hidController
-            .button(HIDInput.IntakeByVision.buttonId)
+        SwitchController
+            .button(SwitchInput.IntakeByVision.buttonId)
             .whileTrue(setIntakeByVision())
             .onFalse(stopIntakeByVision())
 
