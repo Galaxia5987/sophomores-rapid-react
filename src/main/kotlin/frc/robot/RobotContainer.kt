@@ -96,8 +96,8 @@ object RobotContainer {
 
         SwitchController.apply {
             button(SwitchInput.DisableAutoAlign.buttonId)
-                .whileTrue(DisableAutoAlign())
-                .whileFalse(EnableAutoAlign())
+                .whileTrue(disableAutoAlign())
+                .whileFalse(enableAutoAlign())
 
             button(SwitchInput.StaticSetpoint.buttonId)
                 .whileTrue(setStaticShooting())

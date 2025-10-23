@@ -104,9 +104,9 @@ fun setForceShoot() = Commands.runOnce({ forceShoot = true })
 
 fun stopForceShoot() = Commands.runOnce({ forceShoot = false })
 
-fun DisableAutoAlign() = Commands.runOnce({ disableAutoAlign.set(true) })
+fun disableAutoAlign() = Commands.runOnce({ disableAutoAlign.set(true) })
 
-fun EnableAutoAlign() = Commands.runOnce({ disableAutoAlign.set(false) })
+fun enableAutoAlign() = Commands.runOnce({ disableAutoAlign.set(false) })
 
 fun stopIntakeByVision() = Commands.runOnce({ intakeByVision = false })
 
