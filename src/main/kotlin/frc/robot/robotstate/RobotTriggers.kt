@@ -43,7 +43,8 @@ fun bindRobotCommands() {
         and(ballsEmpty.and { !forceShoot })
             .onTrue(setIntaking(), stopShooting())
         and(!isInDeadZone).apply {
-            and( atShootingRotation, { !ShootOnMove.get() }).onTrue(startShooting())
+            and(atShootingRotation, { !ShootOnMove.get() })
+                .onTrue(startShooting())
             and { ShootOnMove.get() }.onTrue(startShooting())
         }
         and((isInDeadZone).or(!atShootingRotation))

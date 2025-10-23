@@ -77,9 +77,9 @@ object RobotContainer {
         // reset swerve
         driverController.apply {
             options()
-            .onTrue(
-                drive.runOnce { drive.resetGyro() }.ignoringDisable(true),
-            )
+                .onTrue(
+                    drive.runOnce { drive.resetGyro() }.ignoringDisable(true),
+                )
 
             circle().onTrue(setIntaking())
             L2().onTrue(Roller.intake()).onFalse(Roller.stop())
@@ -89,9 +89,7 @@ object RobotContainer {
 
             povDown().onTrue(setIdling())
             povUp().onTrue(toggleCompensation())
-            triangle()
-                .onTrue(setForceShoot())
-                .onFalse(stopForceShoot())
+            triangle().onTrue(setForceShoot()).onFalse(stopForceShoot())
 
             create().whileTrue(Wrist.reset())
         }

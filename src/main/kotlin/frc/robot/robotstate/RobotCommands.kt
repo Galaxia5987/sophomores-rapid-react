@@ -97,7 +97,7 @@ val deadZoneAlignmentSetpoint
                     OUTER_SHOOTING_AREA.getDistance(drive.pose.translation)
             )
                 INNER_SHOOTING_AREA_ALIGNMENT
-            else OUTER_SHOOTING_AREA_ALIGNMENT)  // Find area for shooting.
+            else OUTER_SHOOTING_AREA_ALIGNMENT) // Find area for shooting.
             .nearest(drive.pose.translation)
 
 fun setForceShoot() = Commands.runOnce({ forceShoot = true })
@@ -145,10 +145,12 @@ fun stopIntaking() =
     parallel(Roller.stop(), Hopper.stop()).named(COMMAND_NAME_PREFIX)
 
 fun alignToBall(toRun: Boolean = true): Command =
-        drive.defer {
+    drive
+        .defer {
             alignToPose(globalBallPoses.firstOrNull()?.toPose2d() ?: drive.pose)
                 .named(COMMAND_NAME_PREFIX)
-        }.onlyIf {toRun}
+        }
+        .onlyIf { toRun }
 
 fun hoodDefaultCommand() =
     Hood.setAngle {
