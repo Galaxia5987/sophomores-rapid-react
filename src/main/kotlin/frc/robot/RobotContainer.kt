@@ -75,39 +75,40 @@ object RobotContainer {
 
     private fun configureButtonBindings() {
         // reset swerve
-        driverController
-            .options()
+        driverController.apply {
+            options()
             .onTrue(
                 drive.runOnce { drive.resetGyro() }.ignoringDisable(true),
             )
-        driverController.circle().onTrue(setIntaking())
-        driverController.L2().onTrue(Roller.intake()).onFalse(Roller.stop())
-        driverController.R2().onTrue(Roller.outtake()).onFalse(Roller.stop())
-        driverController.square().onTrue(setIntaking())
-        driverController.cross().onTrue(setShooting())
 
-        driverController.povDown().onTrue(setIdling())
-        driverController.povUp().onTrue(toggleCompensation())
-        driverController
-            .triangle()
-            .onTrue(setForceShoot())
-            .onFalse(stopForceShoot())
+            circle().onTrue(setIntaking())
+            L2().onTrue(Roller.intake()).onFalse(Roller.stop())
+            R2().onTrue(Roller.outtake()).onFalse(Roller.stop())
+            square().onTrue(setIntaking())
+            cross().onTrue(setShooting())
 
-        driverController.create().whileTrue(Wrist.reset())
+            povDown().onTrue(setIdling())
+            povUp().onTrue(toggleCompensation())
+            triangle()
+                .onTrue(setForceShoot())
+                .onFalse(stopForceShoot())
 
-        SwitchController
-            .button(SwitchInput.DisableAutoAlign.buttonId)
-            .whileTrue(DisableAutoAlign())
-            .whileFalse(EnableAutoAlign())
-        SwitchController
-            .button(SwitchInput.StaticSetpoint.buttonId)
-            .whileTrue(setStaticShooting())
-            .whileFalse(setShooting())
-        SwitchController
-            .button(SwitchInput.IntakeByVision.buttonId)
-            .whileTrue(setIntakeByVision())
-            .onFalse(stopIntakeByVision())
+            create().whileTrue(Wrist.reset())
+        }
 
+        SwitchController.apply {
+            button(SwitchInput.DisableAutoAlign.buttonId)
+                .whileTrue(DisableAutoAlign())
+                .whileFalse(EnableAutoAlign())
+
+            button(SwitchInput.StaticSetpoint.buttonId)
+                .whileTrue(setStaticShooting())
+                .whileFalse(setShooting())
+
+            button(SwitchInput.IntakeByVision.buttonId)
+                .whileTrue(setIntakeByVision())
+                .onFalse(stopIntakeByVision())
+        }
         // Reset gyro / odometry
         val resetOdometry =
             if (CURRENT_MODE == Mode.SIM)
