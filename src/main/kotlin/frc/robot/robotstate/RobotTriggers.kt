@@ -57,7 +57,7 @@ fun bindRobotCommands() {
             onTrue(stopIntaking())
             and(robotRelativeBallPoses::isNotEmpty, { intakeByVision }).apply {
                 onTrue(Roller.intake())
-                and { !forceShoot }.onTrue(alignToBall(overrideDrive))
+                and { !forceShoot }.onTrue(alignToBall(disableAutoAlign.get()))
             }
             and { !intakeByVision }.onTrue(Roller.intake())
         }
@@ -66,7 +66,7 @@ fun bindRobotCommands() {
                 onTrue(
                     Roller.intake(),
                     Hopper.start(),
-                    alignToBall(overrideDrive)
+                    alignToBall(disableAutoAlign.get())
                 )
             }
             onTrue(stopIntaking())

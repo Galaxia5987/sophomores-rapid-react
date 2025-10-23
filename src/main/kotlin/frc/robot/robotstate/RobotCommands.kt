@@ -12,8 +12,6 @@ import edu.wpi.first.wpilibj2.command.Commands.sequence
 import edu.wpi.first.wpilibj2.command.Commands.waitUntil
 import frc.robot.*
 import frc.robot.lib.extensions.*
-import frc.robot.lib.getPose2d
-import frc.robot.lib.getTranslation2d
 import frc.robot.lib.math.interpolation.InterpolatingDouble
 import frc.robot.lib.named
 import frc.robot.lib.shooting.ShotData
@@ -27,16 +25,14 @@ import frc.robot.subsystems.shooter.hood.Hood
 import frc.robot.subsystems.shooter.hopper.Hopper
 import frc.robot.subsystems.shooter.turret.MAX_ANGLE
 import frc.robot.subsystems.shooter.turret.MIN_ANGLE
-import frc.robot.subsystems.shooter.turret.Turret
 import kotlin.collections.map
 import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean
 import org.team5987.annotation.LoggedOutput
 
 var hoodAngle = InterpolatingDouble(robotDistanceFromHub[m])
 var forceShoot = false
-var overrideDrive = false
+var disableAutoAlign = LoggedNetworkBoolean("/Tuning/disableAutoAlign", false)
 var intakeByVision = false
-
 var ShootOnMove = LoggedNetworkBoolean("/Tuning/ShootOnMove", false)
 val compensatedShot: ShotData
     get() {
@@ -107,9 +103,9 @@ fun setForceShoot() = Commands.runOnce({ forceShoot = true })
 
 fun stopForceShoot() = Commands.runOnce({ forceShoot = false })
 
-fun stopForceShot() = Commands.runOnce({ forceShoot = false })
+fun DisableAutoAlign() = Commands.runOnce({ disableAutoAlign.set(true) })
 
-fun setOverrideDrive() = Commands.runOnce({ overrideDrive = true })
+fun EnableAutoAlign() = Commands.runOnce({ disableAutoAlign.set(false) })
 
 fun stopIntakeByVision() = Commands.runOnce({ intakeByVision = false })
 

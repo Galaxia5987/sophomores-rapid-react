@@ -33,8 +33,8 @@ object RobotContainer {
     private val hidController = CommandGenericHID(1)
     private val autoChooser: LoggedDashboardChooser<Command>
 
-    enum class HIDInput(val buttonId: Int) {
-        DriveOverride(0),
+    enum class ToggleInput(val buttonId: Int) {
+        DisableAutoAlign(0),
         StaticSetpoint(1),
         IntakeByVision(2)
     }
@@ -91,17 +91,17 @@ object RobotContainer {
         driverController.povUp().onTrue(toggleCompensation())
         driverController
             .triangle()
-            .onTrue(setForceShot())
-            .onFalse(stopForceShot())
+            .onTrue(setForceShoot())
+            .onFalse(stopForceShoot())
 
         driverController.create().whileTrue(Wrist.reset())
 
-        hidController
-            .button(HIDInput.DriveOverride.buttonId)
-            .whileTrue(setOverrideDrive())
-            .whileFalse(stopOverrideDrive())
-        hidController
-            .button(HIDInput.StaticSetpoint.buttonId)
+        toggleController
+            .button(ToggleInput.DisableAutoAlign.buttonId)
+            .whileTrue(DisableAutoAlign())
+            .whileFalse(EnableAutoAlign())
+        toggleController
+            .button(ToggleInput.StaticSetpoint.buttonId)
             .whileTrue(setStaticShooting())
             .whileFalse(setShooting())
         hidController
