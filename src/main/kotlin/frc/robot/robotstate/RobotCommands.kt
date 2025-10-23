@@ -112,13 +112,13 @@ fun stopIntakeByVision() = Commands.runOnce({ intakeByVision = false })
 
 fun setIntakeByVision() = Commands.runOnce({ intakeByVision = true })
 
-fun driveToShootingPoint(): Command =
+fun driveToShootingPoint(toRun:()-> Boolean = {true}): Command =
     drive
         .defer {
             alignToPose(
                 Pose2d(deadZoneAlignmentSetpoint, swerveCompensationAngle)
-            )
-        }
+            ).until(toRun)
+        }.onlyIf(toRun)
         .named("Drive")
 
 fun startShooting() =
@@ -144,13 +144,13 @@ fun stopShooting() =
 fun stopIntaking() =
     parallel(Roller.stop(), Hopper.stop()).named(COMMAND_NAME_PREFIX)
 
-fun alignToBall(toRun: Boolean = true): Command =
+fun alignToBall(toRun:()-> Boolean = {true}): Command =
     drive
         .defer {
             alignToPose(globalBallPoses.firstOrNull()?.toPose2d() ?: drive.pose)
-                .named(COMMAND_NAME_PREFIX)
+                .named(COMMAND_NAME_PREFIX).until(toRun)
         }
-        .onlyIf { toRun }
+        .onlyIf(toRun)
 
 fun hoodDefaultCommand() =
     Hood.setAngle {
