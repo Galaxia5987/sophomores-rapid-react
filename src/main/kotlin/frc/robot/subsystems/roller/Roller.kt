@@ -31,7 +31,7 @@ object Roller : SubsystemBase() {
 
     private val voltageRequest = VoltageOut(0.0)
 
-    private val colorSensor = ColorSensorV3(I2C_PORT)
+    private val colorSensor = ColorSensorV3(COLOR_SENSOR_PORT)
 
     @LoggedOutput
     val ballColor

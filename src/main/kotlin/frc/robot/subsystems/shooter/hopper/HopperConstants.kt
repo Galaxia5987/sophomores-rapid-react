@@ -32,4 +32,4 @@ val RED_COLOR = Color(138, 87, 29)
 val BLUE_COLOR = Color(73, 147, 33)
 const val SIMILARITY_THRESHOLD = 0.9
 
-val I2C_PORT = I2C.Port.kMXP
+val COLOR_SENSOR_PORT = I2C.Port.kMXP

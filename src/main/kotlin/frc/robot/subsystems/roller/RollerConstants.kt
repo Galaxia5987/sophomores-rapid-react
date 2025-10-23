@@ -11,4 +11,4 @@ val INTAKE = 12.volts
 val OUTTAKE = -INTAKE
 val STOP = 0.volts
 
-val I2C_PORT = I2C.Port.kOnboard
+val COLOR_SENSOR_PORT = I2C.Port.kOnboard

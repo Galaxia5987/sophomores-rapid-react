@@ -20,7 +20,7 @@ object Hopper : SubsystemBase() {
     private val motor: UniversalTalonFX =
         UniversalTalonFX(MOTOR_ID, config = MOTOR_CONFIG)
 
-    private val colorSensor = ColorSensorV3(I2C_PORT)
+    private val colorSensor = ColorSensorV3(COLOR_SENSOR_PORT)
     private val voltageRequest = VoltageOut(0.0)
 
     @LoggedOutput
