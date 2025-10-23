@@ -74,10 +74,9 @@ fun bindRobotCommands() {
         }
     }
     isStaticShooting.apply {
-        onTrueUntil(
-            this,
-            Roller.intake(),
-            Hopper.start(),
+        onTrue(Roller.intake(),
+            Hopper.start())
+        whileTrue(
             Hood.setAngle { STATIC_SHOOT_SETPOINT },
             Flywheel.setVelocity { STATIC_SHOOT_VELOCITY }
         )
