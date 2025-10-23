@@ -116,7 +116,7 @@ fun driveToShootingPoint(): Command =
     drive
         .defer {
             alignToPose(
-                getPose2d(deadZoneAlignmentSetpoint, swerveCompensationAngle)
+                Pose2d(deadZoneAlignmentSetpoint, swerveCompensationAngle)
             )
         }
         .named("Drive")
