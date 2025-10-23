@@ -103,25 +103,17 @@ val deadZoneAlignmentSetpoint
             INNER_SHOOTING_AREA_ALIGNMENT.nearest(drive.pose.translation)
         else OUTER_SHOOTING_AREA_ALIGNMENT.nearest(drive.pose.translation)
 
-@LoggedOutput(path = COMMAND_NAME_PREFIX)
-val shootingDirection
-    get() =
-        Pose2d(
-            drive.pose.translation + getTranslation2d(1.0),
-            Turret.inputs.position.toRotation2d() + drive.pose.rotation
-        )
+fun setForceShoot() = Commands.runOnce({ forceShoot = true })
 
-fun setForceShot() = Commands.runOnce({ forceShoot = true })
+fun stopForceShoot() = Commands.runOnce({ forceShoot = false })
 
 fun stopForceShot() = Commands.runOnce({ forceShoot = false })
 
 fun setOverrideDrive() = Commands.runOnce({ overrideDrive = true })
 
-fun stopOverrideDrive() = Commands.runOnce({ overrideDrive = false })
+fun stopIntakeByVision() = Commands.runOnce({ intakeByVision = false })
 
-fun stopIntakeByVision() = Commands.runOnce({ overrideDrive = false })
-
-fun setIntakeByVision() = Commands.runOnce({ overrideDrive = true })
+fun setIntakeByVision() = Commands.runOnce({ intakeByVision = true })
 
 fun driveToShootingPoint(): Command =
     drive

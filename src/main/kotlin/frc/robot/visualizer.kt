@@ -1,5 +1,6 @@
 package frc.robot
 
+import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.math.geometry.Pose3d
 import edu.wpi.first.math.geometry.Transform3d
 import edu.wpi.first.math.geometry.Translation2d
@@ -8,14 +9,17 @@ import edu.wpi.first.units.measure.Angle
 import frc.robot.lib.extensions.deg
 import frc.robot.lib.extensions.get
 import frc.robot.lib.extensions.m
+import frc.robot.lib.extensions.toRotation2d
 import frc.robot.lib.getPose3d
 import frc.robot.lib.getRotation3d
 import frc.robot.lib.getTranslation3d
+import frc.robot.robotstate.COMMAND_NAME_PREFIX
 import frc.robot.subsystems.drive.Drive
 import frc.robot.subsystems.shooter.hood.Hood
 import frc.robot.subsystems.shooter.turret.Turret
 import frc.robot.subsystems.wrist.Wrist
 import org.littletonrobotics.junction.Logger
+import org.team5987.annotation.LoggedOutput
 
 private val swerveModulePose: Array<Translation2d> =
     Drive.getModuleTranslations()
@@ -133,3 +137,11 @@ fun getSubsystemPose(): Array<Pose3d> {
 fun logSubsystemPose() {
     Logger.recordOutput("RobotPose3d", *getSubsystemPose())
 }
+
+@LoggedOutput(path = COMMAND_NAME_PREFIX)
+val shootingDirection
+    get() =
+        Pose2d(
+            drive.pose.translation,
+            turretRotation.toRotation2d() + drive.pose.rotation
+        )
