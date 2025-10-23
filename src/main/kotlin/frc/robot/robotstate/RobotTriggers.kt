@@ -32,7 +32,7 @@ val atShootingRotation =
     }
 
 val isShooting = Trigger { state == RobotState.SHOOTING }
-val isStaticShooting = Trigger { state == RobotState.STATIC_SHOOTING }
+val isStaticShooting = Trigger { state == RobotState.FIXED_SHOOTING }
 val isIntaking = Trigger { state == RobotState.INTAKING }
 private val hasFrontBall = Roller.hasBall
 val hasBackBall = Hopper.hasBall
@@ -94,4 +94,4 @@ fun setIntaking() = setRobotState(RobotState.INTAKING)
 
 fun setIdling() = setRobotState(RobotState.IDLING)
 
-fun setStaticShooting() = setRobotState(RobotState.STATIC_SHOOTING)
+fun setStaticShooting() = setRobotState(RobotState.FIXED_SHOOTING)
