@@ -8,7 +8,7 @@ const val AUXILIARY_MOTOR_PORT = 1
 const val SENSOR_ID = 11
 
 val INTAKE = 12.volts
-val OUTTAKE = (-12).volts
+val OUTTAKE = -INTAKE
 val STOP = 0.volts
 
 val I2C_PORT = I2C.Port.kOnboard
