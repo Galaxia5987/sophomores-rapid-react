@@ -144,14 +144,11 @@ fun stopShooting() =
 fun stopIntaking() =
     parallel(Roller.stop(), Hopper.stop()).named(COMMAND_NAME_PREFIX)
 
-fun alignToBall(toRun: Boolean = true): Command {
-    return if (toRun)
+fun alignToBall(toRun: Boolean = true): Command =
         drive.defer {
             alignToPose(globalBallPoses.firstOrNull()?.toPose2d() ?: drive.pose)
                 .named(COMMAND_NAME_PREFIX)
-        }
-    else Commands.none()
-}
+        }.onlyIf {toRun}
 
 fun hoodDefaultCommand() =
     Hood.setAngle {
