@@ -95,9 +95,6 @@ fun Any?.ifNotNull(action: (it: Any) -> Unit) {
     }
 }
 
-fun Trigger.onTrue(vararg commands: Command) {
-    commands.forEach { this.onTrue(it) }
-}
 
 /**
  * Calculates how similar two colors are, based on HSV distance. Returns a value

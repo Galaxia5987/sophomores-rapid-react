@@ -74,11 +74,12 @@ fun bindRobotCommands() {
         }
     }
     isStaticShooting.apply {
-        onTrue(
+        onTrueUntil(
+            this,
             Roller.intake(),
             Hopper.start(),
-            Hood.setAngle { STATIC_SHOOT_SETPOINT }.until(this),
-            Flywheel.setVelocity { STATIC_SHOOT_VELOCITY }.until(this)
+            Hood.setAngle { STATIC_SHOOT_SETPOINT },
+            Flywheel.setVelocity { STATIC_SHOOT_VELOCITY }
         )
     }
     applyLeds()
