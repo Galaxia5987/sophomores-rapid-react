@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.applyLeds
 import frc.robot.drive
 import frc.robot.lib.extensions.*
-import frc.robot.lib.onTrue
 import frc.robot.robotRelativeBallPoses
 import frc.robot.subsystems.roller.Roller
 import frc.robot.subsystems.shooter.flywheel.Flywheel
@@ -43,10 +42,10 @@ fun bindRobotCommands() {
     isShooting.apply {
         and(ballsEmpty.and { !forceShoot })
             .onTrue(setIntaking(), stopShooting())
-        and(!isInDeadZone, atShootingRotation, { !ShootOnMove.get() })
-            .onTrue(startShooting())
-        and(!isInDeadZone, { ShootOnMove.get() })
-            .onTrue(startShooting())
+        and(!isInDeadZone).apply {
+            and( atShootingRotation, { !ShootOnMove.get() }).onTrue(startShooting())
+            and { ShootOnMove.get() }.onTrue(startShooting())
+        }
         and((isInDeadZone).or(!atShootingRotation))
             .onTrue(driveToShootingPoint())
     }
