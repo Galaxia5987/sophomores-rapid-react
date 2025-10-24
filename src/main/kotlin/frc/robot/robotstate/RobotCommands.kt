@@ -16,6 +16,7 @@ import frc.robot.lib.math.interpolation.InterpolatingDouble
 import frc.robot.lib.named
 import frc.robot.lib.shooting.ShotData
 import frc.robot.lib.shooting.calculateShot
+import frc.robot.lib.shooting.disableCompensation
 import frc.robot.robotRelativeBallPoses
 import frc.robot.subsystems.drive.alignToPose
 import frc.robot.subsystems.roller.Roller
@@ -73,7 +74,7 @@ val angleFromRobotHub
 
 val turretAngleToHub: Angle
     get() =
-        (if (ShootOnMove.get()) {
+        (if (disableCompensation.get()) {
                 compensatedShot.turretAngle.measure
             } else angleFromRobotHub)
             .coerceIn(MIN_ANGLE, MAX_ANGLE)
@@ -112,13 +113,13 @@ fun stopIntakeByVision() = Commands.runOnce({ intakeByVision = false })
 
 fun setIntakeByVision() = Commands.runOnce({ intakeByVision = true })
 
-fun driveToShootingPoint(toRun:()-> Boolean = {true}): Command =
+fun driveToShootingPoint(toRun:()-> Boolean = {false}): Command =
     drive
         .defer {
             alignToPose(
                 Pose2d(deadZoneAlignmentSetpoint, swerveCompensationAngle)
-            ).until(toRun)
-        }.onlyIf(toRun)
+            )
+        }.until(toRun)
         .named("Drive")
 
 fun startShooting() =
@@ -144,13 +145,13 @@ fun stopShooting() =
 fun stopIntaking() =
     parallel(Roller.stop(), Hopper.stop()).named(COMMAND_NAME_PREFIX)
 
-fun alignToBall(toRun:()-> Boolean = {true}): Command =
+fun alignToBall(toRun:()-> Boolean = {false}): Command =
     drive
         .defer {
-            alignToPose(globalBallPoses.firstOrNull()?.toPose2d() ?: drive.pose)
-                .named(COMMAND_NAME_PREFIX).until(toRun)
+            alignToPose(globalBallPoses.first().toPose2d()).onlyIf(globalBallPoses::isNotEmpty)
+                .named(COMMAND_NAME_PREFIX)
         }
-        .onlyIf(toRun)
+        .until(toRun)
 
 fun hoodDefaultCommand() =
     Hood.setAngle {

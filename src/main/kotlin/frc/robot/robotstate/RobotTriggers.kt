@@ -48,7 +48,7 @@ fun bindRobotCommands() {
             and { ShootOnMove.get() }.onTrue(startShooting())
         }
         and((isInDeadZone).or(!atShootingRotation))
-            .onTrue(driveToShootingPoint())
+            .onTrue(driveToShootingPoint(disableAutoAlign::get))
     }
     isIntaking.apply {
         and(hasFrontBall, hasBackBall)
@@ -57,7 +57,7 @@ fun bindRobotCommands() {
             onTrue(stopIntaking())
             and(robotRelativeBallPoses::isNotEmpty, { intakeByVision }).apply {
                 onTrue(Roller.intake())
-                and { !forceShoot }.onTrue(alignToBall { disableAutoAlign.get() })
+                and { !forceShoot }.onTrue(alignToBall (disableAutoAlign::get))
             }
             and { !intakeByVision }.onTrue(Roller.intake())
         }
@@ -66,7 +66,7 @@ fun bindRobotCommands() {
                 onTrue(
                     Roller.intake(),
                     Hopper.start(),
-                    alignToBall { disableAutoAlign.get() }
+                    alignToBall (disableAutoAlign::get)
                 )
             }
             onTrue(stopIntaking())
