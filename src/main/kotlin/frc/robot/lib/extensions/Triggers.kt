@@ -22,7 +22,6 @@ fun Trigger.or(vararg trigger: BooleanSupplier): Trigger =
 fun Trigger.onTrue(vararg commands: Command): Trigger =
     commands.fold(this) { baseTrigger, command -> baseTrigger.onTrue(command) }
 
-
 fun Trigger.onFalse(vararg commands: Command): Trigger =
     commands.fold(this) { baseTrigger, command -> baseTrigger.onFalse(command) }
 
