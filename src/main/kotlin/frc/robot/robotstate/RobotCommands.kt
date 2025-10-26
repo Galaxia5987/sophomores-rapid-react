@@ -34,7 +34,6 @@ var hoodAngle = InterpolatingDouble(robotDistanceFromHub[m])
 var forceShoot = false
 var disableAutoAlign = LoggedNetworkBoolean("/Tuning/disableAutoAlign", false)
 var intakeByVision = false
-var ShootOnMove = LoggedNetworkBoolean("/Tuning/ShootOnMove", false)
 val compensatedShot: ShotData
     get() {
         val robotSpeeds =
