@@ -1,6 +1,6 @@
 package frc.robot.subsystems.shooter.hood
 
-import com.ctre.phoenix6.controls.PositionTorqueCurrentFOC
+import com.ctre.phoenix6.controls.PositionVoltage
 import com.ctre.phoenix6.controls.VoltageOut
 import com.ctre.phoenix6.hardware.CANcoder
 import edu.wpi.first.units.measure.Angle
@@ -25,16 +25,20 @@ private var root = mechanism.getRoot("Hood", 3.0, 2.0)
 private val ligament =
     root.append(LoggedMechanismLigament2d("HoodLigament", 0.25, 90.0))
 
-class Hood : SubsystemBase(), SysIdable {
+object Hood : SubsystemBase(), SysIdable {
 
     private val motor =
         UniversalTalonFX(
             MOTOR_ID,
             config = MOTOR_CONFIG,
-            gearRatio = MOTOR_TO_MECHANISM_RATIO
+            gearRatio = MOTOR_TO_MECHANISM_RATIO,
+            absoluteEncoderOffset = ENCODER_OFFSET
         )
 
-    private val positionRequest = PositionTorqueCurrentFOC(0.0)
+    val inputs
+        get() = motor.inputs
+
+    private val positionRequest = PositionVoltage(0.0)
     private val voltageRequest = VoltageOut(0.0)
 
     private val encoder = CANcoder(ENCODER_ID)

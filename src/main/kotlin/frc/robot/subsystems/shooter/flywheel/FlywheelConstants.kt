@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.Filesystem
 import frc.robot.lib.Gains
 import frc.robot.lib.extensions.amps
 import frc.robot.lib.extensions.get
+import frc.robot.lib.extensions.mm
 import frc.robot.lib.extensions.rps
 import frc.robot.lib.extensions.sec
 import frc.robot.lib.math.interpolation.InterpolatingDoubleMap
@@ -22,13 +23,16 @@ val SHOOTER_VELOCITY_BY_DISTANCE: InterpolatingDoubleMap =
             "/shootData/distanceToVelocity.csv"
     )
 
+val STATIC_SHOOT_VELOCITY = 30.rps
+
 const val MAIN_MOTOR_PORT = 5
 const val AUX_MOTOR_PORT = 6
 val STATOR_CURRENT_LIMIT = 100.amps
 val SUPPLY_CURRENT_LIMIT = 50.amps
-val GAINS = Gains(kP = 2.0)
+val GAINS = Gains(kP = 4.0, kD = 0.0, kS = 0.2480, kV = 0.2, kA = 0.0011426)
 val TOLERANCE = 0.1.rps
 val AT_SET_VELOCITY_DEBOUNCE = 0.2.sec
+val FLYWHEEL_DIAMETER = 101.6.mm
 val MOTOR_CONFIG =
     TalonFXConfiguration().apply {
         MotorOutput =

@@ -5,22 +5,23 @@ import com.pathplanner.lib.auto.NamedCommands
 import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.wpilibj2.command.Command
+import edu.wpi.first.wpilibj2.command.button.CommandGenericHID
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine
-import frc.robot.lib.extensions.deg
+import frc.robot.autonomous.paths.deploy.pathplanner.AC1SRP
+import frc.robot.autonomous.paths.deploy.pathplanner.BRP2
+import frc.robot.autonomous.paths.deploy.pathplanner.CC2C3
 import frc.robot.lib.extensions.enableAutoLogOutputFor
-import frc.robot.lib.extensions.get
-import frc.robot.lib.extensions.m
 import frc.robot.lib.extensions.sec
 import frc.robot.lib.extensions.volts
-import frc.robot.lib.math.interpolation.InterpolatingDouble
+import frc.robot.lib.shooting.toggleCompensation
 import frc.robot.lib.sysid.sysId
-import frc.robot.robotstate.bindRobotCommands
-import frc.robot.robotstate.robotDistanceFromHub
-import frc.robot.robotstate.setIntakeing
-import frc.robot.robotstate.turretAngleToHub
+import frc.robot.robotstate.*
 import frc.robot.subsystems.drive.DriveCommands
-import frc.robot.subsystems.shooter.hood.HOOD_ANGLE_BY_DISTANCE
+import frc.robot.subsystems.roller.Roller
+import frc.robot.subsystems.shooter.hood.Hood
+import frc.robot.subsystems.shooter.turret.Turret
+import frc.robot.subsystems.wrist.Wrist
 import org.ironmaple.simulation.SimulatedArena
 import org.littletonrobotics.junction.AutoLogOutput
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser
@@ -28,13 +29,17 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser
 object RobotContainer {
 
     private val driverController = CommandPS5Controller(0)
-
+    private val SwitchController = CommandGenericHID(1)
     private val autoChooser: LoggedDashboardChooser<Command>
 
-    var hoodAngle = InterpolatingDouble(robotDistanceFromHub[m])
+    enum class SwitchInput(val buttonId: Int) {
+        DisableAutoAlign(0),
+        StaticSetpoint(1),
+        IntakeByVision(2)
+    }
+
     init {
         drive // Ensure Drive is initialized
-
         autoChooser =
             LoggedDashboardChooser(
                 "Auto Choices",
@@ -59,23 +64,49 @@ object RobotContainer {
     private fun configureDefaultCommands() {
         drive.defaultCommand =
             DriveCommands.joystickDrive(
+                { driverController.leftY },
                 { driverController.leftX },
-                { -driverController.leftY },
                 { -driverController.rightX * 0.8 }
             )
-        turret.defaultCommand = turret.setAngle { turretAngleToHub }
-        hood.defaultCommand =
-            hood.setAngle {
-                hoodAngle.value = robotDistanceFromHub[m]
-                HOOD_ANGLE_BY_DISTANCE.getInterpolated(hoodAngle).value.deg
-            }
+        Turret.defaultCommand = Turret.setAngle { turretAngleToHub }
+        Hood.defaultCommand = hoodDefaultCommand()
+        Wrist.defaultCommand = Wrist.open()
     }
 
     private fun configureButtonBindings() {
+        // reset swerve
+        driverController.apply {
+            options()
+                .onTrue(
+                    drive.runOnce { drive.resetGyro() }.ignoringDisable(true),
+                )
 
-        // Switch to X pattern when X button is pressed
+            circle().onTrue(setIntaking())
+            L2().onTrue(Roller.intake()).onFalse(Roller.stop())
+            R2().onTrue(Roller.outtake()).onFalse(Roller.stop())
+            square().onTrue(setIntaking())
+            cross().onTrue(setShooting())
 
-        driverController.circle().onTrue(setIntakeing())
+            povDown().onTrue(setIdling())
+            povUp().onTrue(toggleCompensation())
+            triangle().onTrue(setForceShoot()).onFalse(stopForceShoot())
+
+            create().whileTrue(Wrist.reset())
+        }
+
+        SwitchController.apply {
+            button(SwitchInput.DisableAutoAlign.buttonId)
+                .whileTrue(disableAutoAlign())
+                .whileFalse(enableAutoAlign())
+
+            button(SwitchInput.StaticSetpoint.buttonId)
+                .whileTrue(setStaticShooting())
+                .whileFalse(setShooting())
+
+            button(SwitchInput.IntakeByVision.buttonId)
+                .whileTrue(setIntakeByVision())
+                .onFalse(stopIntakeByVision())
+        }
         // Reset gyro / odometry
         val resetOdometry =
             if (CURRENT_MODE == Mode.SIM)
@@ -124,10 +155,26 @@ object RobotContainer {
             "Drive SysId (Dynamic Reverse)",
             drive.sysIdDynamic(SysIdRoutine.Direction.kReverse)
         )
-        autoChooser.addOption("Turret SysId", turret.sysId()
-            .withForwardRoutineConfig(1.volts.per(sec), 2.volts, 2.2.sec)
-            .withBackwardRoutineConfig(1.volts.per(sec), 2.volts, 2.2.sec)
-            .command())
+
+        autoChooser.addOption(
+            "swerveFFCharacterization",
+            DriveCommands.feedforwardCharacterization()
+        )
+
+        autoChooser.addDefaultOption("BRP2", BRP2())
+        autoChooser.addOption("AC1SRP", AC1SRP())
+        autoChooser.addOption("CC2C3", CC2C3())
+        autoChooser.addOption(
+            "hoodSysId",
+            Hood.sysId()
+                .withForwardRoutineConfig(1.8.volts.per(sec), 1.volts, 0.75.sec)
+                .withBackwardRoutineConfig(
+                    1.volts.per(sec),
+                    0.8.volts,
+                    0.75.sec
+                )
+                .command()
+        )
     }
 
     fun resetSimulationField() {

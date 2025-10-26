@@ -4,61 +4,83 @@ import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.applyLeds
 import frc.robot.drive
-import frc.robot.hopper
-import frc.robot.lib.extensions.get
-import frc.robot.lib.onTrue
-import frc.robot.roller
-import frc.robot.turret
-import org.littletonrobotics.junction.Logger.recordOutput
+import frc.robot.lib.extensions.*
+import frc.robot.lib.shooting.disableCompensation
+import frc.robot.robotRelativeBallPoses
+import frc.robot.subsystems.roller.Roller
+import frc.robot.subsystems.shooter.flywheel.Flywheel
+import frc.robot.subsystems.shooter.flywheel.STATIC_SHOOT_VELOCITY
+import frc.robot.subsystems.shooter.hood.Hood
+import frc.robot.subsystems.shooter.hood.STATIC_SHOOT_SETPOINT
+import frc.robot.subsystems.shooter.hopper.Hopper
+import frc.robot.subsystems.shooter.turret.Turret
+import org.team5987.annotation.LoggedOutput
 
-val isShooting = Trigger { state == RobotState.SHOOTING }
+@LoggedOutput(path = COMMAND_NAME_PREFIX)
 val isInDeadZone = Trigger {
     val driveTranslation = drive.pose.translation
     !OUTER_SHOOTING_AREA.contains(driveTranslation) ||
         INNER_SHOOTING_AREA.contains(driveTranslation)
 }
+
+@LoggedOutput(path = COMMAND_NAME_PREFIX)
 val atShootingRotation =
-    turret.isAtSetpoint.and {
+    Turret.isAtSetpoint.and {
         drive.pose.rotation.measure.isNear(
-            swerveCompensationAngle,
+            swerveCompensationAngle.measure,
             ROTATION_TOLERANCE
         )
     }
 
+val isShooting = Trigger { state == RobotState.SHOOTING }
+val isStaticShooting = Trigger { state == RobotState.FIXED_SHOOTING }
 val isIntaking = Trigger { state == RobotState.INTAKING }
-private val hasFrontBall = roller.hasBall
-val hasBackBall = hopper.hasBall
+private val hasFrontBall = Roller.hasBall
+val hasBackBall = Hopper.hasBall
 private val ballsEmpty = hasFrontBall.or(hasBackBall).negate()
-
-fun robotCommandsLogger() {
-    recordOutput("$COMMAND_NAME_PREFIX/RobotState", state)
-    recordOutput(
-        "$COMMAND_NAME_PREFIX/RobotDistanceFromHub",
-        robotDistanceFromHub
-    )
-    recordOutput("$COMMAND_NAME_PREFIX/is in dead zone", isInDeadZone)
-    recordOutput(
-        "$COMMAND_NAME_PREFIX/Turret rotation to Hub",
-        turretAngleToHub
-    )
-    recordOutput("$COMMAND_NAME_PREFIX/atShootingRotation", atShootingRotation)
-}
 
 fun bindRobotCommands() {
     isShooting.apply {
-        and(ballsEmpty).onTrue(setIntakeing(), stopShooting())
-        and(isInDeadZone.negate())
-            .and(atShootingRotation)
-            .onTrue(startShooting())
-        and((isInDeadZone).or(atShootingRotation.negate()))
-            .onTrue(driveToShootingPoint())
+        and(ballsEmpty.and { !forceShoot })
+            .onTrue(setIntaking(), stopShooting())
+        and(!isInDeadZone).apply {
+            val shouldShootOnMove = Trigger { !disableCompensation.get() }
+            and(atShootingRotation, shouldShootOnMove.negate())
+                .onTrue(startShooting())
+            and(shouldShootOnMove).onTrue(startShooting())
+        }
+        and((isInDeadZone).or(!atShootingRotation))
+            .onTrue(driveToShootingPoint(disableAutoAlign::get))
     }
     isIntaking.apply {
-        and(ballsEmpty).onTrue(startIntaking())
-        and(hasFrontBall)
-            .and(hasBackBall)
-            .onTrue(roller.stop(), hopper.stop(), setShooting())
-        and(hasBackBall).and(hasFrontBall.negate()).onTrue(hopper.stop())
+        and(hasFrontBall, hasBackBall)
+            .onTrue(Roller.stop(), Hopper.stop(), setShooting())
+        and(hasBackBall, !hasFrontBall).apply {
+            onTrue(stopIntaking())
+            and(robotRelativeBallPoses::isNotEmpty, { intakeByVision }).apply {
+                onTrue(Roller.intake())
+                and { !forceShoot }.onTrue(alignToBall(disableAutoAlign::get))
+            }
+            and { !intakeByVision }.onTrue(Roller.intake())
+        }
+        and(ballsEmpty).apply {
+            and(robotRelativeBallPoses::isNotEmpty, { intakeByVision }).apply {
+                onTrue(
+                    Roller.intake(),
+                    Hopper.start(),
+                    alignToBall(disableAutoAlign::get)
+                )
+            }
+            onTrue(stopIntaking())
+            and { !intakeByVision }.onTrue(Roller.intake(), Hopper.start())
+        }
+    }
+    isStaticShooting.apply {
+        onTrue(Roller.intake(), Hopper.start())
+        whileTrue(
+            Hood.setAngle { STATIC_SHOOT_SETPOINT },
+            Flywheel.setVelocity { STATIC_SHOOT_VELOCITY }
+        )
     }
     applyLeds()
 }
@@ -68,4 +90,8 @@ private fun setRobotState(newState: RobotState) =
 
 fun setShooting() = setRobotState(RobotState.SHOOTING)
 
-fun setIntakeing() = setRobotState(RobotState.INTAKING)
+fun setIntaking() = setRobotState(RobotState.INTAKING)
+
+fun setIdling() = setRobotState(RobotState.IDLING)
+
+fun setStaticShooting() = setRobotState(RobotState.FIXED_SHOOTING)
