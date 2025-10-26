@@ -67,4 +67,8 @@ class UniversalTalonFX(
     fun reset(angle: Angle = 0.deg) = motorIO.resetInternalEncoder(angle)
 
     fun updateInputs() = motorIO.updateInputs()
+
+    fun applyConfiguration(config: TalonFXConfiguration) {
+        motorIO.applyConfiguration(config)
+    }
 }

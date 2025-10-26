@@ -35,6 +35,8 @@ interface MotorIO {
 
     fun resetInternalEncoder(angle: Angle = 0.deg) {}
 
+    fun applyConfiguration(configuration: TalonFXConfiguration) {}
+
     /**
      * Updates the latest inputs from the motor or simulation. Should be called
      * periodically.
