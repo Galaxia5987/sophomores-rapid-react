@@ -44,9 +44,10 @@ fun bindRobotCommands() {
         and(ballsEmpty.and { !forceShoot })
             .onTrue(setIntaking(), stopShooting())
         and(!isInDeadZone).apply {
-            and(atShootingRotation, { disableCompensation.get() })
+            val shouldShootOnMove = Trigger { !disableCompensation.get() }
+            and(atShootingRotation, shouldShootOnMove.negate())
                 .onTrue(startShooting())
-            and { !disableCompensation.get() }.onTrue(startShooting())
+            and(shouldShootOnMove).onTrue(startShooting())
         }
         and((isInDeadZone).or(!atShootingRotation))
             .onTrue(driveToShootingPoint(disableAutoAlign::get))
