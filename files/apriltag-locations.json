@@ -1,0 +1,103 @@
+{
+  "fiducials": [
+    {
+      "transform": [
+        -1,
+        0,
+        0,
+        -0.175,
+        0,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1.403,
+        0,
+        0,
+        0,
+        1
+      ],
+      "size": 165.1,
+      "id": 11,
+      "family": "apriltag3_36h11_classic",
+      "unique": 1
+    },
+    {
+      "transform": [
+        1,
+        0,
+        0,
+        0.175,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1.403,
+        0,
+        0,
+        0,
+        1
+      ],
+      "size": 165.1,
+      "id": 2,
+      "family": "apriltag3_36h11_classic",
+      "unique": 1
+    },
+    {
+      "transform": [
+        0,
+        -1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0.175,
+        0,
+        0,
+        1,
+        1.403,
+        0,
+        0,
+        0,
+        1
+      ],
+      "size": 165.1,
+      "id": 10,
+      "family": "apriltag3_36h11_classic",
+      "unique": 1
+    },
+    {
+      "transform": [
+        0,
+        1,
+        0,
+        0,
+        -1,
+        0,
+        0,
+        -0.175,
+        0,
+        0,
+        1,
+        1.403,
+        0,
+        0,
+        0,
+        1
+      ],
+      "size": 165.1,
+      "id": 9,
+      "family": "apriltag3_36h11_classic",
+      "unique": 1
+    }
+  ],
+  "type": "frc",
+  "fieldlength": 17.5483,
+  "fieldwidth": 8.0519016
+}

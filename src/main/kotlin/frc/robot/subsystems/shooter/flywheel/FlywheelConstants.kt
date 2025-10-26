@@ -23,6 +23,8 @@ val SHOOTER_VELOCITY_BY_DISTANCE: InterpolatingDoubleMap =
             "/shootData/distanceToVelocity.csv"
     )
 
+val STATIC_SHOOT_VELOCITY = 30.rps
+
 const val MAIN_MOTOR_PORT = 5
 const val AUX_MOTOR_PORT = 6
 val STATOR_CURRENT_LIMIT = 100.amps

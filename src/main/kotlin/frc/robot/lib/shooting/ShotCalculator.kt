@@ -7,6 +7,7 @@ import edu.wpi.first.math.geometry.Translation2d
 import edu.wpi.first.math.kinematics.ChassisSpeeds
 import edu.wpi.first.units.measure.Distance
 import edu.wpi.first.units.measure.LinearVelocity
+import edu.wpi.first.wpilibj2.command.Commands
 import frc.robot.lib.extensions.get
 import frc.robot.lib.extensions.m
 import frc.robot.lib.extensions.mps
@@ -26,6 +27,9 @@ val SHOOT_TARGET = HUB_LOCATION
 
 val NO_COMPENSATION_THRESHOLD: LinearVelocity =
     0.15.mps // The speed threshold for disabling the compensation
+
+fun toggleCompensation() =
+    Commands.runOnce({ disableCompensation.set(!disableCompensation.get()) })
 
 fun calculateShot(
     robotPose: Pose2d,

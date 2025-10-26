@@ -16,7 +16,6 @@ import frc.robot.lib.controllers.TunableHolonomicDriveController
 import frc.robot.lib.extensions.get
 import frc.robot.lib.extensions.mps
 import frc.robot.lib.extensions.sec
-import frc.robot.robotstate.isShooting
 import org.littletonrobotics.junction.Logger
 
 private val translationController =
@@ -67,7 +66,7 @@ val controller =
  * @param holonomicController The holonomic controller to use for the alignment.
  * Defaults to [controller]
  */
-private fun alignToPose(
+fun alignToPose(
     goalPose: Pose2d,
     linearVelocity: LinearVelocity = 0.mps,
     tolerance: Pose2d = TOLERANCE,
@@ -101,7 +100,7 @@ private fun alignToPose(
         )
         .withName("Drive/AlignToPose")
 
-private fun profiledAlignToPose(
+fun profiledAlignToPose(
     goalPose: Pose2d,
     tolerance: Pose2d = TOLERANCE,
     poseSupplier: () -> Pose2d = { drive.pose },
@@ -126,10 +125,3 @@ private fun profiledAlignToPose(
                 .andThen(DriveCommands.stop())
         )
         .withName("Drive/profiledAlignToPose")
-
-fun align(pose: Pose2d) = drive.defer { alignToPose(pose) }
-
-fun profiledAlign(pose: Pose2d) =
-    drive.defer {
-        profiledAlignToPose(pose, endTrigger = isShooting.negate().or(atGoal))
-    }

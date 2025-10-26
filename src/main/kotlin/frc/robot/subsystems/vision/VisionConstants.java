@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class VisionConstants {
+    public static String LOG_PREFIX = "Subsystems/Vision/";
     // AprilTag layout
     public static AprilTagFieldLayout aprilTagLayout =
             AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);

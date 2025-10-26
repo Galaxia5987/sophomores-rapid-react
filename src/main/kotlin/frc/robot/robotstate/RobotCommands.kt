@@ -6,42 +6,34 @@ import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.math.kinematics.ChassisSpeeds
 import edu.wpi.first.units.measure.Angle
 import edu.wpi.first.wpilibj2.command.Command
+import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.Commands.parallel
 import edu.wpi.first.wpilibj2.command.Commands.sequence
 import edu.wpi.first.wpilibj2.command.Commands.waitUntil
-import frc.robot.drive
-import frc.robot.flywheel
-import frc.robot.hood
-import frc.robot.hopper
-import frc.robot.lib.extensions.deg
-import frc.robot.lib.extensions.distanceFromPoint
-import frc.robot.lib.extensions.get
-import frc.robot.lib.extensions.log
-import frc.robot.lib.extensions.m
-import frc.robot.lib.extensions.rotationToPoint
-import frc.robot.lib.extensions.rps
-import frc.robot.lib.extensions.toLinear
-import frc.robot.lib.extensions.toTransform
-import frc.robot.lib.getPose2d
+import frc.robot.*
+import frc.robot.lib.extensions.*
 import frc.robot.lib.math.interpolation.InterpolatingDouble
 import frc.robot.lib.named
 import frc.robot.lib.shooting.ShotData
 import frc.robot.lib.shooting.calculateShot
+import frc.robot.lib.shooting.disableCompensation
 import frc.robot.robotRelativeBallPoses
-import frc.robot.roller
-import frc.robot.subsystems.drive.align
-import frc.robot.subsystems.drive.profiledAlign
-import frc.robot.subsystems.shooter.flywheel.FLYWHEEL_DIAMETER
-import frc.robot.subsystems.shooter.flywheel.SHOOTER_VELOCITY_BY_DISTANCE
-import frc.robot.subsystems.shooter.flywheel.SLOW_ROTATION
+import frc.robot.subsystems.drive.alignToPose
+import frc.robot.subsystems.roller.Roller
+import frc.robot.subsystems.shooter.flywheel.*
 import frc.robot.subsystems.shooter.hood.HOOD_ANGLE_BY_DISTANCE
+import frc.robot.subsystems.shooter.hood.Hood
+import frc.robot.subsystems.shooter.hopper.Hopper
 import frc.robot.subsystems.shooter.turret.MAX_ANGLE
 import frc.robot.subsystems.shooter.turret.MIN_ANGLE
 import kotlin.collections.map
+import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean
 import org.team5987.annotation.LoggedOutput
 
 var hoodAngle = InterpolatingDouble(robotDistanceFromHub[m])
-
+var forceShoot = false
+var disableAutoAlign = LoggedNetworkBoolean("/Tuning/disableAutoAlign", false)
+var intakeByVision = false
 val compensatedShot: ShotData
     get() {
         val robotSpeeds =
@@ -50,7 +42,7 @@ val compensatedShot: ShotData
                 drive.rotation
             )
         val shooterExitVelocity =
-            flywheel.velocity.toLinear(FLYWHEEL_DIAMETER, 1.0)
+            Flywheel.velocity.toLinear(FLYWHEEL_DIAMETER, 1.0)
         val shot = calculateShot(drive.pose, robotSpeeds, shooterExitVelocity)
 
         mapOf(
@@ -64,7 +56,7 @@ val compensatedShot: ShotData
                 "regularShot/turretAngle" to angleFromRobotHub,
                 "shooterExitVelocity" to shooterExitVelocity
             )
-            .log("onMoveShoot")
+            .log("$COMMAND_NAME_PREFIX/onMoveShoot")
 
         return shot
     }
@@ -80,7 +72,11 @@ val angleFromRobotHub
             .measure
 
 val turretAngleToHub: Angle
-    get() = compensatedShot.turretAngle.measure.coerceIn(MIN_ANGLE, MAX_ANGLE)
+    get() =
+        (if (disableCompensation.get()) {
+                compensatedShot.turretAngle.measure
+            } else angleFromRobotHub)
+            .coerceIn(MIN_ANGLE, MAX_ANGLE)
 
 @LoggedOutput(path = COMMAND_NAME_PREFIX)
 val swerveCompensationAngle
@@ -93,22 +89,43 @@ val globalBallPoses
             .map { it + Pose3d(drive.pose).toTransform() }
             .toTypedArray()
 
-fun driveToShootingPoint(): Command {
-    val robotTranslation = drive.pose.translation
-    val setpoint =
-        if (
-            INNER_SHOOTING_AREA.getDistance(robotTranslation) <
-                OUTER_SHOOTING_AREA.getDistance(robotTranslation)
-        )
-            INNER_SHOOTING_AREA.nearest(robotTranslation)
-        else OUTER_SHOOTING_AREA.nearest(robotTranslation)
-    return align(getPose2d(setpoint, swerveCompensationAngle)).named("Drive")
-}
+@LoggedOutput(path = COMMAND_NAME_PREFIX)
+val deadZoneAlignmentSetpoint
+    get() =
+        (if (
+                INNER_SHOOTING_AREA.getDistance(drive.pose.translation) <
+                    OUTER_SHOOTING_AREA.getDistance(drive.pose.translation)
+            )
+                INNER_SHOOTING_AREA_ALIGNMENT
+            else OUTER_SHOOTING_AREA_ALIGNMENT) // Find area for shooting.
+            .nearest(drive.pose.translation)
+
+fun setForceShoot() = Commands.runOnce({ forceShoot = true })
+
+fun stopForceShoot() = Commands.runOnce({ forceShoot = false })
+
+fun disableAutoAlign() = Commands.runOnce({ disableAutoAlign.set(true) })
+
+fun enableAutoAlign() = Commands.runOnce({ disableAutoAlign.set(false) })
+
+fun stopIntakeByVision() = Commands.runOnce({ intakeByVision = false })
+
+fun setIntakeByVision() = Commands.runOnce({ intakeByVision = true })
+
+fun driveToShootingPoint(toRun: () -> Boolean = { false }): Command =
+    drive
+        .defer {
+            alignToPose(
+                Pose2d(deadZoneAlignmentSetpoint, swerveCompensationAngle)
+            )
+        }
+        .until(toRun)
+        .named("Drive")
 
 fun startShooting() =
     sequence(
             drive.lock(),
-            flywheel.setVelocity {
+            Flywheel.setVelocity {
                 FLYWHEEL_VELOCITY_KEY.value = robotDistanceFromHub[m]
                 SHOOTER_VELOCITY_BY_DISTANCE.getInterpolated(
                         FLYWHEEL_VELOCITY_KEY
@@ -116,24 +133,29 @@ fun startShooting() =
                     .value
                     .rps
             },
-            waitUntil(flywheel.isAtSetVelocity),
-            parallel(hopper.start(), roller.intake())
+            waitUntil(Flywheel.isAtSetVelocity),
+            parallel(Hopper.start(), Roller.intake())
         )
         .named(COMMAND_NAME_PREFIX)
 
 fun stopShooting() =
-    parallel(flywheel.setVelocity(SLOW_ROTATION), hopper.stop(), roller.stop())
+    parallel(Flywheel.setVelocity(SLOW_ROTATION), Hopper.stop(), Roller.stop())
         .named(COMMAND_NAME_PREFIX)
 
 fun stopIntaking() =
-    parallel(roller.stop(), hopper.stop()).named(COMMAND_NAME_PREFIX)
+    parallel(Roller.stop(), Hopper.stop()).named(COMMAND_NAME_PREFIX)
 
-fun alignToBall() =
-    profiledAlign(globalBallPoses.firstOrNull()?.toPose2d() ?: drive.pose)
+fun alignToBall(toRun: () -> Boolean = { false }): Command =
+    drive
+        .defer {
+            alignToPose(globalBallPoses.first().toPose2d())
+                .onlyIf(globalBallPoses::isNotEmpty)
+        }
+        .until(toRun)
         .named(COMMAND_NAME_PREFIX)
 
 fun hoodDefaultCommand() =
-    hood.setAngle {
+    Hood.setAngle {
         hoodAngle.value = compensatedShot.compensatedDistance[m]
         HOOD_ANGLE_BY_DISTANCE.getInterpolated(hoodAngle).value.deg
     }

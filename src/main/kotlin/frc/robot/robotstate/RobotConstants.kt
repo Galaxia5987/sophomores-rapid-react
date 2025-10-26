@@ -9,9 +9,12 @@ import frc.robot.lib.math.interpolation.InterpolatingDouble
 
 val ROTATION_TOLERANCE = 1.deg
 val HUB_LOCATION = Translation2d(8.2.m, 4.1.m)
-const val COMMAND_NAME_PREFIX = "RobotCompositions"
+const val COMMAND_NAME_PREFIX = "RobotState"
 val OUTER_SHOOTING_AREA =
     Ellipse2d(HUB_LOCATION, 4.2.m) // the outer part of the shooting area
+val OUTER_SHOOTING_AREA_ALIGNMENT = Ellipse2d(HUB_LOCATION, 4.0.m)
 val INNER_SHOOTING_AREA =
     Ellipse2d(HUB_LOCATION, 0.4.m) // the inner part of the shooting area
+val INNER_SHOOTING_AREA_ALIGNMENT = Ellipse2d(HUB_LOCATION, 0.6.m)
+
 val FLYWHEEL_VELOCITY_KEY = InterpolatingDouble(robotDistanceFromHub[m])
