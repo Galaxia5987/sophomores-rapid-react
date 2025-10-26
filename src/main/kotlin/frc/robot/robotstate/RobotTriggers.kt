@@ -59,7 +59,7 @@ fun bindRobotCommands() {
             onTrue(stopIntaking())
             and(robotRelativeBallPoses::isNotEmpty, { intakeByVision }).apply {
                 onTrue(Roller.intake())
-                and { !forceShoot }.onTrue(alignToBall (disableAutoAlign::get))
+                and { !forceShoot }.onTrue(alignToBall(disableAutoAlign::get))
             }
             and { !intakeByVision }.onTrue(Roller.intake())
         }
@@ -68,7 +68,7 @@ fun bindRobotCommands() {
                 onTrue(
                     Roller.intake(),
                     Hopper.start(),
-                    alignToBall (disableAutoAlign::get)
+                    alignToBall(disableAutoAlign::get)
                 )
             }
             onTrue(stopIntaking())
@@ -76,8 +76,7 @@ fun bindRobotCommands() {
         }
     }
     isStaticShooting.apply {
-        onTrue(Roller.intake(),
-            Hopper.start())
+        onTrue(Roller.intake(), Hopper.start())
         whileTrue(
             Hood.setAngle { STATIC_SHOOT_SETPOINT },
             Flywheel.setVelocity { STATIC_SHOOT_VELOCITY }
