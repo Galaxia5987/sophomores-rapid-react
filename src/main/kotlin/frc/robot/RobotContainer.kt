@@ -175,6 +175,13 @@ object RobotContainer {
                 )
                 .command()
         )
+        autoChooser.addOption(
+            "Turret SysId",
+            Turret.sysId()
+                .withForwardRoutineConfig(1.volts.per(sec), 2.volts, 2.2.sec)
+                .withBackwardRoutineConfig(1.volts.per(sec), 2.volts, 2.2.sec)
+                .command()
+        )
     }
 
     fun resetSimulationField() {
