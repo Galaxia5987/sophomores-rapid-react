@@ -148,9 +148,8 @@ fun alignToBall(toRun:()-> Boolean = {false}): Command =
     drive
         .defer {
             alignToPose(globalBallPoses.first().toPose2d()).onlyIf(globalBallPoses::isNotEmpty)
-                .named(COMMAND_NAME_PREFIX)
         }
-        .until(toRun)
+        .until(toRun).named(COMMAND_NAME_PREFIX)
 
 fun hoodDefaultCommand() =
     Hood.setAngle {
