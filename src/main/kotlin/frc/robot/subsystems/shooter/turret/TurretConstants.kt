@@ -32,7 +32,7 @@ val MOTOR_CONFIG: TalonFXConfiguration =
         SoftwareLimitSwitch =
             SoftwareLimitSwitchConfigs().apply {
                 ForwardSoftLimitEnable = true
-                ForwardSoftLimitThreshold = 0.6564941406250001
+                ForwardSoftLimitThreshold = 0.625
                 ReverseSoftLimitEnable = true
                 ReverseSoftLimitThreshold = 0.005
             }
