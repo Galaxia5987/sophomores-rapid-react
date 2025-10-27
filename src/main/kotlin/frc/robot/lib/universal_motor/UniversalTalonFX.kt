@@ -7,6 +7,7 @@ import edu.wpi.first.units.measure.Distance
 import edu.wpi.first.units.measure.MomentOfInertia
 import frc.robot.CURRENT_MODE
 import frc.robot.Mode
+import frc.robot.lib.Gains
 import frc.robot.lib.extensions.deg
 import frc.robot.lib.extensions.get
 import frc.robot.lib.extensions.kg2m
@@ -32,6 +33,7 @@ class UniversalTalonFX(
     port: Int,
     canbus: String = "",
     config: TalonFXConfiguration = TalonFXConfiguration(),
+    simGains: Gains = Gains(1.0),
     momentOfInertia: MomentOfInertia = 0.003.kg2m,
     gearRatio: Double = 1.0,
     linearSystemWheelDiameter: Distance = 0.m,
@@ -51,6 +53,7 @@ class UniversalTalonFX(
             MotorIOSim(
                 momentOfInertia,
                 config,
+                simGains,
                 gearRatio,
                 linearSystemWheelDiameter
             )
