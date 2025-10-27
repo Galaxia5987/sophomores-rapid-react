@@ -9,6 +9,7 @@ import edu.wpi.first.units.Units.Rotations
 import edu.wpi.first.units.measure.Distance
 import edu.wpi.first.units.measure.MomentOfInertia
 import edu.wpi.first.wpilibj.Timer
+import frc.robot.lib.Gains
 import frc.robot.lib.extensions.get
 import frc.robot.lib.extensions.kg2m
 import frc.robot.lib.extensions.rot
@@ -27,22 +28,23 @@ import frc.robot.lib.motors.TalonType
 class MotorIOSim(
     private val momentOfInertia: MomentOfInertia,
     override val config: TalonFXConfiguration,
+    private val simGains: Gains,
     private val gearRatio: Double,
     private val diameter: Distance
 ) : MotorIO {
     override val inputs = LoggedMotorInputs()
     private val profiledPIDController =
         ProfiledPIDController(
-            config.Slot0.kP,
-            config.Slot0.kI,
-            config.Slot0.kD,
+            simGains.kP,
+            simGains.kI,
+            simGains.kD,
             TrapezoidProfile.Constraints(
                 config.MotionMagic.MotionMagicCruiseVelocity,
                 config.MotionMagic.MotionMagicAcceleration
             )
         )
     private val controller =
-        PIDController(config.Slot0.kP, config.Slot0.kI, config.Slot0.kD)
+        PIDController(simGains.kP, simGains.kI, simGains.kD)
     private val motor =
         TalonFXSim(1, 1.0, momentOfInertia[kg2m], 1.0, TalonType.KRAKEN_FOC)
 
