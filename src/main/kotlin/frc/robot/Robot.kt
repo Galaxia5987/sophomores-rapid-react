@@ -145,11 +145,8 @@ object Robot : LoggedRobot() {
      * SendableChooser make sure to add them to the chooser code above as well.
      */
     override fun autonomousInit() {
-        // Make sure command is compiled beforehand, otherwise there will be a delay.
-        autonomousCommand = RobotContainer.getAutonomousCommand()
-
         // Schedule the autonomous command
-        autonomousCommand.schedule()
+//        autonomousCommand.schedule()
     }
 
     /** This function is called periodically during autonomous. */
