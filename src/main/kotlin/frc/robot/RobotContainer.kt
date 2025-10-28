@@ -16,11 +16,6 @@ import frc.robot.lib.extensions.sec
 import frc.robot.lib.extensions.volts
 import frc.robot.lib.shooting.toggleCompensation
 import frc.robot.lib.sysid.sysId
-import frc.robot.subsystems.drive.DriveCommands
-import frc.robot.subsystems.roller.Roller
-import frc.robot.subsystems.shooter.hood.Hood
-import frc.robot.subsystems.shooter.turret.Turret
-import frc.robot.subsystems.wrist.Wrist
 import org.ironmaple.simulation.SimulatedArena
 import org.littletonrobotics.junction.AutoLogOutput
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser
@@ -36,82 +31,13 @@ object RobotContainer {
                 "Auto Choices",
                 AutoBuilder.buildAutoChooser()
             )
-        registerAutoCommands()
-        configureDefaultCommands()
+
 
         if (CURRENT_MODE == Mode.SIM) {
             SimulatedArena.getInstance().resetFieldForAuto()
         }
 
         enableAutoLogOutputFor(this)
-    }
-
-    @AutoLogOutput(key = "MapleSimPose")
-    private fun getMapleSimPose(): Pose2d? =
-        driveSimulation?.simulatedDriveTrainPose
-
-    private fun configureDefaultCommands() {
-    }
-
-    fun getAutonomousCommand(): Command = autoChooser.get()
-
-    private fun registerAutoCommands() {
-        val namedCommands: Map<String, Command> = mapOf()
-
-        NamedCommands.registerCommands(namedCommands)
-
-        // Set up SysId routines
-        autoChooser.addOption(
-            "Drive Wheel Radius Characterization",
-            DriveCommands.wheelRadiusCharacterization()
-        )
-        autoChooser.addOption(
-            "Drive Simple FF Characterization",
-            DriveCommands.feedforwardCharacterization()
-        )
-        autoChooser.addOption(
-            "Drive SysId (Quasistatic Forward)",
-            drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward)
-        )
-        autoChooser.addOption(
-            "Drive SysId (Quasistatic Reverse)",
-            drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse)
-        )
-        autoChooser.addOption(
-            "Drive SysId (Dynamic Forward)",
-            drive.sysIdDynamic(SysIdRoutine.Direction.kForward)
-        )
-        autoChooser.addOption(
-            "Drive SysId (Dynamic Reverse)",
-            drive.sysIdDynamic(SysIdRoutine.Direction.kReverse)
-        )
-
-        autoChooser.addOption(
-            "swerveFFCharacterization",
-            DriveCommands.feedforwardCharacterization()
-        )
-
-        autoChooser.addDefaultOption("BRP2", BRP2())
-        autoChooser.addOption("AC1SRP", AC1SRP())
-        autoChooser.addOption("CC2C3", CC2C3())
-        autoChooser.addOption(
-            "hoodSysId",
-            Hood.sysId()
-                .withForwardRoutineConfig(1.8.volts.per(sec), 1.volts, 0.75.sec)
-                .withBackwardRoutineConfig(
-                    1.volts.per(sec),
-                    0.8.volts,
-                    0.75.sec
-                )
-                .command()
-        )
-        autoChooser.addOption(
-            "Turret SysId",
-            Turret.sysId()
-                .withForwardRoutineConfig(1.volts.per(sec), 2.volts, 2.2.sec)
-                .withBackwardRoutineConfig(1.volts.per(sec), 2.volts, 2.2.sec)
-                .command()
-        )
     }
 
     fun resetSimulationField() {
