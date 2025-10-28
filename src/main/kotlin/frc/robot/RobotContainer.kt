@@ -16,7 +16,6 @@ import frc.robot.lib.extensions.sec
 import frc.robot.lib.extensions.volts
 import frc.robot.lib.shooting.toggleCompensation
 import frc.robot.lib.sysid.sysId
-import frc.robot.robotstate.*
 import frc.robot.subsystems.drive.DriveCommands
 import frc.robot.subsystems.roller.Roller
 import frc.robot.subsystems.shooter.hood.Hood
@@ -28,15 +27,7 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser
 
 object RobotContainer {
 
-    private val driverController = CommandPS5Controller(0)
-    private val SwitchController = CommandGenericHID(1)
     private val autoChooser: LoggedDashboardChooser<Command>
-
-    enum class SwitchInput(val buttonId: Int) {
-        DisableAutoAlign(0),
-        StaticSetpoint(1),
-        IntakeByVision(2)
-    }
 
     init {
         drive // Ensure Drive is initialized
@@ -46,9 +37,7 @@ object RobotContainer {
                 AutoBuilder.buildAutoChooser()
             )
         registerAutoCommands()
-        configureButtonBindings()
         configureDefaultCommands()
-        bindRobotCommands()
 
         if (CURRENT_MODE == Mode.SIM) {
             SimulatedArena.getInstance().resetFieldForAuto()
@@ -62,65 +51,6 @@ object RobotContainer {
         driveSimulation?.simulatedDriveTrainPose
 
     private fun configureDefaultCommands() {
-        drive.defaultCommand =
-            DriveCommands.joystickDrive(
-                { driverController.leftY },
-                { driverController.leftX },
-                { -driverController.rightX * 0.8 }
-            )
-        Turret.defaultCommand = Turret.setAngle { turretAngleToHub }
-        Hood.defaultCommand = hoodDefaultCommand()
-        Wrist.defaultCommand = Wrist.open()
-    }
-
-    private fun configureButtonBindings() {
-        // reset swerve
-        driverController.apply {
-            options()
-                .onTrue(
-                    drive.runOnce { drive.resetGyro() }.ignoringDisable(true),
-                )
-
-            circle().onTrue(setIntaking())
-            L2().onTrue(Roller.intake()).onFalse(Roller.stop())
-            R2().onTrue(Roller.outtake()).onFalse(Roller.stop())
-            square().onTrue(setIntaking())
-            cross().onTrue(setShooting())
-
-            povDown().onTrue(setIdling())
-            povUp().onTrue(toggleCompensation())
-            triangle().onTrue(setForceShoot()).onFalse(stopForceShoot())
-
-            create().whileTrue(Wrist.reset())
-        }
-
-        SwitchController.apply {
-            button(SwitchInput.DisableAutoAlign.buttonId)
-                .whileTrue(disableAutoAlign())
-                .whileFalse(enableAutoAlign())
-
-            button(SwitchInput.StaticSetpoint.buttonId)
-                .whileTrue(setStaticShooting())
-                .whileFalse(setShooting())
-
-            button(SwitchInput.IntakeByVision.buttonId)
-                .whileTrue(setIntakeByVision())
-                .onFalse(stopIntakeByVision())
-        }
-        // Reset gyro / odometry
-        val resetOdometry =
-            if (CURRENT_MODE == Mode.SIM)
-                Runnable {
-                    drive.resetOdometry(
-                        driveSimulation!!.simulatedDriveTrainPose
-                    )
-                }
-            else
-                Runnable {
-                    drive.resetOdometry(
-                        Pose2d(drive.pose.translation, Rotation2d())
-                    )
-                }
     }
 
     fun getAutonomousCommand(): Command = autoChooser.get()
