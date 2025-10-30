@@ -13,6 +13,7 @@ import edu.wpi.first.units.measure.Angle
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.SubsystemBase
+import frc.robot.lib.Gains
 import frc.robot.lib.extensions.degrees
 import frc.robot.lib.extensions.get
 import frc.robot.lib.universal_motor.UniversalTalonFX
@@ -31,9 +32,6 @@ object Hood : SubsystemBase() {
     private val ligament =
         root.append(LoggedMechanismLigament2d("HoodLigament", 1.0, 0.0))
 
-    private val motor = UniversalTalonFX(1)
-    private val positionReq: PositionVoltage = PositionVoltage(0.0)
-    private var setPoint: Angle = Degrees.of(0.0)
     val config1: TalonFXConfiguration =
         TalonFXConfiguration().apply {
             MotorOutput =
@@ -50,12 +48,16 @@ object Hood : SubsystemBase() {
                 }
             Slot0 =
                 Slot0Configs().apply {
-                    kP = 0.0
-                    kD = 0.0
+                    kP = 1.5
+                    kD = 0.1
                 }
             Feedback =
                 FeedbackConfigs().apply { SensorToMechanismRatio = GEAR_RATIO2 }
         }
+    private val simGains= Gains(kP = 1.3, kD = 0.25)
+    private val motor = UniversalTalonFX(0, config = config1, gearRatio = GEAR_RATIO2, simGains = simGains)
+    private val positionReq: PositionVoltage = PositionVoltage(0.0)
+    private var setPoint: Angle = Degrees.of(0.0)
 
     fun setAngle(angle: Angle): Command {
         return Commands.runOnce({
@@ -64,6 +66,13 @@ object Hood : SubsystemBase() {
         })
     }
 
+    fun moveUp(): Command {
+        return setAngle(30.0.degrees)
+    }
+
+    fun moveDown(): Command{
+        return setAngle(0.0.degrees)
+    }
     override fun periodic() {
         motor.updateInputs()
         ligament.setAngle(motor.inputs.position[degrees])

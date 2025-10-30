@@ -11,8 +11,10 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine
 import frc.robot.autonomous.paths.deploy.pathplanner.AC1SRP
 import frc.robot.autonomous.paths.deploy.pathplanner.BRP2
 import frc.robot.autonomous.paths.deploy.pathplanner.CC2C3
+import frc.robot.lib.extensions.degrees
 import frc.robot.lib.extensions.enableAutoLogOutputFor
 import frc.robot.subsystems.drive.DriveCommands
+import frc.robot.subsystems.hood.Hood
 import org.ironmaple.simulation.SimulatedArena
 import org.littletonrobotics.junction.AutoLogOutput
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser
@@ -60,7 +62,11 @@ object RobotContainer {
             )
     }
 
-    private fun configureButtonBindings() {}
+    private fun configureButtonBindings() {
+        driverController.povUp().onTrue(Hood.moveUp())
+        driverController.povDown().onTrue(Hood.moveDown())
+
+    }
 
     fun getAutonomousCommand(): Command = autoChooser.get()
 
@@ -112,3 +118,5 @@ object RobotContainer {
         SimulatedArena.getInstance().resetFieldForAuto()
     }
 }
+
+
