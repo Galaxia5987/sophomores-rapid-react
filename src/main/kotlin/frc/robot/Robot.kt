@@ -15,7 +15,9 @@ import frc.robot.Mode.REAL
 import frc.robot.Mode.REPLAY
 import frc.robot.Mode.SIM
 import frc.robot.lib.extensions.enableAutoLogOutputFor
+import frc.robot.lib.logged_output.generated.registerAllLoggedOutputs
 import org.ironmaple.simulation.SimulatedArena
+import org.littletonrobotics.junction.AutoLogOutputManager
 import org.littletonrobotics.junction.LogFileUtil
 import org.littletonrobotics.junction.LoggedRobot
 import org.littletonrobotics.junction.Logger
@@ -44,26 +46,26 @@ object Robot : LoggedRobot() {
             tResourceType.kResourceType_Language,
             tInstances.kLanguage_Kotlin
         )
+        arrayOf(vision, drive).forEach { AutoLogOutputManager.addObject(it) }
 
-
-        // Initialize logger TODO broken?
-//        listOf(
-//                "Project name" to BuildConstants.MAVEN_NAME,
-//                "Build date" to BuildConstants.BUILD_DATE,
-//                "Last commit hash" to BuildConstants.GIT_SHA,
-//                "Last commit timestamp" to BuildConstants.GIT_DATE,
-//                "Branch" to BuildConstants.GIT_BRANCH
-//            )
-//            .forEach { (key, value) -> Logger.recordMetadata(key, value) }
-//        @Suppress("KotlinConstantConditions")
-//        Logger.recordMetadata(
-//            "Diff status",
-//            when (BuildConstants.DIRTY) {
-//                0 -> "All changes committed"
-//                1 -> "Uncommitted changes"
-//                else -> "Unknown"
-//            }
-//        )
+        // Initialize logger
+        listOf(
+                "Project name" to BuildConstants.MAVEN_NAME,
+                "Build date" to BuildConstants.BUILD_DATE,
+                "Last commit hash" to BuildConstants.GIT_SHA,
+                "Last commit timestamp" to BuildConstants.GIT_DATE,
+                "Branch" to BuildConstants.GIT_BRANCH
+            )
+            .forEach { (key, value) -> Logger.recordMetadata(key, value) }
+        @Suppress("KotlinConstantConditions")
+        Logger.recordMetadata(
+            "Diff status",
+            when (BuildConstants.DIRTY) {
+                0 -> "All changes committed"
+                1 -> "Uncommitted changes"
+                else -> "Unknown"
+            }
+        )
 
         when (CURRENT_MODE) {
             REAL -> {
@@ -88,6 +90,8 @@ object Robot : LoggedRobot() {
         RobotContainer // Initialize robot container.
 
         enableAutoLogOutputFor(this)
+
+        registerAllLoggedOutputs()
 
         DriverStation.silenceJoystickConnectionWarning(true)
         PathfindingCommand.warmupCommand().schedule()
@@ -145,8 +149,11 @@ object Robot : LoggedRobot() {
      * SendableChooser make sure to add them to the chooser code above as well.
      */
     override fun autonomousInit() {
+        // Make sure command is compiled beforehand, otherwise there will be a delay.
+        autonomousCommand = RobotContainer.getAutonomousCommand()
+
         // Schedule the autonomous command
-//        autonomousCommand.schedule()
+        autonomousCommand.schedule()
     }
 
     /** This function is called periodically during autonomous. */

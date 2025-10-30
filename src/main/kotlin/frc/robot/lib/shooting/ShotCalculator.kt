@@ -12,7 +12,6 @@ import frc.robot.lib.extensions.get
 import frc.robot.lib.extensions.m
 import frc.robot.lib.extensions.mps
 import frc.robot.lib.extensions.rotationToPoint
-import frc.robot.robotstate.HUB_LOCATION
 import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean
 
 data class ShotData(
@@ -23,7 +22,7 @@ data class ShotData(
 
 val disableCompensation =
     LoggedNetworkBoolean("/Tuning/disableShotCompensation", false)
-val SHOOT_TARGET = HUB_LOCATION
+val SHOOT_TARGET = Translation2d()
 
 val NO_COMPENSATION_THRESHOLD: LinearVelocity =
     0.15.mps // The speed threshold for disabling the compensation
@@ -53,7 +52,7 @@ fun calculateShot(
             robotPose.translation.rotationToPoint(robotToHub) -
                 robotPose.rotation
         return ShotData(
-            compensatedTarget = HUB_LOCATION,
+            compensatedTarget = Translation2d(),
             turretAngle = turretAngle,
             compensatedDistance = distance.m
         )

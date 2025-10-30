@@ -12,17 +12,22 @@ import frc.robot.autonomous.paths.deploy.pathplanner.AC1SRP
 import frc.robot.autonomous.paths.deploy.pathplanner.BRP2
 import frc.robot.autonomous.paths.deploy.pathplanner.CC2C3
 import frc.robot.lib.extensions.enableAutoLogOutputFor
-import frc.robot.lib.extensions.sec
-import frc.robot.lib.extensions.volts
-import frc.robot.lib.shooting.toggleCompensation
-import frc.robot.lib.sysid.sysId
+import frc.robot.subsystems.drive.DriveCommands
 import org.ironmaple.simulation.SimulatedArena
 import org.littletonrobotics.junction.AutoLogOutput
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser
 
 object RobotContainer {
 
+    private val driverController = CommandPS5Controller(0)
+    private val SwitchController = CommandGenericHID(1)
     private val autoChooser: LoggedDashboardChooser<Command>
+
+    enum class SwitchInput(val buttonId: Int) {
+        DisableAutoAlign(0),
+        StaticSetpoint(1),
+        IntakeByVision(2)
+    }
 
     init {
         drive // Ensure Drive is initialized
@@ -31,13 +36,73 @@ object RobotContainer {
                 "Auto Choices",
                 AutoBuilder.buildAutoChooser()
             )
-
+        registerAutoCommands()
+        configureButtonBindings()
+        configureDefaultCommands()
 
         if (CURRENT_MODE == Mode.SIM) {
             SimulatedArena.getInstance().resetFieldForAuto()
         }
 
         enableAutoLogOutputFor(this)
+    }
+
+    @AutoLogOutput(key = "MapleSimPose")
+    private fun getMapleSimPose(): Pose2d? =
+        driveSimulation?.simulatedDriveTrainPose
+
+    private fun configureDefaultCommands() {
+        drive.defaultCommand =
+            DriveCommands.joystickDrive(
+                { driverController.leftY },
+                { driverController.leftX },
+                { -driverController.rightX * 0.8 }
+            )
+    }
+
+    private fun configureButtonBindings() {}
+
+    fun getAutonomousCommand(): Command = autoChooser.get()
+
+    private fun registerAutoCommands() {
+        val namedCommands: Map<String, Command> = mapOf()
+
+        NamedCommands.registerCommands(namedCommands)
+
+        // Set up SysId routines
+        autoChooser.addOption(
+            "Drive Wheel Radius Characterization",
+            DriveCommands.wheelRadiusCharacterization()
+        )
+        autoChooser.addOption(
+            "Drive Simple FF Characterization",
+            DriveCommands.feedforwardCharacterization()
+        )
+        autoChooser.addOption(
+            "Drive SysId (Quasistatic Forward)",
+            drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward)
+        )
+        autoChooser.addOption(
+            "Drive SysId (Quasistatic Reverse)",
+            drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse)
+        )
+        autoChooser.addOption(
+            "Drive SysId (Dynamic Forward)",
+            drive.sysIdDynamic(SysIdRoutine.Direction.kForward)
+        )
+        autoChooser.addOption(
+            "Drive SysId (Dynamic Reverse)",
+            drive.sysIdDynamic(SysIdRoutine.Direction.kReverse)
+        )
+
+        autoChooser.addOption(
+            "swerveFFCharacterization",
+            DriveCommands.feedforwardCharacterization()
+        )
+
+        autoChooser.addDefaultOption("BRP2", BRP2())
+        autoChooser.addOption("AC1SRP", AC1SRP())
+        autoChooser.addOption("CC2C3", CC2C3())
     }
 
     fun resetSimulationField() {

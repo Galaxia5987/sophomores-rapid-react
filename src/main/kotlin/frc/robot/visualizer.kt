@@ -13,11 +13,7 @@ import frc.robot.lib.extensions.toRotation2d
 import frc.robot.lib.getPose3d
 import frc.robot.lib.getRotation3d
 import frc.robot.lib.getTranslation3d
-import frc.robot.robotstate.COMMAND_NAME_PREFIX
 import frc.robot.subsystems.drive.Drive
-import frc.robot.subsystems.shooter.hood.Hood
-import frc.robot.subsystems.shooter.turret.Turret
-import frc.robot.subsystems.wrist.Wrist
 import org.littletonrobotics.junction.Logger
 import org.team5987.annotation.LoggedOutput
 
@@ -83,7 +79,7 @@ private fun getAllSwerveModulePoseDrive(): Array<Pose3d> {
 val wristTranslation
     get() = getTranslation3d(-0.3, 0.0, 0.28)
 val wristRotation
-    get() = getRotation3d(pitch = Wrist.inputs.position)
+    get() = getRotation3d(pitch = 0.0)
 val wristPose
     get() = getPose3d(wristTranslation, wristRotation)
 
@@ -97,7 +93,7 @@ val rollerPose
 val turretTranslation
     get() = getTranslation3d(z = 0.41)
 val turretRotation
-    get() = getRotation3d(yaw = Turret.inputs.position)
+    get() = getRotation3d(yaw = 0.0)
 val turretPose
     get() =
         getPose3d(turretTranslation, turretRotation) +
@@ -106,7 +102,7 @@ val turretPose
 val hoodTranslation
     get() = getTranslation3d(z = 0.083, y = 0.151)
 val hoodRotation
-    get() = getRotation3d(roll = 50.deg + Hood.inputs.position)
+    get() = getRotation3d(roll = 50.deg)
 val hoodPose
     get() = turretPose + Transform3d(hoodTranslation, hoodRotation)
 
@@ -138,7 +134,7 @@ fun logSubsystemPose() {
     Logger.recordOutput("RobotPose3d", *getSubsystemPose())
 }
 
-@LoggedOutput(path = COMMAND_NAME_PREFIX)
+@LoggedOutput
 val shootingDirection
     get() =
         Pose2d(
