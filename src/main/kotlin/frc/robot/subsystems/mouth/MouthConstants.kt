@@ -4,7 +4,7 @@ import com.ctre.phoenix6.configs.*
 import com.ctre.phoenix6.signals.InvertedValue
 import com.ctre.phoenix6.signals.NeutralModeValue
 
-const val ratio = 5.0 / 8.0
+const val ratio = 69.82
 
 val config =
     TalonFXConfiguration().apply {
@@ -15,11 +15,14 @@ val config =
             }
         CurrentLimits =
             CurrentLimitsConfigs().apply {
-                StatorCurrentLimit = 75.0
+                StatorCurrentLimit = 0.0
                 StatorCurrentLimitEnable = true
-                SupplyCurrentLimit = 32.5
+                SupplyCurrentLimit = 0.0
                 SupplyCurrentLimitEnable = true
             }
+        Slot0 =
+            Slot0Configs().apply {
+                kP = 0.0
+                kD = 0.0
+            }
     }
-
-

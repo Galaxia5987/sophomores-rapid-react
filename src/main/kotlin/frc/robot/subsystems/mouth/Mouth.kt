@@ -5,11 +5,14 @@ import edu.wpi.first.units.measure.Voltage
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.SubsystemBase
+import frc.robot.lib.extensions.get
 import frc.robot.lib.extensions.volts
 import frc.robot.lib.universal_motor.UniversalTalonFX
+import org.littletonrobotics.junction.Logger
 
-object Mouth: SubsystemBase() {
-    private val motor1: UniversalTalonFX = UniversalTalonFX(0, config = config, gearRatio = ratio)
+object Mouth : SubsystemBase() {
+    private val motor1: UniversalTalonFX =
+        UniversalTalonFX(0, config = config, gearRatio = ratio)
     private val voltageRequest: VoltageOut = VoltageOut(0.0)
     private var setVolts: Voltage = 0.0.volts
 
@@ -20,15 +23,21 @@ object Mouth: SubsystemBase() {
         })
     }
 
-    fun setActionInTake(){
-            setVoltage(Action.INTAKE.voltage)
+    fun setActionInTake(): Command {
+        return setVoltage(Action.INTAKE.voltage)
     }
 
-    fun setActionOutTake(){
-        setVoltage(Action.OUTTAKE.voltage)
+    fun setActionOutTake(): Command {
+        return setVoltage(Action.OUTTAKE.voltage)
     }
 
-    fun setActionStop(){
-        setVoltage(Action.STOP.voltage)
+    fun setActionStop(): Command {
+        return setVoltage(Action.STOP.voltage)
+    }
+
+    override fun periodic() {
+        motor1.updateInputs()
+        Logger.processInputs("Mouth", motor1.inputs)
+        Logger.recordOutput("Mouth/setVolts", setVolts)
     }
 }
