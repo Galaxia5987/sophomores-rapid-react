@@ -7,6 +7,7 @@ import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine
 import frc.robot.autonomous.paths.deploy.pathplanner.AC1SRP
 import frc.robot.autonomous.paths.deploy.pathplanner.BRP2
@@ -15,13 +16,14 @@ import frc.robot.lib.extensions.degrees
 import frc.robot.lib.extensions.enableAutoLogOutputFor
 import frc.robot.subsystems.drive.DriveCommands
 import frc.robot.subsystems.hood.Hood
+import frc.robot.subsystems.wrist.Wrist
 import org.ironmaple.simulation.SimulatedArena
 import org.littletonrobotics.junction.AutoLogOutput
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser
 
 object RobotContainer {
 
-    private val driverController = CommandPS5Controller(0)
+    private val driverController = CommandXboxController(0)
     private val SwitchController = CommandGenericHID(1)
     private val autoChooser: LoggedDashboardChooser<Command>
 
@@ -65,7 +67,8 @@ object RobotContainer {
     private fun configureButtonBindings() {
         driverController.povUp().onTrue(Hood.moveUp())
         driverController.povDown().onTrue(Hood.moveDown())
-
+ driverController.y().onTrue(Wrist.open())
+        driverController.a().onTrue(Wrist.close())
     }
 
     fun getAutonomousCommand(): Command = autoChooser.get()
