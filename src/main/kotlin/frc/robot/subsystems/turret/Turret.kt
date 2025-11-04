@@ -20,7 +20,7 @@ private val ligament =
     root.append(LoggedMechanismLigament2d("TurretLigament", 1.0, 0.0))
 
 object Turret : SubsystemBase() {
-    private val motor: UniversalTalonFX = UniversalTalonFX(0, config = config, gearRatio = ratio)
+    private val motor: UniversalTalonFX = UniversalTalonFX(0, config = config, gearRatio = RATIO)
     private val positionVoltageRequest: PositionVoltage = PositionVoltage(0.0)
     private var targetPosition: Angle = 0.0.degrees
 

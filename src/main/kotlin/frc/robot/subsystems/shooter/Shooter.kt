@@ -10,7 +10,7 @@ import frc.robot.lib.universal_motor.UniversalTalonFX
 import org.littletonrobotics.junction.Logger
 
 object Shooter: SubsystemBase() {
-    private val motor: UniversalTalonFX = UniversalTalonFX(0, config = config, gearRatio = ratio)
+    private val motor: UniversalTalonFX = UniversalTalonFX(0, config = config, gearRatio = RATIO)
     private val VoltageOutRequest: VelocityVoltage = VelocityVoltage(0.0)
     private var targetVelocity: AngularVelocity = 0.0.rps
 

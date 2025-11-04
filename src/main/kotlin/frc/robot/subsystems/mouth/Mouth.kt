@@ -11,7 +11,7 @@ import frc.robot.lib.universal_motor.UniversalTalonFX
 import org.littletonrobotics.junction.Logger
 
 object Mouth : SubsystemBase() {
-    private val motor: UniversalTalonFX = UniversalTalonFX(0, config = config, gearRatio = ratio)
+    private val motor: UniversalTalonFX = UniversalTalonFX(0, config = config, gearRatio = RATIO)
     private val voltageRequest: VoltageOut = VoltageOut(0.0)
     private var targetVoltage: Voltage = 0.0.volts
 
@@ -23,15 +23,15 @@ object Mouth : SubsystemBase() {
     }
 
     fun setActionInTake(): Command {
-        return setVoltage(Action.INTAKE.voltage)
+        return setVoltage(10.0.volts)
     }
 
     fun setActionOutTake(): Command {
-        return setVoltage(Action.OUTTAKE.voltage)
+        return setVoltage((-10.0).volts)
     }
 
     fun setActionStop(): Command {
-        return setVoltage(Action.STOP.voltage)
+        return setVoltage(0.0.volts)
     }
 
     override fun periodic() {

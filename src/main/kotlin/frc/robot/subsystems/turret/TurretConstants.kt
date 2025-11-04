@@ -6,8 +6,9 @@ import com.ctre.phoenix6.signals.NeutralModeValue
 import frc.robot.lib.extensions.get
 import frc.robot.lib.extensions.m
 import frc.robot.lib.extensions.mm
+import frc.robot.lib.extensions.volts
 
-const val ratio = 56.0
+const val RATIO = 56.0
 
 val config =
     TalonFXConfiguration().apply {
@@ -30,14 +31,4 @@ val config =
             }
         Feedback =
             FeedbackConfigs().apply { SensorToMechanismRatio = 1.0 / 2.0 }
-
-        val DISTANCE_SENSOR_ID: Int = 0
-        val DISTANCE_THRESHOLD = 50.mm
-        val distanceSensorConfig =
-            CANrangeConfiguration().apply {
-                ProximityParams =
-                    ProximityParamsConfigs().apply {
-                        ProximityThreshold = DISTANCE_THRESHOLD[m]
-                    }
-            }
     }
