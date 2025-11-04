@@ -1,4 +1,4 @@
-package frc.robot.subsystems.hood.Wrist
+package frc.robot.subsystems.wrist
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs
 import com.ctre.phoenix6.configs.FeedbackConfigs
