@@ -22,11 +22,11 @@ private val ligament =
 object Turret : SubsystemBase() {
     private val motor: UniversalTalonFX = UniversalTalonFX(0, config = config, gearRatio = RATIO)
     private val positionVoltageRequest: PositionVoltage = PositionVoltage(0.0)
-    private var targetPosition: Angle = 0.0.degrees
+    private var setpoint: Angle = 0.0.degrees
 
     private fun setAngle(angle: Angle): Command {
         return Commands.runOnce({
-            targetPosition = angle
+            setpoint = angle
             motor.setControl(positionVoltageRequest.withPosition(angle))
         })
     }
@@ -35,7 +35,7 @@ object Turret : SubsystemBase() {
         motor.updateInputs()
         ligament.setAngle(motor.inputs.position[degrees])
         Logger.processInputs("Turret", motor.inputs)
-        Logger.recordOutput("Turret/targetPosition", targetPosition)
+        Logger.recordOutput("Turret/targetPosition", setpoint)
         Logger.recordOutput("Subsystems/Turret/Ligament", mechanism)
     }
 }

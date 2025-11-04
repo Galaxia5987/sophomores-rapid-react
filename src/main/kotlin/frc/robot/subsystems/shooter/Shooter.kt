@@ -12,11 +12,11 @@ import org.littletonrobotics.junction.Logger
 object Shooter: SubsystemBase() {
     private val motor: UniversalTalonFX = UniversalTalonFX(0, config = config, gearRatio = RATIO)
     private val VoltageOutRequest: VelocityVoltage = VelocityVoltage(0.0)
-    private var targetVelocity: AngularVelocity = 0.0.rps
+    private var setpoint: AngularVelocity = 0.0.rps
 
     private fun setVelocity(velocity: AngularVelocity): Command {
         return Commands.runOnce({
-            targetVelocity = velocity
+            setpoint = velocity
             motor.setControl(VoltageOutRequest.withVelocity(velocity))
         })
     }
@@ -32,7 +32,7 @@ object Shooter: SubsystemBase() {
     override fun periodic(){
         motor.updateInputs()
         Logger.processInputs("Shooter", motor.inputs)
-        Logger.recordOutput("Shooter/targetVelocity", targetVelocity)
+        Logger.recordOutput("Shooter/targetVelocity", setpoint)
     }
 }
 

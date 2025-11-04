@@ -13,11 +13,11 @@ import org.littletonrobotics.junction.Logger
 object Mouth : SubsystemBase() {
     private val motor: UniversalTalonFX = UniversalTalonFX(0, config = config, gearRatio = RATIO)
     private val voltageRequest: VoltageOut = VoltageOut(0.0)
-    private var targetVoltage: Voltage = 0.0.volts
+    private var setpoint: Voltage = 0.0.volts
 
     private fun setVoltage(voltage: Voltage): Command {
         return Commands.runOnce({
-            targetVoltage = voltage
+            setpoint = voltage
             motor.setControl(voltageRequest.withOutput(voltage))
         })
     }
@@ -37,6 +37,6 @@ object Mouth : SubsystemBase() {
     override fun periodic() {
         motor.updateInputs()
         Logger.processInputs("Mouth", motor.inputs)
-        Logger.recordOutput("Mouth/targetVoltage", targetVoltage)
+        Logger.recordOutput("Mouth/targetVoltage", setpoint)
     }
 }
