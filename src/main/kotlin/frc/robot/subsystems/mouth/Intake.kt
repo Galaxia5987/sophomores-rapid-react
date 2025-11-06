@@ -14,23 +14,21 @@ object Intake : SubsystemBase() {
     private val voltageRequest: VoltageOut = VoltageOut(0.0)
     private var setpoint: Voltage = 0.volts
 
-    private fun setVoltage(voltage: Voltage): Command {
-        return runOnce{
-            setpoint = voltage
-            motor.setControl(voltageRequest.withOutput(voltage))
-        }
+    private fun setVoltage(voltage: Voltage) = runOnce {
+        setpoint = voltage
+        motor.setControl(voltageRequest.withOutput(voltage))
     }
 
-    fun intake(): Command {
-        return setVoltage(10.volts)
+    fun intake() = runOnce {
+        setVoltage(10.volts)
     }
 
-    fun outtake(): Command {
-        return setVoltage((-10).volts)
+    fun outtake() = runOnce {
+        setVoltage((-10).volts)
     }
 
-    fun stop(): Command {
-        return setVoltage(0.volts)
+    fun stop() = runOnce {
+        setVoltage(0.volts)
     }
 
     override fun periodic() {

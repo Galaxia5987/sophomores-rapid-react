@@ -14,19 +14,17 @@ object Shooter: SubsystemBase() {
     private val VoltageOutRequest: VelocityVoltage = VelocityVoltage(0.0)
     private var setpoint: AngularVelocity = 0.rps
 
-    private fun setVelocity(velocity: AngularVelocity): Command {
-        return runOnce {
-            setpoint = velocity
-            motor.setControl(VoltageOutRequest.withVelocity(velocity))
-        }
+    private fun setVelocity(velocity: AngularVelocity) = runOnce {
+        setpoint = velocity
+        motor.setControl(VoltageOutRequest.withVelocity(velocity))
     }
 
-    fun on(): Command {
-        return setVelocity(10.rps)
+    fun on() = runOnce {
+        setVelocity(10.rps)
     }
 
-    fun off(): Command {
-        return setVelocity(0.rps)
+    fun off() = runOnce {
+        setVelocity(0.rps)
     }
 
     override fun periodic() {
