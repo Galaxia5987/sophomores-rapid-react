@@ -2,12 +2,9 @@ package frc.robot.subsystems.mouth
 
 import com.ctre.phoenix6.controls.VoltageOut
 import edu.wpi.first.units.measure.Voltage
-import edu.wpi.first.wpilibj2.command.Command
-import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.lib.extensions.volts
 import frc.robot.lib.universal_motor.UniversalTalonFX
-import org.littletonrobotics.junction.Logger
 import org.team5987.annotation.LoggedOutput
 
 object Intake : SubsystemBase() {
