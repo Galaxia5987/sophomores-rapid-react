@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.lib.extensions.degrees
 import frc.robot.lib.universal_motor.UniversalTalonFX
 import org.littletonrobotics.junction.AutoLogOutput
+import org.littletonrobotics.junction.Logger
 import org.littletonrobotics.junction.mechanism.LoggedMechanism2d
 import org.littletonrobotics.junction.mechanism.LoggedMechanismLigament2d
 import org.team5987.annotation.LoggedOutput
@@ -17,12 +18,9 @@ private val ligament =
     root.append(LoggedMechanismLigament2d("TurretLigament", 1.0, 0.0))
 
 object Turret : SubsystemBase() {
-    @LoggedOutput
     private val motor: UniversalTalonFX = UniversalTalonFX(0, config = config, gearRatio = RATIO)
-    @LoggedOutput
     private val positionVoltageRequest: PositionVoltage = PositionVoltage(0.0)
-    @LoggedOutput
-    private var setpoint: Angle = 0.degrees
+    @LoggedOutput private var setpoint: Angle = 0.degrees
 
     private fun setAngle(angle: Angle) = runOnce {
         setpoint = angle
@@ -32,4 +30,9 @@ object Turret : SubsystemBase() {
     fun rotateClockwise() = runOnce { setAngle(10.degrees) }
 
     fun rotateCounterClockwise() = runOnce { setAngle((-10).degrees) }
+
+    override fun periodic() {
+        motor.updateInputs()
+        Logger.processInputs("Subsystems/Turret", motor.inputs)
+    }
 }

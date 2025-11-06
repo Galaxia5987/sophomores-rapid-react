@@ -5,11 +5,13 @@ import edu.wpi.first.units.measure.AngularVelocity
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.lib.extensions.rps
 import frc.robot.lib.universal_motor.UniversalTalonFX
+import frc.robot.subsystems.turret.Turret
+import org.littletonrobotics.junction.Logger
 import org.team5987.annotation.LoggedOutput
 
 object Shooter: SubsystemBase() {
-    @LoggedOutput private val motor: UniversalTalonFX = UniversalTalonFX(0, config = config, gearRatio = RATIO)
-    @LoggedOutput private val VoltageOutRequest: VelocityVoltage = VelocityVoltage(0.0)
+    private val motor: UniversalTalonFX = UniversalTalonFX(0, config = config, gearRatio = RATIO)
+    private val VoltageOutRequest: VelocityVoltage = VelocityVoltage(0.0)
     @LoggedOutput private var setpoint: AngularVelocity = 0.rps
 
     private fun setVelocity(velocity: AngularVelocity) = runOnce {
@@ -20,5 +22,10 @@ object Shooter: SubsystemBase() {
     fun on() = runOnce { setVelocity(10.rps) }
 
     fun off() = runOnce { setVelocity(0.rps) }
+
+    override fun periodic() {
+        motor.updateInputs()
+        Logger.processInputs("Subsystems/Intake", motor.inputs)
+    }
 }
 
