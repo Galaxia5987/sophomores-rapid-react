@@ -13,8 +13,9 @@ import frc.robot.autonomous.paths.deploy.pathplanner.BRP2
 import frc.robot.autonomous.paths.deploy.pathplanner.CC2C3
 import frc.robot.lib.extensions.enableAutoLogOutputFor
 import frc.robot.subsystems.drive.DriveCommands
-import frc.robot.subsystems.mouth.Mouth
+import frc.robot.subsystems.mouth.Intake
 import frc.robot.subsystems.shooter.Shooter
+import frc.robot.subsystems.turret.Turret
 import org.ironmaple.simulation.SimulatedArena
 import org.littletonrobotics.junction.AutoLogOutput
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser
@@ -63,14 +64,18 @@ object RobotContainer {
     }
 
     private fun configureButtonBindings() {
-        // -=+ Mouth Commands +=-
-        driverController.b().onTrue(Mouth.setActionInTake())
-        driverController.x().onTrue(Mouth.setActionOutTake())
-        driverController.y().onTrue(Mouth.setActionStop())
+        // -=+ Intake Commands +=-
+        driverController.b().onTrue(Intake.intake())
+        driverController.x().onTrue(Intake.outtake())
+        driverController.y().onTrue(Intake.stop())
+
+        // -=+ Turret Commands +=-
+        driverController.povLeft().whileTrue(Turret.rotateClockwise())
+        driverController.povRight().whileTrue(Turret.rotateCounterClockwise())
 
         // -=+ Shooter Commands +=-
-        driverController.a().onTrue(Shooter.startShooting())
-        driverController.a().onFalse(Shooter.stopShooting())
+        driverController.a().onTrue(Shooter.on())
+        driverController.a().onFalse(Shooter.off())
     }
 
     fun getAutonomousCommand(): Command = autoChooser.get()
