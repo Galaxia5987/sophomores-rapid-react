@@ -12,6 +12,7 @@ import org.littletonrobotics.junction.AutoLogOutput
 import org.littletonrobotics.junction.Logger
 import org.littletonrobotics.junction.mechanism.LoggedMechanism2d
 import org.littletonrobotics.junction.mechanism.LoggedMechanismLigament2d
+import org.team5987.annotation.LoggedOutput
 
 @AutoLogOutput(key = "Turret/mechanism")
 private var mechanism = LoggedMechanism2d(5.0, 5.0)
@@ -20,20 +21,12 @@ private val ligament =
     root.append(LoggedMechanismLigament2d("TurretLigament", 1.0, 0.0))
 
 object Turret : SubsystemBase() {
-    private val motor: UniversalTalonFX = UniversalTalonFX(0, config = config, gearRatio = RATIO)
-    private val positionVoltageRequest: PositionVoltage = PositionVoltage(0.0)
-    private var setpoint: Angle = 0.degrees
+    @LoggedOutput private val motor: UniversalTalonFX = UniversalTalonFX(0, config = config, gearRatio = RATIO)
+    @LoggedOutput private val positionVoltageRequest: PositionVoltage = PositionVoltage(0.0)
+    @LoggedOutput private var setpoint: Angle = 0.degrees
 
     private fun setAngle(angle: Angle) = runOnce {
         setpoint = angle
         motor.setControl(positionVoltageRequest.withPosition(angle))
-    }
-
-    override fun periodic() {
-        motor.updateInputs()
-        ligament.setAngle(motor.inputs)
-        Logger.processInputs("Turret", motor.inputs)
-        Logger.recordOutput("Turret/setpoint", setpoint)
-        Logger.recordOutput("Subsystems/Turret/Ligament", mechanism)
     }
 }

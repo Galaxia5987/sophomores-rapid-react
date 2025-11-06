@@ -8,32 +8,21 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.lib.extensions.volts
 import frc.robot.lib.universal_motor.UniversalTalonFX
 import org.littletonrobotics.junction.Logger
+import org.team5987.annotation.LoggedOutput
 
 object Intake : SubsystemBase() {
-    private val motor: UniversalTalonFX = UniversalTalonFX(0, config = config, gearRatio = RATIO)
-    private val voltageRequest: VoltageOut = VoltageOut(0.0)
-    private var setpoint: Voltage = 0.volts
+    @LoggedOutput private val motor: UniversalTalonFX = UniversalTalonFX(0, config = config, gearRatio = RATIO)
+    @LoggedOutput private val voltageRequest: VoltageOut = VoltageOut(0.0)
+    @LoggedOutput private var setpoint: Voltage = 0.volts
 
     private fun setVoltage(voltage: Voltage) = runOnce {
         setpoint = voltage
         motor.setControl(voltageRequest.withOutput(voltage))
     }
 
-    fun intake() = runOnce {
-        setVoltage(10.volts)
-    }
+    fun intake() = runOnce { setVoltage(10.volts) }
 
-    fun outtake() = runOnce {
-        setVoltage((-10).volts)
-    }
+    fun outtake() = runOnce { setVoltage((-10).volts) }
 
-    fun stop() = runOnce {
-        setVoltage(0.volts)
-    }
-
-    override fun periodic() {
-        motor.updateInputs()
-        Logger.processInputs("Intake", motor.inputs)
-        Logger.recordOutput("Intake/setpoint", setpoint)
-    }
+    fun stop() = runOnce { setVoltage(0.volts) }
 }
