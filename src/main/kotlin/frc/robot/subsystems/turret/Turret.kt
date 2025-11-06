@@ -25,10 +25,10 @@ object Turret : SubsystemBase() {
     private var setpoint: Angle = 0.degrees
 
     private fun setAngle(angle: Angle): Command {
-        return Commands.runOnce({
+        return runOnce {
             setpoint = angle
             motor.setControl(positionVoltageRequest.withPosition(angle))
-        })
+        }
     }
 
     override fun periodic() {

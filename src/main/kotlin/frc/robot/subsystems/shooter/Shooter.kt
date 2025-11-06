@@ -15,21 +15,21 @@ object Shooter: SubsystemBase() {
     private var setpoint: AngularVelocity = 0.rps
 
     private fun setVelocity(velocity: AngularVelocity): Command {
-        return Commands.runOnce({
+        return runOnce {
             setpoint = velocity
             motor.setControl(VoltageOutRequest.withVelocity(velocity))
-        })
+        }
     }
 
-    fun startShooting(): Command{
+    fun on(): Command {
         return setVelocity(10.rps)
     }
 
-    fun stopShooting(): Command{
+    fun off(): Command {
         return setVelocity(0.rps)
     }
 
-    override fun periodic(){
+    override fun periodic() {
         motor.updateInputs()
         Logger.processInputs("Shooter", motor.inputs)
         Logger.recordOutput("Shooter/setpoint", setpoint)

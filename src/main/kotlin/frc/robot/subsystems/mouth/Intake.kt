@@ -15,21 +15,21 @@ object Intake : SubsystemBase() {
     private var setpoint: Voltage = 0.volts
 
     private fun setVoltage(voltage: Voltage): Command {
-        return Commands.runOnce({
+        return runOnce{
             setpoint = voltage
             motor.setControl(voltageRequest.withOutput(voltage))
-        })
+        }
     }
 
-    fun setActionIntake(): Command {
+    fun intake(): Command {
         return setVoltage(10.volts)
     }
 
-    fun setActionOuttake(): Command {
+    fun outtake(): Command {
         return setVoltage((-10).volts)
     }
 
-    fun setActionStop(): Command {
+    fun stop(): Command {
         return setVoltage(0.volts)
     }
 
