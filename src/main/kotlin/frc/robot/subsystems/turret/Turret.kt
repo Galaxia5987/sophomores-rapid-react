@@ -20,7 +20,7 @@ private val ligament =
 object Turret : SubsystemBase() {
     private val motor: UniversalTalonFX = UniversalTalonFX(0, config = config, gearRatio = RATIO)
     private val positionVoltageRequest: PositionVoltage = PositionVoltage(0.0)
-    @LoggedOutput private var setpoint: Angle = 0.degrees
+    @LoggedOutput var setpoint: Angle = 0.degrees
 
     private fun setAngle(angle: Angle) = runOnce {
         setpoint = angle
