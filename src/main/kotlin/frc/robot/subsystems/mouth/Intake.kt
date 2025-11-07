@@ -27,11 +27,11 @@ object Intake : SubsystemBase() {
         motor.setControl(voltageRequest.withOutput(voltage))
     }
 
-    fun intake() = runOnce { setVoltage(10.volts) }
+    fun intake() = runOnce { setVoltage(10.volts) } //Intakes Ball
 
-    fun outtake() = runOnce { setVoltage((-10).volts) }
+    fun outtake() = runOnce { setVoltage((-10).volts) } //Outtakes Ball
 
-    fun stop() = runOnce { setVoltage(0.volts) }
+    fun stop() = runOnce { setVoltage(0.volts) } //Stops Moving
 
     override fun periodic() {
         motor.updateInputs()

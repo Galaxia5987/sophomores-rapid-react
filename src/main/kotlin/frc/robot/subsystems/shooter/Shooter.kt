@@ -27,9 +27,9 @@ object Shooter: SubsystemBase() {
         motor.setControl(VoltageOutRequest.withVelocity(velocity))
     }
 
-    fun on() = runOnce { setVelocity(10.rps) }
+    fun on() = runOnce { setVelocity(10.rps) } //Start Spinning
 
-    fun off() = runOnce { setVelocity(0.rps) }
+    fun off() = runOnce { setVelocity(0.rps) } //Stop Spinning
 
     override fun periodic() {
         motor.updateInputs()

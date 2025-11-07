@@ -27,9 +27,9 @@ object Turret : SubsystemBase() {
         motor.setControl(positionVoltageRequest.withPosition(angle))
     }
 
-    fun rotateClockwise() = runOnce { setAngle(10.degrees) }
+    fun rotateClockwise() = runOnce { setAngle(10.degrees) } //Spinning Right
 
-    fun rotateCounterClockwise() = runOnce { setAngle((-10).degrees) }
+    fun rotateCounterClockwise() = runOnce { setAngle((-10).degrees) } //Spinning Left
 
     override fun periodic() {
         motor.updateInputs()
