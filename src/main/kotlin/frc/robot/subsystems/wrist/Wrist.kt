@@ -17,9 +17,11 @@ import frc.robot.lib.Gains
 import frc.robot.lib.extensions.degrees
 import frc.robot.lib.extensions.get
 import frc.robot.lib.universal_motor.UniversalTalonFX
-import frc.robot.subsystems.hood.Wrist.GEAR_RATIO
-import frc.robot.subsystems.hood.Wrist.KD
-import frc.robot.subsystems.hood.Wrist.KP
+import frc.robot.subsystems.Wrist.GEAR_RATIO
+import frc.robot.subsystems.Wrist.KD
+import frc.robot.subsystems.Wrist.KP
+import frc.robot.subsystems.Wrist.port
+import frc.robot.subsystems.Wrist.simGains
 
 import org.littletonrobotics.junction.AutoLogOutput
 import org.littletonrobotics.junction.Logger
@@ -36,7 +38,7 @@ object Wrist : SubsystemBase() {
     private val ligament =
         root.append(LoggedMechanismLigament2d("WristLigament", 1.0, 0.0))
 
-    private val config1: TalonFXConfiguration = TalonFXConfiguration().apply {
+    private val config: TalonFXConfiguration = TalonFXConfiguration().apply {
         MotorOutput = MotorOutputConfigs().apply {
             Inverted = InvertedValue.CounterClockwise_Positive
             NeutralMode = NeutralModeValue.Brake
@@ -56,15 +58,15 @@ object Wrist : SubsystemBase() {
         }
 
     }
-    private val simGains = Gains(kD = 0.3, kP = 1.65)
-    private val WristMotor = UniversalTalonFX(3, simGains = simGains, config = config1, gearRatio = GEAR_RATIO)
+
+    private val motor = UniversalTalonFX(port = port, simGains = simGains, config = config, gearRatio = GEAR_RATIO)
     private val positionReq1: PositionVoltage = PositionVoltage(0.0)
     private var setpoint: Angle = Degrees.of(0.0)
 
     fun setAngle(angle: Angle): Command {
         return Commands.runOnce({
             setpoint = angle
-            WristMotor.setControl(positionReq1.withPosition(angle))
+            motor.setControl(positionReq1.withPosition(angle))
         })
     }
 
@@ -77,10 +79,10 @@ object Wrist : SubsystemBase() {
     }
 
     override fun periodic() {
-WristMotor.updateInputs()
-        ligament.setAngle(WristMotor.inputs.position[degrees])
-        Logger.processInputs("Wrist",WristMotor.inputs)
-        Logger.recordOutput("Wrist/targetAngle",setpoint)
-        Logger.recordOutput("Wrist/ligament",mechanism)
+        motor.updateInputs()
+        ligament.setAngle(motor.inputs.position[degrees])
+        Logger.processInputs("Wrist", motor.inputs)
+        Logger.recordOutput("Wrist/targetAngle", setpoint)
+        Logger.recordOutput("Wrist/ligament", mechanism)
     }
 }
