@@ -31,31 +31,7 @@ object Hood : SubsystemBase() {
 
     private val ligament =
         root.append(LoggedMechanismLigament2d("HoodLigament", 1.0, 0.0))
-
-    val config1: TalonFXConfiguration =
-        TalonFXConfiguration().apply {
-            MotorOutput =
-                MotorOutputConfigs().apply {
-                    Inverted = InvertedValue.CounterClockwise_Positive
-                    NeutralMode = NeutralModeValue.Brake
-                }
-            CurrentLimits =
-                CurrentLimitsConfigs().apply {
-                    StatorCurrentLimitEnable = true
-                    SupplyCurrentLimitEnable = true
-                    StatorCurrentLimit = 20.0
-                    SupplyCurrentLimit = 10.0
-                }
-            Slot0 =
-                Slot0Configs().apply {
-                    kP = KP
-                    kD = KD
-                }
-            Feedback =
-                FeedbackConfigs().apply { SensorToMechanismRatio = GEAR_RATIO }
-        }
-    private val simGains= Gains(kP = 1.3, kD = 0.25)
-    private val motor = UniversalTalonFX(0, config = config1, gearRatio = GEAR_RATIO, simGains = simGains)
+    private val motor = UniversalTalonFX(port = port, config = config, gearRatio = GEAR_RATIO, simGains = simGains)
     private val positionReq: PositionVoltage = PositionVoltage(0.0)
     private var setpoint: Angle = Degrees.of(0.0)
 
