@@ -17,7 +17,10 @@ import frc.robot.lib.Gains
 import frc.robot.lib.extensions.degrees
 import frc.robot.lib.extensions.get
 import frc.robot.lib.universal_motor.UniversalTalonFX
-import frc.robot.subsystems.hood.Wrist.GEAR_RATIO3
+import frc.robot.subsystems.hood.Wrist.GEAR_RATIO
+import frc.robot.subsystems.hood.Wrist.KD
+import frc.robot.subsystems.hood.Wrist.KP
+
 import org.littletonrobotics.junction.AutoLogOutput
 import org.littletonrobotics.junction.Logger
 import org.littletonrobotics.junction.mechanism.LoggedMechanism2d
@@ -45,22 +48,22 @@ object Wrist : SubsystemBase() {
             StatorCurrentLimitEnable = true
         }
         Slot0 = Slot0Configs().apply {
-            kP = 1.7
-            kD = 0.0
+            kP = KP
+            kD = KD
         }
         Feedback = FeedbackConfigs().apply {
-            SensorToMechanismRatio = GEAR_RATIO3
+            SensorToMechanismRatio = GEAR_RATIO
         }
 
     }
     private val simGains = Gains(kD = 0.3, kP = 1.65)
-    private val WristMotor = UniversalTalonFX(3, simGains = simGains, config = config1, gearRatio = GEAR_RATIO3)
+    private val WristMotor = UniversalTalonFX(3, simGains = simGains, config = config1, gearRatio = GEAR_RATIO)
     private val positionReq1: PositionVoltage = PositionVoltage(0.0)
-    private var setPoint: Angle = Degrees.of(0.0)
+    private var setpoint: Angle = Degrees.of(0.0)
 
     fun setAngle(angle: Angle): Command {
         return Commands.runOnce({
-            setPoint = angle
+            setpoint = angle
             WristMotor.setControl(positionReq1.withPosition(angle))
         })
     }
@@ -77,6 +80,7 @@ object Wrist : SubsystemBase() {
 WristMotor.updateInputs()
         ligament.setAngle(WristMotor.inputs.position[degrees])
         Logger.processInputs("Wrist",WristMotor.inputs)
-        Logger.recordOutput("Wrist/setAngle",setPoint)
+        Logger.recordOutput("Wrist/targetAngle",setpoint)
+        Logger.recordOutput("Wrist/ligament",mechanism)
     }
 }

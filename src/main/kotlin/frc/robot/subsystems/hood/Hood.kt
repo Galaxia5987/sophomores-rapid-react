@@ -48,20 +48,20 @@ object Hood : SubsystemBase() {
                 }
             Slot0 =
                 Slot0Configs().apply {
-                    kP = 1.5
-                    kD = 0.1
+                    kP = KP
+                    kD = KD
                 }
             Feedback =
-                FeedbackConfigs().apply { SensorToMechanismRatio = GEAR_RATIO2 }
+                FeedbackConfigs().apply { SensorToMechanismRatio = GEAR_RATIO }
         }
     private val simGains= Gains(kP = 1.3, kD = 0.25)
-    private val motor = UniversalTalonFX(0, config = config1, gearRatio = GEAR_RATIO2, simGains = simGains)
+    private val motor = UniversalTalonFX(0, config = config1, gearRatio = GEAR_RATIO, simGains = simGains)
     private val positionReq: PositionVoltage = PositionVoltage(0.0)
-    private var setPoint: Angle = Degrees.of(0.0)
+    private var setpoint: Angle = Degrees.of(0.0)
 
     fun setAngle(angle: Angle): Command {
         return Commands.runOnce({
-            setPoint = angle
+             setpoint= angle
             motor.setControl(positionReq.withPosition(angle))
         })
     }
@@ -77,6 +77,7 @@ object Hood : SubsystemBase() {
         motor.updateInputs()
         ligament.setAngle(motor.inputs.position[degrees])
         Logger.processInputs("Hood", motor.inputs)
-        Logger.recordOutput("Hood/setAngle", setPoint)
+        Logger.recordOutput("Hood/target", setpoint)
+        Logger.recordOutput("Hood/ligament",mechanism)
     }
 }

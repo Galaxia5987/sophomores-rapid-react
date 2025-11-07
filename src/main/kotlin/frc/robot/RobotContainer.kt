@@ -67,7 +67,7 @@ object RobotContainer {
     private fun configureButtonBindings() {
         driverController.povUp().onTrue(Hood.moveUp())
         driverController.povDown().onTrue(Hood.moveDown())
- driverController.y().onTrue(Wrist.open())
+        driverController.y().onTrue(Wrist.open())
         driverController.a().onTrue(Wrist.close())
     }
 
