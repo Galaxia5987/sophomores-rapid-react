@@ -12,8 +12,8 @@ import frc.robot.lib.Gains
  val port= 0
  val simGains= Gains(kP = 1.3, kD = 0.25)
 val GEAR_RATIO =  59.5
-val KP= 1.5
-val KD = 0.1
+
+val GAINS: Gains = Gains (kP = 1.5, kD = 0.1)
 val config: TalonFXConfiguration =
     TalonFXConfiguration().apply {
         MotorOutput =
@@ -30,8 +30,8 @@ val config: TalonFXConfiguration =
             }
         Slot0 =
             Slot0Configs().apply {
-                kP = KP
-                kD = KD
+                kP = GAINS.kP
+                kD = GAINS.kD
             }
         Feedback =
             FeedbackConfigs().apply { SensorToMechanismRatio = GEAR_RATIO }
