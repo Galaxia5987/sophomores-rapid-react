@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.lib.Gains
+import frc.robot.lib.extensions.deg
 import frc.robot.lib.extensions.degrees
 import frc.robot.lib.extensions.get
 import frc.robot.lib.universal_motor.UniversalTalonFX
@@ -35,7 +36,7 @@ object Hood : SubsystemBase() {
         root.append(LoggedMechanismLigament2d("HoodLigament", 1.0, 0.0))
     private val motor = UniversalTalonFX(port = port, config = config, gearRatio = GEAR_RATIO, simGains = simGains)
     private val positionReq: PositionVoltage = PositionVoltage(0.0)
-    @LoggedOutput  private var setpoint: Angle = Degrees.of(0.0)
+    @LoggedOutput  private var setpoint: Angle = 0.deg
 
     fun setAngle(angle: Angle): Command {
         return Commands.runOnce({
