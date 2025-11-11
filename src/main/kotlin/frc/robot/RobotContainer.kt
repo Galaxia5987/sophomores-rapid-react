@@ -14,7 +14,7 @@ import frc.robot.autonomous.paths.deploy.pathplanner.CC2C3
 import frc.robot.lib.extensions.enableAutoLogOutputFor
 import frc.robot.subsystems.drive.DriveCommands
 import frc.robot.subsystems.intake.Intake
-import frc.robot.subsystems.mouth.Shooter
+import frc.robot.subsystems.shooter.Shooter
 import frc.robot.subsystems.turret.Turret
 import org.ironmaple.simulation.SimulatedArena
 import org.littletonrobotics.junction.AutoLogOutput
