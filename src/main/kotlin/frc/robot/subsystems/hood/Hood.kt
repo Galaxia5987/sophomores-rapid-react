@@ -26,7 +26,7 @@ import org.team5987.annotation.LoggedOutput
 
 object Hood : SubsystemBase() {
 
-    @AutoLogOutput(key = "Hood/mechanism")
+    @LoggedOutput(key = "Hood/mechanism")
     private var mechanism = LoggedMechanism2d(4.0, 6.0)
 
     private var root = mechanism.getRoot("Hood", 2.0, 1.0)
