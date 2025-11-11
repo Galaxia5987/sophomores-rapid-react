@@ -14,7 +14,7 @@ import frc.robot.autonomous.paths.deploy.pathplanner.CC2C3
 import frc.robot.lib.extensions.enableAutoLogOutputFor
 import frc.robot.subsystems.drive.DriveCommands
 import frc.robot.subsystems.intake.Intake
-import frc.robot.subsystems.shooter.Shooter
+import frc.robot.subsystems.mouth.Shooter
 import frc.robot.subsystems.turret.Turret
 import org.ironmaple.simulation.SimulatedArena
 import org.littletonrobotics.junction.AutoLogOutput
@@ -70,11 +70,15 @@ object RobotContainer {
         driverController.y().onTrue(Intake.stop()) // Intake Stops
 
         // -=+ Turret Commands +=-
-        driverController.povRight().whileTrue(Turret.rotateClockwise()) // Turret Rotates Right
-        driverController.povLeft().whileTrue(Turret.rotateCounterClockwise()) // Turret Rotates Left
+        driverController
+            .povRight()
+            .whileTrue(Turret.rotateClockwise()) // Turret Rotates Right
+        driverController
+            .povLeft()
+            .whileTrue(Turret.rotateCounterClockwise()) // Turret Rotates Left
 
         // -=+ Shooter Commands +=-
-        driverController.a().onTrue(Shooter.on()) //Shooter Starts Shooting
+        driverController.a().onTrue(Shooter.on()) // Shooter Starts Shooting
         driverController.a().onFalse(Shooter.off()) // Shooter Stops Shooting
     }
 

@@ -4,9 +4,6 @@ import com.ctre.phoenix6.configs.*
 import com.ctre.phoenix6.signals.InvertedValue
 import com.ctre.phoenix6.signals.NeutralModeValue
 import frc.robot.lib.extensions.get
-import frc.robot.lib.extensions.m
-import frc.robot.lib.extensions.mm
-import frc.robot.lib.extensions.volts
 
 const val RATIO = 56.0
 

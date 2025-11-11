@@ -3,8 +3,10 @@ package frc.robot.subsystems.shooter
 import com.ctre.phoenix6.controls.VelocityVoltage
 import edu.wpi.first.units.measure.AngularVelocity
 import edu.wpi.first.wpilibj2.command.SubsystemBase
+import frc.robot.lib.extensions.get
 import frc.robot.lib.extensions.rps
 import frc.robot.lib.universal_motor.UniversalTalonFX
+import frc.robot.subsystems.intake.mechanism
 import org.littletonrobotics.junction.AutoLogOutput
 import org.littletonrobotics.junction.Logger
 import org.littletonrobotics.junction.mechanism.LoggedMechanism2d
@@ -33,8 +35,9 @@ object Shooter: SubsystemBase() {
 
     override fun periodic() {
         motor.updateInputs()
-        Logger.processInputs("Subsystems/Intake", motor.inputs)
+        ligament.setAngle(setpoint[rps])
+        Logger.recordOutput("Shooter", mechanism)
+        Logger.processInputs("Subsystems/Shooter", motor.inputs)
 
     }
 }
-
