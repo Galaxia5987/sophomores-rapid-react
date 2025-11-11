@@ -10,11 +10,10 @@ import com.ctre.phoenix6.signals.NeutralModeValue
 import frc.robot.lib.Gains
 
 val GEAR_RATIO=1/69.82
-val KP = 1.7
- val   KD = 0.0
+val  GAINS: Gains= Gains(1.7 , kD = 0.0)
 val port =3
 val simGains = Gains(kD = 0.3, kP = 1.65)
-private val config: TalonFXConfiguration = TalonFXConfiguration().apply {
+ val config: TalonFXConfiguration = TalonFXConfiguration().apply {
     MotorOutput = MotorOutputConfigs().apply {
         Inverted = InvertedValue.CounterClockwise_Positive
         NeutralMode = NeutralModeValue.Brake
@@ -26,8 +25,8 @@ private val config: TalonFXConfiguration = TalonFXConfiguration().apply {
         StatorCurrentLimitEnable = true
     }
     Slot0 = Slot0Configs().apply {
-        kP = KP
-        kD = KD
+        kP = GAINS.kP
+        kD = GAINS.kD
     }
     Feedback = FeedbackConfigs().apply {
         SensorToMechanismRatio = GEAR_RATIO
