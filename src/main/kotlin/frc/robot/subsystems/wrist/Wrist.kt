@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.lib.Gains
+import frc.robot.lib.extensions.deg
 import frc.robot.lib.extensions.degrees
 import frc.robot.lib.extensions.get
 import frc.robot.lib.universal_motor.UniversalTalonFX
@@ -53,11 +54,11 @@ object Wrist : SubsystemBase() {
     }
 
     fun open(): Command {
-        return setAngle(25.0.degrees)
+        return setAngle(25.deg)
     }
 
     fun close(): Command {
-        return setAngle(0.0.degrees)
+        return setAngle(0.deg)
     }
 
     override fun periodic() {
