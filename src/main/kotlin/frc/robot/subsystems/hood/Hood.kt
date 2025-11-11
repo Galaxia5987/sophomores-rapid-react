@@ -17,6 +17,7 @@ import frc.robot.lib.Gains
 import frc.robot.lib.extensions.degrees
 import frc.robot.lib.extensions.get
 import frc.robot.lib.universal_motor.UniversalTalonFX
+import frc.robot.subsystems.wrist.Wrist
 import org.littletonrobotics.junction.AutoLogOutput
 import org.littletonrobotics.junction.Logger
 import org.littletonrobotics.junction.mechanism.LoggedMechanism2d
@@ -57,6 +58,7 @@ object Hood : SubsystemBase() {
         motor.updateInputs()
         ligament.setAngle(motor.inputs.position[degrees])
         Logger.processInputs("Hood", motor.inputs)
-
+        Logger.recordOutput("Hood/targetAngle", Hood.setpoint)
+        Logger.recordOutput("Hood/ligament", Hood.mechanism)
     }
 }
