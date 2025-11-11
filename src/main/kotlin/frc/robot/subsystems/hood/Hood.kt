@@ -21,6 +21,7 @@ import org.littletonrobotics.junction.AutoLogOutput
 import org.littletonrobotics.junction.Logger
 import org.littletonrobotics.junction.mechanism.LoggedMechanism2d
 import org.littletonrobotics.junction.mechanism.LoggedMechanismLigament2d
+import org.team5987.annotation.LoggedOutput
 
 object Hood : SubsystemBase() {
 
@@ -33,7 +34,7 @@ object Hood : SubsystemBase() {
         root.append(LoggedMechanismLigament2d("HoodLigament", 1.0, 0.0))
     private val motor = UniversalTalonFX(port = port, config = config, gearRatio = GEAR_RATIO, simGains = simGains)
     private val positionReq: PositionVoltage = PositionVoltage(0.0)
-    private var setpoint: Angle = Degrees.of(0.0)
+    @LoggedOutput  private var setpoint: Angle = Degrees.of(0.0)
 
     fun setAngle(angle: Angle): Command {
         return Commands.runOnce({
@@ -49,11 +50,13 @@ object Hood : SubsystemBase() {
     fun moveDown(): Command{
         return setAngle(0.0.degrees)
     }
+
+
+
     override fun periodic() {
         motor.updateInputs()
         ligament.setAngle(motor.inputs.position[degrees])
         Logger.processInputs("Hood", motor.inputs)
-        Logger.recordOutput("Hood/target", setpoint)
-        Logger.recordOutput("Hood/ligament",mechanism)
+
     }
 }
