@@ -31,7 +31,7 @@ import org.team5987.annotation.LoggedOutput
 
 object Wrist : SubsystemBase() {
 
-    @AutoLogOutput(key = "Wrist/mechanism")
+    @LoggedOutput(key = "Wrist/mechanism")
     private var mechanism = LoggedMechanism2d(4.0, 6.0)
 
     private var root = mechanism.getRoot("Wrist", 2.0, 1.0)
