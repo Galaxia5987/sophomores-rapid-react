@@ -18,8 +18,8 @@ import frc.robot.lib.extensions.degrees
 import frc.robot.lib.extensions.get
 import frc.robot.lib.universal_motor.UniversalTalonFX
 import frc.robot.subsystems.Wrist.GEAR_RATIO
-import frc.robot.subsystems.Wrist.KD
-import frc.robot.subsystems.Wrist.KP
+import frc.robot.subsystems.Wrist.config
+
 import frc.robot.subsystems.Wrist.port
 import frc.robot.subsystems.Wrist.simGains
 
@@ -27,6 +27,7 @@ import org.littletonrobotics.junction.AutoLogOutput
 import org.littletonrobotics.junction.Logger
 import org.littletonrobotics.junction.mechanism.LoggedMechanism2d
 import org.littletonrobotics.junction.mechanism.LoggedMechanismLigament2d
+import org.team5987.annotation.LoggedOutput
 
 object Wrist : SubsystemBase() {
 
@@ -38,30 +39,11 @@ object Wrist : SubsystemBase() {
     private val ligament =
         root.append(LoggedMechanismLigament2d("WristLigament", 1.0, 0.0))
 
-    private val config: TalonFXConfiguration = TalonFXConfiguration().apply {
-        MotorOutput = MotorOutputConfigs().apply {
-            Inverted = InvertedValue.CounterClockwise_Positive
-            NeutralMode = NeutralModeValue.Brake
-        }
-        CurrentLimits = CurrentLimitsConfigs().apply {
-            SupplyCurrentLimit = 20.0
-            StatorCurrentLimit = 40.0
-            SupplyCurrentLimitEnable = true
-            StatorCurrentLimitEnable = true
-        }
-        Slot0 = Slot0Configs().apply {
-            kP = KP
-            kD = KD
-        }
-        Feedback = FeedbackConfigs().apply {
-            SensorToMechanismRatio = GEAR_RATIO
-        }
 
-    }
 
     private val motor = UniversalTalonFX(port = port, simGains = simGains, config = config, gearRatio = GEAR_RATIO)
     private val positionReq1: PositionVoltage = PositionVoltage(0.0)
-    private var setpoint: Angle = Degrees.of(0.0)
+   @LoggedOutput private var setpoint: Angle = Degrees.of(0.0)
 
     fun setAngle(angle: Angle): Command {
         return Commands.runOnce({
