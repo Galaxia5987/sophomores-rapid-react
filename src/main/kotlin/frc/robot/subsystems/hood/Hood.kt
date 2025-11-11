@@ -46,11 +46,11 @@ object Hood : SubsystemBase() {
     }
 
     fun moveUp(): Command {
-        return setAngle(30.0.degrees)
+        return setAngle(30.deg)
     }
 
     fun moveDown(): Command{
-        return setAngle(0.0.degrees)
+        return setAngle(0.deg)
     }
 
 
