@@ -1,4 +1,4 @@
-package frc.robot.subsystems.mouth
+package frc.robot.subsystems.intake
 
 import com.ctre.phoenix6.configs.*
 import com.ctre.phoenix6.signals.InvertedValue

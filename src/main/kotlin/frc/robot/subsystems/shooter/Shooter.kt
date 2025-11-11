@@ -34,6 +34,7 @@ object Shooter: SubsystemBase() {
     override fun periodic() {
         motor.updateInputs()
         Logger.processInputs("Subsystems/Intake", motor.inputs)
+
     }
 }
 

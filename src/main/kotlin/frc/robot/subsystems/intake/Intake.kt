@@ -1,4 +1,4 @@
-package frc.robot.subsystems.mouth
+package frc.robot.subsystems.intake
 
 import com.ctre.phoenix6.controls.VoltageOut
 import edu.wpi.first.units.measure.Voltage
@@ -36,5 +36,6 @@ object Intake : SubsystemBase() {
     override fun periodic() {
         motor.updateInputs()
         Logger.processInputs("Subsystems/Intake", motor.inputs)
+        ligament
     }
 }
