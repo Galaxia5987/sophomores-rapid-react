@@ -83,7 +83,7 @@ private val visionIOs =
                                         getRotation3d(yaw = 0.0)
                                     ),
                                     getRotation3d(
-                                        yaw = 0.0.degrees,
+                                        yaw = 0.deg,
                                         pitch = it.value.rotation.measureZ
                                     )
                                 )
