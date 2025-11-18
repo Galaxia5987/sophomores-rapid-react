@@ -48,4 +48,3 @@ object Intake : SubsystemBase() {
         Logger.processInputs("Subsystems/Intake", motor.inputs)
     }
 }
-

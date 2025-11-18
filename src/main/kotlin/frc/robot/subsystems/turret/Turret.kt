@@ -28,17 +28,23 @@ object Turret : SubsystemBase() {
             simGains = Gains(kP = 1.0, kD = 0.0)
         )
     private val positionVoltageRequest: PositionVoltage = PositionVoltage(0.0)
-    @LoggedOutput
-    var setpoint: Angle = 0.degrees
+    @LoggedOutput var setpoint: Angle = 0.degrees
 
-    private fun addAngle(angle: Angle) = runOnce{
+    private fun setAngle(angle: Angle) = runOnce {
+        setpoint = angle
+        motor.setControl(positionVoltageRequest.withPosition(angle))
+    }
+
+    private fun addAngle(angle: Angle) = run {
         setpoint += angle
         motor.setControl(positionVoltageRequest.withPosition(setpoint))
     }
 
-    fun rotateClockwise() = addAngle(10.degrees)
+    fun rotateClockwise() = addAngle(2.5.degrees)
 
-    fun rotateCounterClockwise() = addAngle((-10).degrees)
+    fun rotateCounterClockwise() = addAngle((-2.5).degrees)
+
+    fun resetRotation() = setAngle(0.degrees)
 
     fun getAngle() = motor.inputs.position
 

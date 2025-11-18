@@ -5,7 +5,6 @@ import com.pathplanner.lib.auto.NamedCommands
 import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.wpilibj2.command.Command
-import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine
@@ -13,13 +12,13 @@ import frc.robot.autonomous.paths.deploy.pathplanner.AC1SRP
 import frc.robot.autonomous.paths.deploy.pathplanner.BRP2
 import frc.robot.autonomous.paths.deploy.pathplanner.CC2C3
 import frc.robot.lib.extensions.enableAutoLogOutputFor
+import frc.robot.lib.extensions.whileTrue
 import frc.robot.subsystems.drive.DriveCommands
 import frc.robot.subsystems.intake.Intake
 import frc.robot.subsystems.shooter.Shooter
 import frc.robot.subsystems.turret.Turret
 import org.ironmaple.simulation.SimulatedArena
 import org.littletonrobotics.junction.AutoLogOutput
-import org.littletonrobotics.junction.Logger
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser
 
 object RobotContainer {
@@ -72,13 +71,9 @@ object RobotContainer {
         driverController.y().onTrue(Intake.stop()) // Intake Stops
 
         // -=+ Turret Commands +=-
-
-        driverController
-            .povRight()
-            .whileTrue(Turret.rotateClockwise()) // Turret Rotates Right
-        driverController
-            .povLeft()
-            .whileTrue(Turret.rotateCounterClockwise()) // Turret Rotates Left
+        driverController.povRight().whileTrue(Turret.rotateClockwise()) // Turret Rotates Right
+        driverController.povLeft().whileTrue(Turret.rotateCounterClockwise()) // Turret Rotates Left
+        driverController.povDown().onTrue(Turret.resetRotation()) // Turret Rotates Back To Original Position
 
         // -=+ Shooter Commands +=-
         driverController.a().onTrue(Shooter.on()) // Shooter Starts Shooting
