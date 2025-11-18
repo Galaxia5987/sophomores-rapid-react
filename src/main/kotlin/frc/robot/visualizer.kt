@@ -14,6 +14,7 @@ import frc.robot.lib.getPose3d
 import frc.robot.lib.getRotation3d
 import frc.robot.lib.getTranslation3d
 import frc.robot.subsystems.drive.Drive
+import frc.robot.subsystems.hood.Hood
 import org.littletonrobotics.junction.Logger
 import org.team5987.annotation.LoggedOutput
 
@@ -102,7 +103,7 @@ val turretPose
 val hoodTranslation
     get() = getTranslation3d(z = 0.083, y = 0.151)
 val hoodRotation
-    get() = getRotation3d(roll = 50.deg)
+    get() = getRotation3d(roll =90.deg - Hood.getAngle())
 val hoodPose
     get() = turretPose + Transform3d(hoodTranslation, hoodRotation)
 
