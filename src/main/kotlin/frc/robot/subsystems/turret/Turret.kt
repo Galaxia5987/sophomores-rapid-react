@@ -7,8 +7,6 @@ import frc.robot.lib.Gains
 import frc.robot.lib.extensions.degrees
 import frc.robot.lib.extensions.get
 import frc.robot.lib.universal_motor.UniversalTalonFX
-import frc.robot.subsystems.intake.ligament
-import frc.robot.subsystems.intake.mechanism
 import org.littletonrobotics.junction.AutoLogOutput
 import org.littletonrobotics.junction.Logger
 import org.littletonrobotics.junction.mechanism.LoggedMechanism2d
@@ -33,19 +31,14 @@ object Turret : SubsystemBase() {
     @LoggedOutput
     var setpoint: Angle = 0.degrees
 
-    private fun setAngle(angle: Angle) = runOnce {
-        setpoint = angle
-        motor.setControl(positionVoltageRequest.withPosition(angle))
-    }
-
-    private fun addAngle(angle: Angle) = runOnce {
+    private fun addAngle(angle: Angle) = runOnce{
         setpoint += angle
         motor.setControl(positionVoltageRequest.withPosition(setpoint))
     }
 
-    fun rotateClockwise() = addAngle(10.degrees) // Spinning Right
+    fun rotateClockwise() = addAngle(10.degrees)
 
-    fun rotateCounterClockwise() = addAngle((-10).degrees) // Spinning Left
+    fun rotateCounterClockwise() = addAngle((-10).degrees)
 
     fun getAngle() = motor.inputs.position
 

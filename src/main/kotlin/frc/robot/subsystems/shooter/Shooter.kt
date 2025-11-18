@@ -8,7 +8,6 @@ import frc.robot.lib.Gains
 import frc.robot.lib.extensions.get
 import frc.robot.lib.extensions.rps
 import frc.robot.lib.universal_motor.UniversalTalonFX
-import frc.robot.subsystems.intake.mechanism
 import org.littletonrobotics.junction.AutoLogOutput
 import org.littletonrobotics.junction.Logger
 import org.littletonrobotics.junction.mechanism.LoggedMechanism2d
@@ -37,9 +36,9 @@ object Shooter : SubsystemBase() {
         motor.setControl(VoltageOutRequest.withVelocity(velocity))
     }
 
-    fun on(): Command = setVelocity(10.rps) // Start Spinning
+    fun on(): Command = setVelocity(10.rps)
 
-    fun off(): Command = setVelocity(0.rps)  // Stop Spinning
+    fun off(): Command = setVelocity(0.rps)
 
     override fun periodic() {
         motor.updateInputs()

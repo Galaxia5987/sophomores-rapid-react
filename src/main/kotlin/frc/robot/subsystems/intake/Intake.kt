@@ -13,13 +13,13 @@ import org.littletonrobotics.junction.mechanism.LoggedMechanism2d
 import org.littletonrobotics.junction.mechanism.LoggedMechanismLigament2d
 import org.team5987.annotation.LoggedOutput
 
-@AutoLogOutput(key = "Intake/mechanism")
-var mechanism = LoggedMechanism2d(5.0, 5.0)
-private var root = mechanism.getRoot("Intake", 2.5, 2.5)
-val ligament =
-    root.append(LoggedMechanismLigament2d("IntakeLigament", 1.0, 0.0))
-
 object Intake : SubsystemBase() {
+    @AutoLogOutput(key = "Intake/mechanism")
+    var mechanism = LoggedMechanism2d(5.0, 5.0)
+    private var root = mechanism.getRoot("Intake", 2.5, 2.5)
+    val ligament =
+        root.append(LoggedMechanismLigament2d("IntakeLigament", 1.0, 0.0))
+
     private val motor: UniversalTalonFX =
         UniversalTalonFX(
             0,
@@ -35,11 +35,11 @@ object Intake : SubsystemBase() {
         motor.setControl(voltageRequest.withOutput(voltage))
     }
 
-    fun intake() = setVoltage(10.volts) // Intakes Ball
+    fun intake() = setVoltage(10.volts)
 
-    fun outtake() = setVoltage((-10).volts) // Outtakes Ball
+    fun outtake() = setVoltage((-10).volts)
 
-    fun stop() = setVoltage(0.volts) // Stops Moving
+    fun stop() = setVoltage(0.volts)
 
     override fun periodic() {
         motor.updateInputs()
@@ -48,3 +48,4 @@ object Intake : SubsystemBase() {
         Logger.processInputs("Subsystems/Intake", motor.inputs)
     }
 }
+
