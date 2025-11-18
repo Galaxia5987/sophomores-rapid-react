@@ -3,6 +3,7 @@ package frc.robot.subsystems.turret
 import com.ctre.phoenix6.controls.PositionVoltage
 import edu.wpi.first.units.measure.Angle
 import edu.wpi.first.wpilibj2.command.SubsystemBase
+import frc.robot.lib.Gains
 import frc.robot.lib.extensions.degrees
 import frc.robot.lib.extensions.get
 import frc.robot.lib.universal_motor.UniversalTalonFX
@@ -22,20 +23,24 @@ private val ligament =
 
 object Turret : SubsystemBase() {
     private val motor: UniversalTalonFX =
-        UniversalTalonFX(0, config = config, gearRatio = RATIO)
+        UniversalTalonFX(
+            0,
+            config = config,
+            gearRatio = RATIO,
+            simGains = Gains(kP = 1.0, kD = 0.0)
+        )
     private val positionVoltageRequest: PositionVoltage = PositionVoltage(0.0)
-    @LoggedOutput var setpoint: Angle = 0.degrees
+    @LoggedOutput
+    var setpoint: Angle = 0.degrees
 
     private fun setAngle(angle: Angle) = runOnce {
         setpoint = angle
         motor.setControl(positionVoltageRequest.withPosition(angle))
     }
 
-    fun rotateClockwise() = runOnce { setAngle(10.degrees) } // Spinning Right
+    fun rotateClockwise() = setAngle(10.degrees) // Spinning Right
 
-    fun rotateCounterClockwise() = runOnce {
-        setAngle((-10).degrees)
-    } // Spinning Left
+    fun rotateCounterClockwise() = setAngle((-10).degrees) // Spinning Left
 
     override fun periodic() {
         motor.updateInputs()

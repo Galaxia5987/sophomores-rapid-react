@@ -2,7 +2,9 @@ package frc.robot.subsystems.shooter
 
 import com.ctre.phoenix6.controls.VelocityVoltage
 import edu.wpi.first.units.measure.AngularVelocity
+import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.SubsystemBase
+import frc.robot.lib.Gains
 import frc.robot.lib.extensions.get
 import frc.robot.lib.extensions.rps
 import frc.robot.lib.universal_motor.UniversalTalonFX
@@ -19,8 +21,14 @@ private var root = mechanism.getRoot("Shooter", 2.5, 2.5)
 private val ligament =
     root.append(LoggedMechanismLigament2d("ShooterLigament", 1.0, 0.0))
 
-object Shooter: SubsystemBase() {
-    private val motor: UniversalTalonFX = UniversalTalonFX(0, config = config, gearRatio = RATIO)
+object Shooter : SubsystemBase() {
+    private val motor: UniversalTalonFX =
+        UniversalTalonFX(
+            0,
+            config = config,
+            gearRatio = RATIO,
+            simGains = Gains(kP = 1.0, kD = 0.0)
+        )
     private val VoltageOutRequest: VelocityVoltage = VelocityVoltage(0.0)
     @LoggedOutput var setpoint: AngularVelocity = 0.rps
 
@@ -29,15 +37,14 @@ object Shooter: SubsystemBase() {
         motor.setControl(VoltageOutRequest.withVelocity(velocity))
     }
 
-    fun on() = runOnce { setVelocity(10.rps) } //Start Spinning
+    fun on(): Command = setVelocity(10.rps) // Start Spinning
 
-    fun off() = runOnce { setVelocity(0.rps) } //Stop Spinning
+    fun off(): Command = setVelocity(0.rps)  // Stop Spinning
 
     override fun periodic() {
         motor.updateInputs()
         ligament.setAngle(setpoint[rps])
         Logger.recordOutput("Shooter", mechanism)
         Logger.processInputs("Subsystems/Shooter", motor.inputs)
-
     }
 }

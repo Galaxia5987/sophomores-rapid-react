@@ -3,6 +3,7 @@ package frc.robot.subsystems.intake
 import com.ctre.phoenix6.controls.VoltageOut
 import edu.wpi.first.units.measure.Voltage
 import edu.wpi.first.wpilibj2.command.SubsystemBase
+import frc.robot.lib.Gains
 import frc.robot.lib.extensions.get
 import frc.robot.lib.extensions.volts
 import frc.robot.lib.universal_motor.UniversalTalonFX
@@ -20,7 +21,12 @@ val ligament =
 
 object Intake : SubsystemBase() {
     private val motor: UniversalTalonFX =
-        UniversalTalonFX(0, config = config, gearRatio = RATIO)
+        UniversalTalonFX(
+            0,
+            config = config,
+            gearRatio = RATIO,
+            simGains = Gains(kP = 1.0, kD = 0.0)
+        )
     private val voltageRequest: VoltageOut = VoltageOut(0.0)
     @LoggedOutput var setpoint: Voltage = 0.volts
 
@@ -29,11 +35,11 @@ object Intake : SubsystemBase() {
         motor.setControl(voltageRequest.withOutput(voltage))
     }
 
-    fun intake() = runOnce { setVoltage(10.volts) } // Intakes Ball
+    fun intake() = setVoltage(10.volts) // Intakes Ball
 
-    fun outtake() = runOnce { setVoltage((-10).volts) } // Outtakes Ball
+    fun outtake() = setVoltage((-10).volts) // Outtakes Ball
 
-    fun stop() = runOnce { setVoltage(0.volts) } // Stops Moving
+    fun stop() = setVoltage(0.volts) // Stops Moving
 
     override fun periodic() {
         motor.updateInputs()
