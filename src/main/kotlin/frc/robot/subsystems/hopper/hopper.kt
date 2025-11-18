@@ -1,4 +1,3 @@
 package frc.robot.subsystems.hopper
 
-object hopper {
-}
+object hopper {}

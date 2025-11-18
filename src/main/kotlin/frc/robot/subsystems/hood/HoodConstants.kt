@@ -9,11 +9,11 @@ import com.ctre.phoenix6.signals.InvertedValue
 import com.ctre.phoenix6.signals.NeutralModeValue
 import frc.robot.lib.Gains
 
- val port= 0
- val simGains= Gains(kP = 1.3, kD = 0.25)
-val GEAR_RATIO =  59.5
+val port = 0
+val simGains = Gains(kP = 1.3, kD = 0.25)
+val GEAR_RATIO = 59.5
 
-val REAL_GAINS: Gains = Gains (kP = 1.5, kD = 0.1)
+val REAL_GAINS: Gains = Gains(kP = 1.5, kD = 0.1)
 val config: TalonFXConfiguration =
     TalonFXConfiguration().apply {
         MotorOutput =

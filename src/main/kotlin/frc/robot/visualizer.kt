@@ -103,7 +103,7 @@ val turretPose
 val hoodTranslation
     get() = getTranslation3d(z = 0.083, y = 0.151)
 val hoodRotation
-    get() = getRotation3d(roll =90.deg - Hood.getAngle())
+    get() = getRotation3d(roll = 90.deg - Hood.getAngle())
 val hoodPose
     get() = turretPose + Transform3d(hoodTranslation, hoodRotation)
 
