@@ -28,7 +28,7 @@ import org.team5987.annotation.LoggedOutput
 object Hood : SubsystemBase() {
 
     @LoggedOutput(key = "Hood/mechanism")
-    private var mechanism = LoggedMechanism2d(4.0, 6.0)
+ var mechanism = LoggedMechanism2d(4.0, 6.0)
 
     private var root = mechanism.getRoot("Hood", 2.0, 1.0)
 
@@ -36,7 +36,7 @@ object Hood : SubsystemBase() {
         root.append(LoggedMechanismLigament2d("HoodLigament", 1.0, 0.0))
     private val motor = UniversalTalonFX(port = port, config = config, gearRatio = GEAR_RATIO, simGains = simGains)
     private val positionReq: PositionVoltage = PositionVoltage(0.0)
-    @LoggedOutput  private var setpoint: Angle = 0.deg
+    @LoggedOutput   var setpoint: Angle = 0.deg
 
     fun setAngle(angle: Angle): Command {
         return Commands.runOnce({

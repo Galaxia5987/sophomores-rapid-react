@@ -33,7 +33,7 @@ import org.team5987.annotation.LoggedOutput
 object Wrist : SubsystemBase() {
 
     @LoggedOutput(key = "Wrist/mechanism")
-    private var mechanism = LoggedMechanism2d(4.0, 6.0)
+   var mechanism = LoggedMechanism2d(4.0, 6.0)
 
     private var root = mechanism.getRoot("Wrist", 2.0, 1.0)
 
@@ -44,7 +44,7 @@ object Wrist : SubsystemBase() {
 
     private val motor = UniversalTalonFX(port = port, simGains = simGains, config = config, gearRatio = GEAR_RATIO)
     private val positionReq1: PositionVoltage = PositionVoltage(0.0)
-   @LoggedOutput private var setpoint: Angle = Degrees.of(0.0)
+   @LoggedOutput  var setpoint: Angle = Degrees.of(0.0)
 
     fun setAngle(angle: Angle): Command {
         return Commands.runOnce({
