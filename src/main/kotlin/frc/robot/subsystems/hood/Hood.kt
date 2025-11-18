@@ -53,7 +53,7 @@ object Hood : SubsystemBase() {
         return setAngle(0.deg)
     }
 
-
+    fun getAngle() = motor.inputs.position
 
     override fun periodic() {
         motor.updateInputs()
