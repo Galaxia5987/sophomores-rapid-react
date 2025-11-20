@@ -15,7 +15,7 @@ object Hopper: SubsystemBase() {
 @LoggedOutput var machanism = LoggedMechanism2d(4.0 , 60.0)
     private var root = mechanism.getRoot("Hopper", 2.0 , 1.0)
     private val motor = UniversalTalonFX(port = port, simGains = simGains , config = counfig)
-    @LoggedOutput private var voltageReq : VoltageOut = VoltageOut(0.0)
+    @LoggedOutput  var voltageReq : VoltageOut = VoltageOut(0.0)
 
     fun setVoltage(voltage : Voltage ) = runOnce{
 
