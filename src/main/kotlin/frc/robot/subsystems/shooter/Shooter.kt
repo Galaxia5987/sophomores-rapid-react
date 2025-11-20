@@ -36,9 +36,11 @@ object Shooter : SubsystemBase() {
         motor.setControl(VoltageOutRequest.withVelocity(velocity))
     }
 
-    fun on(): Command = setVelocity(10.rps)
+    fun on(): Command = setVelocity(25.rps)
 
     fun off(): Command = setVelocity(0.rps)
+
+    fun getMotorInputs() = motor.inputs
 
     override fun periodic() {
         motor.updateInputs()

@@ -12,7 +12,6 @@ import frc.robot.autonomous.paths.deploy.pathplanner.AC1SRP
 import frc.robot.autonomous.paths.deploy.pathplanner.BRP2
 import frc.robot.autonomous.paths.deploy.pathplanner.CC2C3
 import frc.robot.lib.extensions.enableAutoLogOutputFor
-import frc.robot.lib.extensions.whileTrue
 import frc.robot.subsystems.drive.DriveCommands
 import frc.robot.subsystems.intake.Intake
 import frc.robot.subsystems.shooter.Shooter

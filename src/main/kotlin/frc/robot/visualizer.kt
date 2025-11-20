@@ -14,6 +14,7 @@ import frc.robot.lib.getPose3d
 import frc.robot.lib.getRotation3d
 import frc.robot.lib.getTranslation3d
 import frc.robot.subsystems.drive.Drive
+import frc.robot.subsystems.shooter.Shooter
 import frc.robot.subsystems.turret.Turret
 import org.littletonrobotics.junction.Logger
 import org.team5987.annotation.LoggedOutput
@@ -113,7 +114,7 @@ val hoodPose
 val flywheelTranslation
     get() = getTranslation3d(0.0)
 val flywheelRotation
-    get() = getRotation3d(pitch = (-10).deg, yaw = 90.deg)
+    get() = getRotation3d(pitch = (Shooter.getMotorInputs().position), yaw = 90.deg)
 val flywheelPose
     get() = hoodPose + Transform3d(flywheelTranslation, flywheelRotation)
 
