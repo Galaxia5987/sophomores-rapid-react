@@ -33,11 +33,9 @@ object Hood : SubsystemBase() {
     private val positionReq: PositionVoltage = PositionVoltage(0.0)
     @LoggedOutput var setpoint: Angle = 0.deg
 
-    fun setAngle(angle: Angle): Command {
-        return Commands.runOnce({
+    fun setAngle(angle: Angle) = runOnce {
             setpoint = angle
             motor.setControl(positionReq.withPosition(angle))
-        })
     }
 
     fun moveUp(): Command {
