@@ -14,6 +14,7 @@ import frc.robot.autonomous.paths.deploy.pathplanner.CC2C3
 import frc.robot.lib.extensions.enableAutoLogOutputFor
 import frc.robot.subsystems.drive.DriveCommands
 import frc.robot.subsystems.hood.Hood
+import frc.robot.subsystems.hopper.Hopper
 import frc.robot.subsystems.wrist.Wrist
 import org.ironmaple.simulation.SimulatedArena
 import org.littletonrobotics.junction.AutoLogOutput
@@ -67,6 +68,11 @@ object RobotContainer {
         driverController.povDown().onTrue(Hood.moveDown())
         driverController.y().onTrue(Wrist.open())
         driverController.a().onTrue(Wrist.close())
+        driverController.b().onTrue(Hopper.intake())
+        driverController.b().onFalse(Hopper.stop())
+        driverController.x().onTrue(Hopper.outTake())
+        driverController.x().onFalse(Hopper.stop())
+
     }
 
     fun getAutonomousCommand(): Command = autoChooser.get()
