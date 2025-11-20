@@ -26,7 +26,7 @@ object Hopper: SubsystemBase() {
         return setVoltage(10.0.volts)
     }
     fun outTake(): Command {
-        return setVoltage(-10.0.volts)
+        return setVoltage((-10.0).volts)
     }
     fun stop (): Command{
         return setVoltage(0.0.volts)
