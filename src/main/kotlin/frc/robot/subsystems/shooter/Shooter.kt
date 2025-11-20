@@ -36,6 +36,11 @@ object Shooter : SubsystemBase() {
         motor.setControl(VoltageOutRequest.withVelocity(velocity))
     }
 
+    private fun setVelocity(velocitySupplier: () -> AngularVelocity) = runOnce {
+        setpoint = velocitySupplier()
+        motor.setControl(VoltageOutRequest.withVelocity(velocitySupplier()))
+    }
+
     fun on(): Command = setVelocity(25.rps)
 
     fun off(): Command = setVelocity(0.rps)

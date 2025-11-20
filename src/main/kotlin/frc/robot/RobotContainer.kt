@@ -70,8 +70,8 @@ object RobotContainer {
         driverController.y().onTrue(Intake.stop()) // Intake Stops
 
         // -=+ Turret Commands +=-
-        driverController.povRight().whileTrue(Turret.rotateClockwise()) // Turret Rotates Right
-        driverController.povLeft().whileTrue(Turret.rotateCounterClockwise()) // Turret Rotates Left
+        driverController.povRight().whileTrue(Turret.rotateClockwise().repeatedly()) // Turret Rotates Right
+        driverController.povLeft().whileTrue(Turret.rotateCounterClockwise().repeatedly()) // Turret Rotates Left
         driverController.povDown().onTrue(Turret.resetRotation()) // Turret Rotates Back To Original Position
 
         // -=+ Shooter Commands +=-
