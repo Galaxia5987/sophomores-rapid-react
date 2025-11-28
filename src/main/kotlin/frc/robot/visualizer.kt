@@ -15,6 +15,7 @@ import frc.robot.lib.getRotation3d
 import frc.robot.lib.getTranslation3d
 import frc.robot.subsystems.drive.Drive
 import frc.robot.subsystems.hood.Hood
+import frc.robot.subsystems.wrist.Wrist
 import org.littletonrobotics.junction.Logger
 import org.team5987.annotation.LoggedOutput
 
@@ -80,7 +81,9 @@ private fun getAllSwerveModulePoseDrive(): Array<Pose3d> {
 val wristTranslation
     get() = getTranslation3d(-0.3, 0.0, 0.28)
 val wristRotation
-    get() = getRotation3d(pitch = 0.0)
+    get() = getRotation3d(
+        pitch = Wrist.getAngle())
+
 val wristPose
     get() = getPose3d(wristTranslation, wristRotation)
 
