@@ -32,13 +32,13 @@ object Wrist : SubsystemBase() {
             config = config,
             gearRatio = GEAR_RATIO
         )
-    private val positionReq1: PositionVoltage = PositionVoltage(0.0)
+    private val positionRequest: PositionVoltage = PositionVoltage(0.0)
     @LoggedOutput var setpoint: Angle = Degrees.of(0.0)
 
     fun setAngle(angle: Angle): Command {
         return Commands.runOnce({
             setpoint = angle
-            motor.setControl(positionReq1.withPosition(angle))
+            motor.setControl(positionRequest.withPosition(angle))
         })
     }
 
