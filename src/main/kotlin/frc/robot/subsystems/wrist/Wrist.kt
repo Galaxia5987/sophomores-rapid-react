@@ -50,7 +50,7 @@ object Wrist : SubsystemBase() {
 
     override fun periodic() {
         motor.updateInputs()
-        ligament.setAngle(motor.inputs.position[degrees])
+        ligament.setAngle(motor.inputs.position[deg])
         Logger.processInputs("Wrist", motor.inputs)
         Logger.recordOutput("Wrist/targetAngle", setpoint)
         Logger.recordOutput("Wrist/ligament", mechanism)
