@@ -4,10 +4,8 @@ import com.ctre.phoenix6.controls.PositionVoltage
 import edu.wpi.first.units.Units.Degrees
 import edu.wpi.first.units.measure.Angle
 import edu.wpi.first.wpilibj2.command.Command
-import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.lib.extensions.deg
-import frc.robot.lib.extensions.degrees
 import frc.robot.lib.extensions.get
 import frc.robot.lib.universal_motor.UniversalTalonFX
 import org.littletonrobotics.junction.Logger
@@ -44,9 +42,7 @@ object Wrist : SubsystemBase() {
 
     fun open(): Command = setAngle(25.deg)
 
-
     fun close(): Command = setAngle(0.deg)
-
 
     override fun periodic() {
         motor.updateInputs()

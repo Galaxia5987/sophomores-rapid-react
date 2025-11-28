@@ -72,7 +72,6 @@ object RobotContainer {
         driverController.b().onFalse(Hopper.stop())
         driverController.x().onTrue(Hopper.outTake())
         driverController.x().onFalse(Hopper.stop())
-
     }
 
     fun getAutonomousCommand(): Command = autoChooser.get()

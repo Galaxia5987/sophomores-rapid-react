@@ -28,7 +28,6 @@ object Hopper : SubsystemBase() {
 
     fun stop(): Command = setVoltage(0.volts)
 
-
     override fun periodic() {
         motor.updateInputs()
         setVoltage(motor.inputs.voltage)

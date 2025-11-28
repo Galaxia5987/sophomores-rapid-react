@@ -4,7 +4,7 @@ import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.math.geometry.Pose3d
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.math.geometry.Translation3d
-import frc.robot.lib.extensions.degrees
+import frc.robot.lib.extensions.deg
 import frc.robot.lib.extensions.toTransform
 import frc.robot.lib.getRotation3d
 import frc.robot.sim.RapidReactArena
