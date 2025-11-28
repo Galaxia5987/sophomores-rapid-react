@@ -42,13 +42,11 @@ object Wrist : SubsystemBase() {
         })
     }
 
-    fun open(): Command {
-        return setAngle(25.deg)
-    }
+    fun open(): Command = setAngle(25.deg)
 
-    fun close(): Command {
-        return setAngle(0.deg)
-    }
+
+    fun close(): Command = setAngle(0.deg)
+
 
     override fun periodic() {
         motor.updateInputs()
