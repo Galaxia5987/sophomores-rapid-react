@@ -3,10 +3,8 @@ package frc.robot.subsystems.hood
 import com.ctre.phoenix6.controls.PositionVoltage
 import edu.wpi.first.units.measure.Angle
 import edu.wpi.first.wpilibj2.command.Command
-import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.lib.extensions.deg
-import frc.robot.lib.extensions.degrees
 import frc.robot.lib.extensions.get
 import frc.robot.lib.universal_motor.UniversalTalonFX
 import org.littletonrobotics.junction.Logger
@@ -30,18 +28,17 @@ object Hood : SubsystemBase() {
             gearRatio = GEAR_RATIO,
             simGains = simGains
         )
-   val positionReq: PositionVoltage = PositionVoltage(0.0)
+    val positionReq: PositionVoltage = PositionVoltage(0.0)
     @LoggedOutput var setpoint: Angle = 0.deg
 
     fun setAngle(angle: Angle) = runOnce {
-            setpoint = angle
-            motor.setControl(positionReq.withPosition(angle))
+        setpoint = angle
+        motor.setControl(positionReq.withPosition(angle))
     }
 
     fun moveUp(): Command = setAngle(moveUpAngle)
 
     fun moveDown(): Command = setAngle(0.deg)
-
 
     fun getAngle() = motor.inputs.position
 
