@@ -30,7 +30,7 @@ object Wrist : SubsystemBase() {
             config = config,
             gearRatio = GEAR_RATIO
         )
-    private val positionRequest: PositionVoltage = PositionVoltage(0.0)
+ val positionRequest: PositionVoltage = PositionVoltage(0.0)
     @LoggedOutput var setpoint: Angle = Degrees.of(0.0)
 
     fun setAngle(angle: Angle): Command {
