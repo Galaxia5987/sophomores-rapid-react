@@ -22,15 +22,12 @@ object Hopper : SubsystemBase() {
         motor.setControl(voltageReq.withOutput(voltage))
     }
 
-    fun intake(): Command {
-        return setVoltage(10.volts)
-    }
-    fun outTake(): Command {
-        return setVoltage((-10).volts)
-    }
-    fun stop(): Command {
-        return setVoltage(0.volts)
-    }
+    fun intake(): Command = setVoltage(10.volts)
+
+    fun outTake(): Command = setVoltage((-10).volts)
+
+    fun stop(): Command = setVoltage(0.volts)
+
 
     override fun periodic() {
         motor.updateInputs()
