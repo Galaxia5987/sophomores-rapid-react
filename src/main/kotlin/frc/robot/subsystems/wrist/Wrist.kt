@@ -36,7 +36,7 @@ object Wrist : SubsystemBase() {
     @LoggedOutput var setpoint: Angle = Degrees.of(0.0)
 
     fun setAngle(angle: Angle): Command {
-        return Commands.runOnce({
+        return this.runOnce({
             setpoint = angle
             motor.setControl(positionRequest.withPosition(angle))
         })
