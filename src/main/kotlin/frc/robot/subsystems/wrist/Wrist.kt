@@ -44,6 +44,9 @@ object Wrist : SubsystemBase() {
 
     fun close(): Command = setAngle(0.deg)
 
+    fun getAngle() : Angle{
+        return motor.inputs.position
+    }
     override fun periodic() {
         motor.updateInputs()
         ligament.setAngle(motor.inputs.position[deg])
