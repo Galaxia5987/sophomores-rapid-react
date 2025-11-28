@@ -47,7 +47,7 @@ object Hood : SubsystemBase() {
 
     override fun periodic() {
         motor.updateInputs()
-        ligament.setAngle(motor.inputs.position[degrees])
+        ligament.setAngle(motor.inputs.position[deg])
         Logger.processInputs("Hood", motor.inputs)
         Logger.recordOutput("Hood/targetAngle", Hood.setpoint)
         Logger.recordOutput("Hood/ligament", Hood.mechanism)
