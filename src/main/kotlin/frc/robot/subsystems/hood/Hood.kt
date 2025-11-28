@@ -38,7 +38,7 @@ object Hood : SubsystemBase() {
             motor.setControl(positionReq.withPosition(angle))
     }
 
-    fun moveUp(): Command = setAngle(30.deg)
+    fun moveUp(): Command = setAngle(moveUpAngle)
 
     fun moveDown(): Command = setAngle(0.deg)
 

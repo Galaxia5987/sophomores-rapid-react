@@ -7,12 +7,14 @@ import com.ctre.phoenix6.configs.Slot0Configs
 import com.ctre.phoenix6.configs.TalonFXConfiguration
 import com.ctre.phoenix6.signals.InvertedValue
 import com.ctre.phoenix6.signals.NeutralModeValue
+import edu.wpi.first.units.measure.Angle
 import frc.robot.lib.Gains
+import frc.robot.lib.extensions.deg
 
 val port = 0
 val simGains = Gains(kP = 1.3, kD = 0.25)
 val GEAR_RATIO = 59.5
-
+val moveUpAngle: Angle = 30.deg
 val REAL_GAINS: Gains = Gains(kP = 1.5, kD = 0.1)
 val config: TalonFXConfiguration =
     TalonFXConfiguration().apply {
