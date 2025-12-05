@@ -28,8 +28,12 @@ object Hood : SubsystemBase() {
             gearRatio = GEAR_RATIO,
             simGains = simGains
         )
-    val positionReq: PositionVoltage = PositionVoltage(0.0)
+    private val positionReq: PositionVoltage = PositionVoltage(0.0)
     @LoggedOutput var setpoint: Angle = 0.deg
+
+    val angle: Angle
+        get() = motor.inputs.position
+
 
     fun setAngle(angle: Angle) = runOnce {
         setpoint = angle
@@ -39,10 +43,6 @@ object Hood : SubsystemBase() {
     fun moveUp(): Command = setAngle(MOVE_UP_ANGLE)
 
     fun moveDown(): Command = setAngle(0.deg)
-
-    fun getAngle(): Angle {
-        return motor.inputs.position
-    }
 
     override fun periodic() {
         motor.updateInputs()
